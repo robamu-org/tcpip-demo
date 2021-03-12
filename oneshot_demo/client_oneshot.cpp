@@ -8,19 +8,9 @@
 
 #include <vector>
 
-int client_win32();
-
-int client_application() {
-	std::cout << "Client application startup.." << std::endl;
-#ifdef WIN32
-    return client_win32();
-#elif UNIX
-    return 0;
-#endif
-}
 
 #ifdef WIN32
-int client_win32() {
+int client_oneshot_win32() {
     /* Totally not copied from https://docs.microsoft.com/en-us/windows/win32/winsock/complete-client-code */
     WSADATA wsaData;
     SOCKET ConnectSocket = INVALID_SOCKET;

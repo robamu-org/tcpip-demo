@@ -1,4 +1,8 @@
-cmake_minimum_required (VERSION 3.6)
+cmake_minimum_required (VERSION 3.13)
+
+# Specify the C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 project (tcpip_demo)
 
@@ -10,10 +14,16 @@ add_executable(${TARGET_NAME})
 
 target_sources(${TARGET_NAME} PRIVATE
 	main.cpp
-	client.cpp
-	server.cpp
 )
+
+add_subdirectory(oneshot_demo)
+add_subdirectory(core)
 
 target_link_libraries(${TARGET_NAME}
 	ws2_32
+)
+
+# Add include paths for all sources.
+target_include_directories(${TARGET_NAME} PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
 )

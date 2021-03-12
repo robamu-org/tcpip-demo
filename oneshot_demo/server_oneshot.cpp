@@ -11,20 +11,8 @@
 
 static constexpr size_t RECEIVE_BUFFER_SIZE = 1500;
 
-int server_win32();
-
-int server_application() {
 #ifdef WIN32
-    return server_win32();
-#elif UNIX
-    return 0;
-#endif
-
-}
-
-#ifdef WIN32
-int server_win32() {
-	std::cout << "Server application startup.." << std::endl;
+int server_oneshot_win32() {
     /* Totally not copied from https://docs.microsoft.com/en-us/windows/win32/winsock/complete-server-code */
     WSADATA wsaData;
     int iResult;
