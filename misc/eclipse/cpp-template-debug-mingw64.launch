@@ -18,12 +18,12 @@
     <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_START_MODE" value="run"/>
     <booleanAttribute key="org.eclipse.cdt.launch.DEBUGGER_STOP_AT_MAIN" value="true"/>
     <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_STOP_AT_MAIN_SYMBOL" value="main"/>
-    <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug-MinGW64/hello_world.exe"/>
-    <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="template-cpp-cmake"/>
+    <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="build/tcpip_demo.exe"/>
+    <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="tcp-ip-demo"/>
     <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="false"/>
     <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="cdt.managedbuild.toolchain.gnu.mingw.base.1166944256"/>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-        <listEntry value="/template-cpp-cmake"/>
+        <listEntry value="/tcp-ip-demo"/>
     </listAttribute>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
         <listEntry value="4"/>
