@@ -1,4 +1,8 @@
-# C++ and C project template
+# TCP/IP demo application
+
+Test application including a TCP client and server.
+
+## Build instructions 
 
 Project template for building C++ and C projects with CMake and various different compilers
 and IDEs. Install [CMake](https://cmake.org/install/) first.
