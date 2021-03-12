@@ -1,0 +1,36 @@
+{
+"version": "2.0.0",
+"tasks": [
+    {
+        "label": "cmake build debug",
+        "type": "shell",
+        "options": {
+            "cwd": "${workspaceRoot}/Debug-MinGW64"
+        },
+        "command": "cmake",
+        "args": [
+            "--build",
+            ".",
+            "-j"
+        ],
+        "problemMatcher": [],
+        "group": {
+            "kind": "build",
+            "isDefault": true
+        }
+    },
+    {
+        "label": "cmake run debug",
+        "type": "shell",
+        "options": {
+            "cwd": "${workspaceRoot}/Debug-MinGW64"
+        },
+        "command": "./hello_world.exe",
+        "args": [
+            ""
+        ],
+        "problemMatcher": [],
+        "group": "test"
+    }
+]
+}
