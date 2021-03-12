@@ -33,7 +33,7 @@ int client_application() {
     hints.ai_protocol = IPPROTO_TCP;
 
     // Resolve the server address and port
-    iResult = getaddrinfo(nullptr, TCPIP_SERVER_PORT, &hints, &result);
+    iResult = getaddrinfo(TCPIP_SERVER_ADDRESS, TCPIP_SERVER_PORT, &hints, &result);
     if ( iResult != 0 ) {
         printf("getaddrinfo failed with error: %d\n", iResult);
         WSACleanup();
