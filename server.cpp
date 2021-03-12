@@ -11,7 +11,19 @@
 
 static constexpr size_t RECEIVE_BUFFER_SIZE = 1500;
 
+int server_win32();
+
 int server_application() {
+#ifdef WIN32
+    return server_win32();
+#elif UNIX
+    return 0;
+#endif
+
+}
+
+#ifdef WIN32
+int server_win32() {
 	std::cout << "Server application startup.." << std::endl;
     /* Totally not copied from https://docs.microsoft.com/en-us/windows/win32/winsock/complete-server-code */
     WSADATA wsaData;
@@ -93,9 +105,9 @@ int server_application() {
 
         iResult = recv(ClientSocket, reinterpret_cast<char*>(reception_buffer.data()), recvbuflen, 0);
         if (iResult > 0) {
-            printf("Bytes received: %d\n", iResult);
+            printf("Server: Bytes Received: %d\n", iResult);
 
-        // Echo the buffer back to the sender
+            // Echo the buffer back to the sender
             iSendResult = send( ClientSocket, reinterpret_cast<char*>(reception_buffer.data()), iResult, 0 );
             if (iSendResult == SOCKET_ERROR) {
                 printf("send failed with error: %d\n", WSAGetLastError());
@@ -103,12 +115,12 @@ int server_application() {
                 WSACleanup();
                 return 1;
             }
-            printf("Bytes sent: %d\n", iSendResult);
+            printf("Server: Bytes sent: %d\n", iSendResult);
         }
         else if (iResult == 0)
-            printf("Connection closing...\n");
+            printf("Server: Connection closing...\n");
         else  {
-            printf("recv failed with error: %d\n", WSAGetLastError());
+            printf("Server: recv failed with error: %d\n", WSAGetLastError());
             closesocket(ClientSocket);
             WSACleanup();
             return 1;
@@ -131,3 +143,4 @@ int server_application() {
 
     return 0;
 }
+#endif /* WIN32 */

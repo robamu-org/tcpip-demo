@@ -8,13 +8,23 @@
 
 #include <vector>
 
+int client_win32();
+
 int client_application() {
 	std::cout << "Client application startup.." << std::endl;
+#ifdef WIN32
+    return client_win32();
+#elif UNIX
+    return 0;
+#endif
+}
+
+#ifdef WIN32
+int client_win32() {
+    /* Totally not copied from https://docs.microsoft.com/en-us/windows/win32/winsock/complete-client-code */
     WSADATA wsaData;
     SOCKET ConnectSocket = INVALID_SOCKET;
-    struct addrinfo *result = NULL,
-                    *ptr = NULL,
-                    hints;
+    struct addrinfo *result = NULL, *ptr = NULL, hints;
     const char *sendbuf = "this is a test";
     std::vector<uint8_t> reception_buffer(TCPIP_BUFFER_SIZES);
     int iResult;
@@ -42,10 +52,11 @@ int client_application() {
 
     // Attempt to connect to an address until one succeeds
     for(ptr=result; ptr != NULL ;ptr=ptr->ai_next) {
-
+        struct sockaddr_in *addr_in = (struct sockaddr_in *)ptr->ai_addr;
+        char *ip = inet_ntoa(addr_in->sin_addr);
+        std::cout << "Client: Attempting connection to address " << ip << std::endl;
         // Create a SOCKET for connecting to server
-        ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype, 
-            ptr->ai_protocol);
+        ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
         if (ConnectSocket == INVALID_SOCKET) {
             printf("socket failed with error: %ld\n", WSAGetLastError());
             WSACleanup();
@@ -59,6 +70,8 @@ int client_application() {
             ConnectSocket = INVALID_SOCKET;
             continue;
         }
+
+        std::cout << "Client: Connected successfully to " << ip << std::endl;
         break;
     }
 
@@ -79,7 +92,7 @@ int client_application() {
         return 1;
     }
 
-    printf("Bytes Sent: %ld\n", iResult);
+    printf("Client: Bytes Sent: %ld\n", iResult);
 
     // shutdown the connection since no more data will be sent
     iResult = shutdown(ConnectSocket, SD_SEND);
@@ -95,11 +108,11 @@ int client_application() {
 
         iResult = recv(ConnectSocket, reinterpret_cast<char*>(reception_buffer.data()), recvbuflen, 0);
         if ( iResult > 0 )
-            printf("Bytes received: %d\n", iResult);
+            printf("Client: Bytes Received: %d\n", iResult);
         else if ( iResult == 0 )
-            printf("Connection closed\n");
+            printf("Client: Connection closed\n");
         else
-            printf("recv failed with error: %d\n", WSAGetLastError());
+            printf("Client: recv failed with error: %d\n", WSAGetLastError());
 
     } while( iResult > 0 );
 
@@ -109,3 +122,4 @@ int client_application() {
 
     return 0;
 }
+#endif
