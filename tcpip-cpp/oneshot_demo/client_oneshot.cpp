@@ -178,6 +178,7 @@ int client_oneshot() {
         return 1;
     }
 
+    printf("Client: Sending string: %s\n", sendbuf);
     // Send an initial buffer
     retval = send(connect_socket, sendbuf, (int)strlen(sendbuf), 0 );
     if (retval < 0) {
@@ -186,7 +187,7 @@ int client_oneshot() {
         return 1;
     }
 
-    printf("Client: Bytes Sent: %d\n", retval);
+    printf("Client: Bytes sent: %d\n", retval);
 
     // shutdown the connection since no more data will be sent
     retval = shutdown(connect_socket, SHUT_WR);
@@ -200,12 +201,16 @@ int client_oneshot() {
     do {
 
         retval = recv(connect_socket, reinterpret_cast<char*>(reception_buffer.data()), recvbuflen, 0);
-        if (retval > 0)
-            printf("Client: Bytes Received: %d\n", retval);
-        else if (retval == 0)
+        if (retval > 0) {
+            printf("Client: Bytes received: %d\n", retval);
+            printf("Client: String received back: %s\n", reception_buffer.data());
+        }
+        else if (retval == 0) {
             printf("Client: Connection closed\n");
-        else
+        }
+        else {
             printf("Client: recv failed with error: %d\n", errno);
+        }
 
     } while(retval > 0);
 

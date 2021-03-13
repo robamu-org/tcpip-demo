@@ -15,7 +15,9 @@ int client_application(tcpip::DemoConfig cfg) {
 	case(DemoModes::PROCEDURAL_DEMO): {
 	    return client_oneshot();
 	}
-	case(DemoModes::OOP_CLIENT_ONE_SERVER_ECHO):
+	case(DemoModes::OOP_CLIENT_ONE_SERVER_ECHO): {
+	    return client_oneshot();
+	}
 	case(DemoModes::OOP_CLIENT_NONE_SERVER_ONE):
 	case(DemoModes::OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY):
 	case(DemoModes::OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE):

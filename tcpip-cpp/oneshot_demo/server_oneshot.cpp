@@ -211,8 +211,9 @@ int server_oneshot() {
 
         retval = recv(client_socket, reinterpret_cast<char*>(reception_buffer.data()), recvbuflen, 0);
         if (retval > 0) {
-            printf("Server: Bytes Received: %d\n", retval);
-
+            printf("Server: Bytes received: %d\n", retval);
+            printf("Server: Received string: %s\n", reception_buffer.data());
+            printf("Server: Echoing back string\n");
             // Echo the buffer back to the sender
             send_result = send(client_socket, reinterpret_cast<char*>(reception_buffer.data()), retval, 0 );
             if (send_result < 0) {
@@ -220,9 +221,9 @@ int server_oneshot() {
                 close(client_socket);
                 return 1;
             }
-            printf("Server: Bytes sent: %d\n", send_result);
+            printf("Server: Bytes echoed back: %d\n", send_result);
         }
-        else if (send_result == 0)
+        else if (retval == 0)
             printf("Server: Connection closing...\n");
         else  {
             printf("Server: recv failed with error: %d\n", errno);

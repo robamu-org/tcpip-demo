@@ -6,9 +6,9 @@
 namespace tcpip {
 
 enum DemoType {
-    CLIENT_ONLY,
+    CLIENT_AND_SERVER,
     SERVER_ONLY,
-    CLIENT_AND_SERVER
+    CLIENT_ONLY,
 };
 
 enum DemoModes {
@@ -31,17 +31,18 @@ struct DemoConfig {
 }
 
 //! Demo types
-#define TCPIP_CLIENT_ONLY                           0
-#define TCPIP_SERVER_ONLY                           1
-#define TCPIP_CLIENT_AND_SERVER                     2
+#define TCPIP_TP_0_CLIENT_AND_SERVER                     0
+#define TCPIP_TP_1_SERVER_ONLY                           1
+#define TCPIP_TP_2_CLIENT_ONLY                           2
+
 
 //! Demo modes
 //! Simple, procedural
-#define TCPIP_PROCEDURAL_DEMO                       0
+#define TCPIP_MD_0_PROCEDURAL_DEMO                       0
 //! Same demo as above but implemented using classes and modern C++
-#define TCPIP_OOP_CLIENT_ONE_SERVER_ECHO            1
-#define TCPIP_OOP_CLIENT_NONE_SERVER_ONE            2
-#define TCPIP_OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY   3
-#define TCPIP_OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE   4
+#define TCPIP_MD_1_OOP_CLIENT_ONE_SERVER_ECHO            1
+#define TCPIP_MD_2_OOP_CLIENT_NONE_SERVER_ONE            2
+#define TCPIP_MD_3_OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY   3
+#define TCPIP_MD_4_OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE   4
 
 #endif /* DEFINITIONS_H_ */
