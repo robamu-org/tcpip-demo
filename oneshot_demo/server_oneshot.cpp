@@ -2,17 +2,25 @@
 
 #include <iostream>
 
+#ifdef _WIN32
+
 #define WIN32_LEAN_AND_MEAN
 
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
+#elif defined(__unix__)
+
+#include <netdb.h>
+#include <unistd.h>
+
+#endif
+
 #include <vector>
 
-static constexpr size_t RECEIVE_BUFFER_SIZE = 1500;
 
 #ifdef WIN32
-int server_oneshot_win32() {
+int server_oneshot() {
     /* Totally not copied from https://docs.microsoft.com/en-us/windows/win32/winsock/complete-server-code */
     WSADATA wsaData;
     int iResult;
@@ -131,4 +139,107 @@ int server_oneshot_win32() {
 
     return 0;
 }
-#endif /* WIN32 */
+#elif defined(__unix__)
+
+int server_oneshot() {
+    /* Based on https://docs.microsoft.com/en-us/windows/win32/winsock/complete-server-code */
+    int retval = 0;
+    int send_result = 0;
+    int listen_socket = 0;
+    int client_socket = 0;
+
+    struct addrinfo *result = NULL;
+    struct addrinfo hints = {};
+
+    std::vector<uint8_t> reception_buffer(tcpip::BUFFER_SIZES);
+    int recvbuflen = reception_buffer.size();
+
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;
+
+    // Resolve the server address and port
+    retval = getaddrinfo(nullptr, tcpip::SERVER_PORT, &hints, &result);
+    if (retval != 0) {
+        printf("getaddrinfo failed with error: %d\n", retval);
+        return 1;
+    }
+
+    // Create a SOCKET for connecting to server
+    listen_socket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+    if (listen_socket == 0) {
+        printf("socket failed with error: %d\n", errno);
+        freeaddrinfo(result);
+        return 1;
+    }
+
+    // Setup the TCP listening socket
+    retval = bind(listen_socket, result->ai_addr, (int)result->ai_addrlen);
+    if (retval != 0) {
+        printf("bind failed with error: %d\n", errno);
+        freeaddrinfo(result);
+        close(listen_socket);
+        return 1;
+    }
+
+    freeaddrinfo(result);
+
+    retval = listen(listen_socket, SOMAXCONN);
+    if (retval != 0) {
+        printf("listen failed with error: %d\n", errno);
+        close(listen_socket);
+        return 1;
+    }
+
+    // Accept a client socket
+    client_socket = accept(listen_socket, NULL, NULL);
+    if (client_socket == 0) {
+        printf("accept failed with error: %d\n", errno);
+        close(listen_socket);
+        return 1;
+    }
+
+    // No longer need server socket
+    close(listen_socket);
+
+    // Receive until the peer shuts down the connection
+    do {
+
+        retval = recv(client_socket, reinterpret_cast<char*>(reception_buffer.data()), recvbuflen, 0);
+        if (retval > 0) {
+            printf("Server: Bytes Received: %d\n", retval);
+
+            // Echo the buffer back to the sender
+            send_result = send(client_socket, reinterpret_cast<char*>(reception_buffer.data()), retval, 0 );
+            if (send_result < 0) {
+                printf("send failed with error: %d\n", errno);
+                close(client_socket);
+                return 1;
+            }
+            printf("Server: Bytes sent: %d\n", send_result);
+        }
+        else if (send_result == 0)
+            printf("Server: Connection closing...\n");
+        else  {
+            printf("Server: recv failed with error: %d\n", errno);
+            close(client_socket);
+            return 1;
+        }
+
+    } while (retval > 0);
+
+    // shutdown the connection since we're done
+    retval = shutdown(client_socket, SHUT_WR);
+    if (retval != 0) {
+        printf("shutdown failed with error: %d\n", errno);
+        close(client_socket);
+        return 1;
+    }
+
+    // cleanup
+    close(client_socket);
+
+    return 0;
+}
+
+#endif /* UNIX */

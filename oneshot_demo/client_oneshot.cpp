@@ -1,16 +1,26 @@
 #include "demo_config.h"
 #include <iostream>
 
-#define WIN32_LEAN_AND_MEAN
+#ifdef _WIN32
 
+#define WIN32_LEAN_AND_MEAN
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
+#elif defined(__unix__)
+
+#include <netdb.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+
+#endif
+
 #include <vector>
+#include <cstring>
 
 
-#ifdef WIN32
-int client_oneshot_win32() {
+#ifdef _WIN32
+int client_oneshot() {
     /* Totally not copied from https://docs.microsoft.com/en-us/windows/win32/winsock/complete-client-code */
     WSADATA wsaData;
     SOCKET ConnectSocket = INVALID_SOCKET;
@@ -112,4 +122,97 @@ int client_oneshot_win32() {
 
     return 0;
 }
-#endif
+
+#elif defined(__unix__)
+
+int client_oneshot() {
+    /* Based on https://docs.microsoft.com/en-us/windows/win32/winsock/complete-client-code */
+    int connect_socket = 0;
+    struct addrinfo *result = NULL;
+    struct addrinfo hints = {};
+    const char *sendbuf = "this is a test";
+    std::vector<uint8_t> reception_buffer(tcpip::BUFFER_SIZES);
+    int retval;
+    int recvbuflen = tcpip::BUFFER_SIZES;
+
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;
+
+    // Resolve the server address and port
+    retval = getaddrinfo(tcpip::SERVER_ADDRESS, tcpip::SERVER_PORT, &hints, &result);
+    if (retval != 0) {
+        printf("getaddrinfo failed with error: %d\n", retval);
+        return 1;
+    }
+
+    // Attempt to connect to an address until one succeeds
+    for(struct addrinfo* ptr=result; ptr != NULL ;ptr=ptr->ai_next) {
+        struct sockaddr_in *addr_in = (struct sockaddr_in *)ptr->ai_addr;
+        char *ip = inet_ntoa(addr_in->sin_addr);
+        std::cout << "Client: Attempting connection to address " << ip << std::endl;
+        // Create a SOCKET for connecting to server
+        connect_socket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
+        if (connect_socket == 0) {
+            printf("socket failed with error: %d\n", errno);
+            return 1;
+        }
+
+        // Connect to server.
+        retval = connect(connect_socket, ptr->ai_addr, (int)ptr->ai_addrlen);
+        if (retval != 0) {
+            close(connect_socket);
+            connect_socket = -1;
+            continue;
+        }
+
+        std::cout << "Client: Connected successfully to " << ip << std::endl;
+        break;
+    }
+
+    freeaddrinfo(result);
+
+    if (connect_socket != 0) {
+        printf("Unable to connect to server!\n");
+        return 1;
+    }
+
+    // Send an initial buffer
+    retval = send(connect_socket, sendbuf, (int)strlen(sendbuf), 0 );
+    if (retval < 0) {
+        printf("send failed with error: %d\n", errno);
+        close(connect_socket);
+        return 1;
+    }
+
+    printf("Client: Bytes Sent: %d\n", retval);
+
+    // shutdown the connection since no more data will be sent
+    retval = shutdown(connect_socket, SHUT_WR);
+    if (retval != 0) {
+        printf("shutdown failed with error: %d\n", errno);
+        close(connect_socket);
+        return 1;
+    }
+
+    // Receive until the peer closes the connection
+    do {
+
+        retval = recv(connect_socket, reinterpret_cast<char*>(reception_buffer.data()), recvbuflen, 0);
+        if (retval > 0)
+            printf("Client: Bytes Received: %d\n", retval);
+        else if (retval == 0)
+            printf("Client: Connection closed\n");
+        else
+            printf("Client: recv failed with error: %d\n", errno);
+
+    } while(retval > 0);
+
+    // cleanup
+    close(connect_socket);
+
+    return 0;
+}
+
+
+#endif /* UNIX */

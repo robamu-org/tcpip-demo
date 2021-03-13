@@ -19,9 +19,18 @@ target_sources(${TARGET_NAME} PRIVATE
 add_subdirectory(oneshot_demo)
 add_subdirectory(core)
 
-target_link_libraries(${TARGET_NAME}
-	ws2_32
-)
+if(WIN32)
+    target_link_libraries(${TARGET_NAME}
+	   ws2_32
+    )
+elseif(UNIX)
+    find_package(Threads REQUIRED)
+
+    target_link_libraries(${TARGET_NAME} PRIVATE
+        ${CMAKE_THREAD_LIBS_INIT}
+        rt
+    )
+endif()
 
 # Add include paths for all sources.
 target_include_directories(${TARGET_NAME} PRIVATE

@@ -25,7 +25,7 @@ constexpr char SERVER_PORT[] = "27015";
 #define TCPIP_CLASS_ONE_SHOT_DEMO                     1
 #define TCPIP_SERVER_REPLYING_DEMO                    2
 
-#define TCPIP_DEMO_TYPE                               TCPIP_CLASS_ONE_SHOT_DEMO
+#define TCPIP_DEMO_TYPE                               TCPIP_SIMPLE_ONE_SHOT_DEMO
 
 
 

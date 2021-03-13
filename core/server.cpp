@@ -2,20 +2,14 @@
 #include <core/ServerClass.h>
 #include <iostream>
 
-#if TCPIP_DEMO_TYPE == TCPIP_SIMPLE_ONE_SHOT_DEMO
-int server_oneshot_win32();
-#endif
+int server_oneshot();
 
 int server_application() {
     std::cout << "Server application startup.." << std::endl;
 
 #if TCPIP_DEMO_TYPE == TCPIP_SIMPLE_ONE_SHOT_DEMO
     /* Simple one-shot demo, no classes or any fancy stuff */
-#ifdef WIN32
-    return server_oneshot_win32();
-#elif UNIX
-    return 0;
-#endif
+    return server_oneshot();
 
 #elif TCPIP_DEMO_TYPE == TCPIP_CLASS_ONE_SHOT_DEMO
 
@@ -25,3 +19,4 @@ int server_application() {
 #endif
 
 }
+

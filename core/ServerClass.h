@@ -22,10 +22,10 @@ public:
 private:
     tcpip::Modes mode;
 
-#ifdef WIN32
+#ifdef _WIN32
     SOCKET listen_socket = INVALID_SOCKET;
     SOCKET client_socket = INVALID_SOCKET;
-#else
+#elif defined(__unix__)
     int listen_socket = 0;
     int client_socket = 0;
 #endif
