@@ -112,6 +112,11 @@ there are good instructions on how to set up Visual Studio Code
 
 Coming soon.
 
+# Python
+
+# Go
+
+# Rust
 
 
 
