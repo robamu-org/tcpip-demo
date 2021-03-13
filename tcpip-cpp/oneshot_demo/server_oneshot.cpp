@@ -141,7 +141,7 @@ int server_oneshot() {
 }
 #elif defined(__unix__)
 
-int server_oneshot() {
+int server_oneshot(std::string ip_address) {
     /* Based on https://docs.microsoft.com/en-us/windows/win32/winsock/complete-server-code */
     int retval = 0;
     int send_result = 0;
@@ -163,9 +163,15 @@ int server_oneshot() {
     hints.ai_flags = AI_PASSIVE;
 
     // Resolve the server address and port
-    retval = getaddrinfo(nullptr, tcpip::SERVER_PORT, &hints, &result);
+    if(ip_address == "" or ip_address == "any") {
+        retval = getaddrinfo(nullptr, tcpip::SERVER_PORT, &hints, &result);
+    }
+    else {
+        retval = getaddrinfo(ip_address.c_str(), tcpip::SERVER_PORT, &hints, &result);
+    }
+
     if (retval != 0) {
-        printf("getaddrinfo failed with error: %d\n", retval);
+        printf("getaddrinfo for address %s failed with error: %d\n", ip_address.c_str(), retval);
         return 1;
     }
 

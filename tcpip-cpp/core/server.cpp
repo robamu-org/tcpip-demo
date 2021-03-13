@@ -2,7 +2,7 @@
 #include <core/ServerClass.h>
 #include <iostream>
 
-int server_oneshot();
+int server_oneshot(std::string ip_address);
 
 int server_application(tcpip::DemoConfig cfg) {
     using namespace tcpip;
@@ -14,7 +14,7 @@ int server_application(tcpip::DemoConfig cfg) {
 
     switch(cfg.mode) {
     case(DemoModes::PROCEDURAL_DEMO): {
-        return server_oneshot();
+        return server_oneshot(cfg.server_address);
     }
     case(DemoModes::OOP_CLIENT_ONE_SERVER_ECHO): {
         ServerClass serverClass(cfg.mode);

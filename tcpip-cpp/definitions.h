@@ -32,8 +32,8 @@ enum DemoModes {
 struct DemoConfig {
     tcpip::DemoTypes type;
     tcpip::DemoModes mode;
-    std::string serverAddress;
-    std::string serverPort;
+    std::string server_address;
+    std::string server_port;
 };
 
 }
