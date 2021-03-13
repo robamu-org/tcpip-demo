@@ -18,6 +18,9 @@ constexpr char SERVER_PORT[] = "27015";
 
 }
 
+//! In CLI mode, the CL interface is used to prompt data from the user instead of hardcoding
+//! the configuration in this header file. Not implemented yet.
+#define CLI_MODE                                    0
 
 //! Simple, procedural
 #define TCPIP_SIMPLE_ONE_SHOT_DEMO                  0
@@ -29,6 +32,7 @@ constexpr char SERVER_PORT[] = "27015";
 
 /* If this in 1, the program will exit automatically instead of prompting an enter command */
 #define AUTO_TERMINATE_DEMO                         1
+
 
 
 
