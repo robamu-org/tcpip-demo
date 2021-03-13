@@ -1,6 +1,9 @@
 # TCP/IP demo application
 
-Test application including a TCP client and server.
+Test application including a TCP client and server. Planned for various programming languages,
+operating systems and IDEs.
+
+# C++
 
 ## Build instructions 
 
