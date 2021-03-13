@@ -6,11 +6,11 @@
 class ClientClass {
 public:
 
-    ClientClass(tcpip::Modes mode);
+    ClientClass(tcpip::DemoModes mode);
 
     int performOperation();
 private:
-    tcpip::Modes mode;
+    tcpip::DemoModes mode;
 
 
 };

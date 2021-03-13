@@ -14,13 +14,13 @@
 class ServerClass {
 public:
 
-    ServerClass(tcpip::Modes mode);
+    ServerClass(tcpip::DemoModes mode);
 
     virtual~ ServerClass();
 
     int perform_operation();
 private:
-    tcpip::Modes mode;
+    tcpip::DemoModes mode;
 
 #ifdef _WIN32
     SOCKET listen_socket = INVALID_SOCKET;

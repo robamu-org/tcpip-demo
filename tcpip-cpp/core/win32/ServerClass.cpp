@@ -3,7 +3,7 @@
 #include <iostream>
 #include <stdexcept>
 
-ServerClass::ServerClass(tcpip::Modes mode):  mode(mode), reception_buffer(tcpip::BUFFER_SIZES),
+ServerClass::ServerClass(tcpip::DemoModes mode):  mode(mode), reception_buffer(tcpip::BUFFER_SIZES),
         reception_buffer_len(reception_buffer.size()) {
     WSADATA wsaData;
     // Initialize Winsock
@@ -96,7 +96,7 @@ int ServerClass::accept_connection() {
 }
 
 int ServerClass::perform_mode_operation() {
-    using md = tcpip::Modes;
+    using md = tcpip::DemoModes;
     switch(mode) {
     case(md::CLIENT_ONE_PACKET_SERVER_ECHO): {
         return perform_simple_echo_op();

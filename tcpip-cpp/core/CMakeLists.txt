@@ -5,4 +5,6 @@ target_sources(${TARGET_NAME} PRIVATE
 
 if(WIN32)
     add_subdirectory(win32)
+elseif(UNIX)
+    add_subdirectory(unix)
 endif()

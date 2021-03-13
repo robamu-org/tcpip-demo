@@ -3,26 +3,26 @@
 
 int client_oneshot();
 
-int client_application() {
+int client_application(tcpip::DemoConfig cfg) {
+    using namespace tcpip;
 	std::cout << "Client application startup.." << std::endl;
     
-#if TCPIP_DEMO_TYPE == TCPIP_SIMPLE_ONE_SHOT_DEMO
-    /* Simple one-shot demo, no classes or any fancy stuff */
-    return client_oneshot();
+	if(cfg.type == DemoType::SERVER_ONLY) {
+	    return 0;
+	}
 
-#elif TCPIP_DEMO_TYPE == TCPIP_CLASS_ONE_SHOT_DEMO
-
-    return client_oneshot();
-
-#elif TCPIP_DEMO_TYPE == TCPIP_SERVER_REPLYING_DEMO
-
-    return 0;
-
-#else
-
-    std::cout << "client_application: Unhandled client code!" << std::endl;
-    return 0;
-
-#endif
+	switch(cfg.mode) {
+	case(DemoModes::PROCEDURAL_DEMO): {
+	    return client_oneshot();
+	}
+	case(DemoModes::OOP_CLIENT_ONE_SERVER_ECHO):
+	case(DemoModes::OOP_CLIENT_NONE_SERVER_ONE):
+	case(DemoModes::OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY):
+	case(DemoModes::OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE):
+	default: {
+	    std::cerr << "client_application: Mode not implemented yet!" << std::endl;
+	    return -1;
+	}
+	}
 }
 
