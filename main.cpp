@@ -15,6 +15,7 @@ int main() {
 	std::thread client_thread(client_application);
 	server_thread.join();
 	client_thread.join();
-	std::cout << "Demo finished!" << std::endl;
+	std::cout << "Demo finished!\nPress enter to finish program" << std::endl;
+	std::cin.ignore();
 	return 0;
 }
