@@ -3,6 +3,8 @@
 
 #if TCPIP_DEMO_TYPE == TCPIP_SIMPLE_ONE_SHOT_DEMO
 int client_oneshot_win32();
+#else
+int client_oneshot_win32();
 #endif
 
 int client_application() {
@@ -16,12 +18,21 @@ int client_application() {
     return 0;
 #endif
 
+#elif TCPIP_DEMO_TYPE == TCPIP_CLASS_ONE_SHOT_DEMO
+
+#ifdef WIN32
+    return client_oneshot_win32();
+#elif UNIX
+    return 0;
+#endif
+
 #elif TCPIP_DEMO_TYPE == TCPIP_SERVER_REPLYING_DEMO
 
     return 0;
 
 #else
 
+    std::cout << "client_application: Unhandled client code!" << std::endl;
     return 0;
 
 #endif

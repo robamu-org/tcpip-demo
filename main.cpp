@@ -14,7 +14,6 @@ int main() {
 	std::this_thread::sleep_for(1000ms);
 	std::thread client_thread(client_application);
 	server_thread.join();
-
 	client_thread.join();
 	std::cout << "Demo finished!" << std::endl;
 	return 0;
