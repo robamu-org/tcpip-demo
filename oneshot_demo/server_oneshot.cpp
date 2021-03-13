@@ -1,4 +1,4 @@
-#include "config.h"
+#include "demo_config.h"
 
 #include <iostream>
 
