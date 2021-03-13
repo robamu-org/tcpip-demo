@@ -1,5 +1,5 @@
 #include "demo_config.h"
-#include <core/win32/ServerClass.h>
+#include <core/ServerClass.h>
 #include <iostream>
 
 #if TCPIP_DEMO_TYPE == TCPIP_SIMPLE_ONE_SHOT_DEMO

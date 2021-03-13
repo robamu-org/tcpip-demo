@@ -1,9 +1,9 @@
-#include "ServerClass.h"
-#include <demo_config.h>
+#include "../ServerClass.h"
+
 #include <iostream>
 #include <stdexcept>
 
-ServerClass::ServerClass(tcpip::Modes mode):  mode(mode), reception_buffer(TCPIP_BUFFER_SIZES),
+ServerClass::ServerClass(tcpip::Modes mode):  mode(mode), reception_buffer(tcpip::BUFFER_SIZES),
         reception_buffer_len(reception_buffer.size()) {
     WSADATA wsaData;
     // Initialize Winsock
@@ -45,7 +45,7 @@ int ServerClass::setup_server() {
     hints.ai_protocol = IPPROTO_TCP;
 
     // Resolve the server address and port
-    int retval = getaddrinfo(nullptr, TCPIP_SERVER_PORT, &hints, &result);
+    int retval = getaddrinfo(nullptr, tcpip::SERVER_PORT, &hints, &result);
     if (retval != 0) {
         std::cerr << "ServerClass::setup_server: getaddrinfo failed with error: " <<
                 retval << std::endl;

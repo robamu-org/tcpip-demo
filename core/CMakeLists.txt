@@ -3,4 +3,6 @@ target_sources(${TARGET_NAME} PRIVATE
     server.cpp 
 )
 
-add_subdirectory(win32)
+if(WIN32)
+    add_subdirectory(win32)
+endif()

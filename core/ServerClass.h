@@ -1,9 +1,12 @@
 #pragma once
 
 #include "common.h"
+#include <demo_config.h>
 
+#ifdef WIN32
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#endif
 
 #include <vector>
 #include <cstdint>
@@ -19,8 +22,13 @@ public:
 private:
     tcpip::Modes mode;
 
+#ifdef WIN32
     SOCKET listen_socket = INVALID_SOCKET;
     SOCKET client_socket = INVALID_SOCKET;
+#else
+    int listen_socket = 0;
+    int client_socket = 0;
+#endif
 
     std::vector<uint8_t> reception_buffer;
     size_t reception_buffer_len;

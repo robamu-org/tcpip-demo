@@ -16,9 +16,9 @@ int client_oneshot_win32() {
     SOCKET ConnectSocket = INVALID_SOCKET;
     struct addrinfo *result = NULL, *ptr = NULL, hints;
     const char *sendbuf = "this is a test";
-    std::vector<uint8_t> reception_buffer(TCPIP_BUFFER_SIZES);
+    std::vector<uint8_t> reception_buffer(tcpip::BUFFER_SIZES);
     int iResult;
-    int recvbuflen = TCPIP_BUFFER_SIZES;
+    int recvbuflen = tcpip::BUFFER_SIZES;
 
     // Initialize Winsock
     iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
@@ -33,7 +33,7 @@ int client_oneshot_win32() {
     hints.ai_protocol = IPPROTO_TCP;
 
     // Resolve the server address and port
-    iResult = getaddrinfo(TCPIP_SERVER_ADDRESS, TCPIP_SERVER_PORT, &hints, &result);
+    iResult = getaddrinfo(tcpip::SERVER_ADDRESS, tcpip::SERVER_PORT, &hints, &result);
     if ( iResult != 0 ) {
         printf("getaddrinfo failed with error: %d\n", iResult);
         WSACleanup();

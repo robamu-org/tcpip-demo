@@ -1,4 +1,4 @@
-#include "ClientClass.h"
+#include "../ClientClass.h"
 
 ClientClass::ClientClass(tcpip::Modes mode): mode(mode) {
 }
