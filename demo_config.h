@@ -20,12 +20,15 @@ constexpr char SERVER_PORT[] = "27015";
 
 
 //! Simple, procedural
-#define TCPIP_SIMPLE_ONE_SHOT_DEMO                    0
+#define TCPIP_SIMPLE_ONE_SHOT_DEMO                  0
 //! Same demo as above but implemented using classes and modern C++
-#define TCPIP_CLASS_ONE_SHOT_DEMO                     1
-#define TCPIP_SERVER_REPLYING_DEMO                    2
+#define TCPIP_CLASS_ONE_SHOT_DEMO                   1
+#define TCPIP_SERVER_REPLYING_DEMO                  2
 
-#define TCPIP_DEMO_TYPE                               TCPIP_SIMPLE_ONE_SHOT_DEMO
+#define TCPIP_DEMO_TYPE                             TCPIP_SIMPLE_ONE_SHOT_DEMO
+
+/* If this in 1, the program will exit automatically instead of prompting an enter command */
+#define AUTO_TERMINATE_DEMO                         1
 
 
 

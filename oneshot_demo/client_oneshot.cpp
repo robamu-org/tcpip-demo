@@ -130,6 +130,7 @@ int client_oneshot() {
     int connect_socket = 0;
     struct addrinfo *result = NULL;
     struct addrinfo hints = {};
+
     const char *sendbuf = "this is a test";
     std::vector<uint8_t> reception_buffer(tcpip::BUFFER_SIZES);
     int retval;
@@ -172,8 +173,8 @@ int client_oneshot() {
 
     freeaddrinfo(result);
 
-    if (connect_socket != 0) {
-        printf("Unable to connect to server!\n");
+    if (connect_socket < 0) {
+        printf("Client: Unable to connect to server!\n");
         return 1;
     }
 

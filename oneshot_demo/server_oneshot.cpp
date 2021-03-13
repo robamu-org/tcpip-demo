@@ -157,6 +157,10 @@ int server_oneshot() {
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
+    /* This is required on Linux, also see
+    https://man7.org/linux/man-pages/man3/getaddrinfo.3.html
+    */
+    hints.ai_flags = AI_PASSIVE;
 
     // Resolve the server address and port
     retval = getaddrinfo(nullptr, tcpip::SERVER_PORT, &hints, &result);
