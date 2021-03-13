@@ -13,7 +13,7 @@
 
 namespace tcpip {
 
-enum DemoType {
+enum DemoTypes {
     CLIENT_AND_SERVER,
     SERVER_ONLY,
     CLIENT_ONLY,
@@ -30,7 +30,7 @@ enum DemoModes {
 };
 
 struct DemoConfig {
-    tcpip::DemoType type;
+    tcpip::DemoTypes type;
     tcpip::DemoModes mode;
     std::string serverAddress;
     std::string serverPort;

@@ -8,7 +8,7 @@ int server_application(tcpip::DemoConfig cfg) {
     using namespace tcpip;
     std::cout << ANSI_COLOR_GREEN << "Server application startup.." << std::endl;
 
-    if(cfg.type == DemoType::SERVER_ONLY) {
+    if(cfg.type == DemoTypes::SERVER_ONLY) {
         return 0;
     }
 
