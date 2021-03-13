@@ -151,7 +151,8 @@ int client_oneshot() {
     for(struct addrinfo* ptr=result; ptr != NULL ;ptr=ptr->ai_next) {
         struct sockaddr_in *addr_in = (struct sockaddr_in *)ptr->ai_addr;
         char *ip = inet_ntoa(addr_in->sin_addr);
-        std::cout << "Client: Attempting connection to address " << ip << std::endl;
+        std::cout << ANSI_COLOR_CYAN << "Client: Attempting connection to address " << ip <<
+                std::endl;
         // Create a SOCKET for connecting to server
         connect_socket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
         if (connect_socket == 0) {
@@ -167,7 +168,7 @@ int client_oneshot() {
             continue;
         }
 
-        std::cout << "Client: Connected successfully to " << ip << std::endl;
+        std::cout << ANSI_COLOR_CYAN << "Client: Connected successfully to " << ip << std::endl;
         break;
     }
 
@@ -178,7 +179,7 @@ int client_oneshot() {
         return 1;
     }
 
-    printf("Client: Sending string: %s\n", sendbuf);
+    printf(ANSI_COLOR_CYAN "Client: Sending string: %s\n", sendbuf);
     // Send an initial buffer
     retval = send(connect_socket, sendbuf, (int)strlen(sendbuf), 0 );
     if (retval < 0) {
@@ -187,7 +188,7 @@ int client_oneshot() {
         return 1;
     }
 
-    printf("Client: Bytes sent: %d\n", retval);
+    printf(ANSI_COLOR_CYAN "Client: Bytes sent: %d\n", retval);
 
     // shutdown the connection since no more data will be sent
     retval = shutdown(connect_socket, SHUT_WR);
@@ -202,14 +203,14 @@ int client_oneshot() {
 
         retval = recv(connect_socket, reinterpret_cast<char*>(reception_buffer.data()), recvbuflen, 0);
         if (retval > 0) {
-            printf("Client: Bytes received: %d\n", retval);
-            printf("Client: String received back: %s\n", reception_buffer.data());
+            printf(ANSI_COLOR_CYAN "Client: Bytes received: %d\n", retval);
+            printf(ANSI_COLOR_CYAN "Client: String received back: %s\n", reception_buffer.data());
         }
         else if (retval == 0) {
-            printf("Client: Connection closed\n");
+            printf(ANSI_COLOR_CYAN "Client: Connection closed\n");
         }
         else {
-            printf("Client: recv failed with error: %d\n", errno);
+            printf(ANSI_COLOR_CYAN "Client: recv failed with error: %d\n", errno);
         }
 
     } while(retval > 0);

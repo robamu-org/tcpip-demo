@@ -5,7 +5,7 @@ int client_oneshot();
 
 int client_application(tcpip::DemoConfig cfg) {
     using namespace tcpip;
-	std::cout << "Client application startup.." << std::endl;
+	std::cout << ANSI_COLOR_CYAN << "Client application startup.." << std::endl;
     
 	if(cfg.type == DemoType::SERVER_ONLY) {
 	    return 0;
