@@ -3,7 +3,8 @@
 #include <iostream>
 #include <stdexcept>
 
-ServerClass::ServerClass(tcpip::DemoModes mode):  mode(mode), reception_buffer(tcpip::BUFFER_SIZES),
+ServerClass::ServerClass(tcpip::DemoConfig& cfg):  mode(cfg.mode), server_port(cfg.server_port),
+        server_address(cfg.server_address), reception_buffer(tcpip::BUFFER_SIZES),
         reception_buffer_len(reception_buffer.size()) {
     WSADATA wsaData;
     // Initialize Winsock

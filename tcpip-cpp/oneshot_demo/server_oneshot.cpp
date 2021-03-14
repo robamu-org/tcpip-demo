@@ -107,7 +107,8 @@ int server_oneshot(std::string ip_address) {
 
         iResult = recv(ClientSocket, reinterpret_cast<char*>(reception_buffer.data()), recvbuflen, 0);
         if (iResult > 0) {
-            printf("Server: Bytes Received: %d\n", iResult);
+            printf(SRV_CLR "Server: Bytes Received: %d\n", iResult);
+            printf(SRV_CLR "Server: Received string: %s\n", reception_buffer.data());
 
             // Echo the buffer back to the sender
             iSendResult = send( ClientSocket, reinterpret_cast<char*>(reception_buffer.data()), iResult, 0 );
@@ -117,10 +118,10 @@ int server_oneshot(std::string ip_address) {
                 WSACleanup();
                 return 1;
             }
-            printf("Server: Bytes sent: %d\n", iSendResult);
+            printf(SRV_CLR "Server: Bytes echoed back: %d\n", iSendResult);
         }
         else if (iResult == 0)
-            printf("Server: Connection closing...\n");
+            printf(SRV_CLR "Server: Client closed connection...\n");
         else  {
             printf("Server: recv failed with error: %d\n", WSAGetLastError());
             closesocket(ClientSocket);
@@ -130,6 +131,7 @@ int server_oneshot(std::string ip_address) {
 
     } while (iResult > 0);
 
+    printf(SRV_CLR "Server: Shutting down\n");
     // shutdown the connection since we're done
     iResult = shutdown(ClientSocket, SD_SEND);
     if (iResult == SOCKET_ERROR) {

@@ -92,7 +92,8 @@ int client_oneshot() {
         return 1;
     }
 
-    printf("Client: Bytes Sent: %ld\n", iResult);
+    printf(CL_CLR "Client: Bytes Sent: %ld\n", iResult);
+    printf(CL_CLR "Client: Sent string: %s\n", sendbuf);
 
     // shutdown the connection since no more data will be sent
     iResult = shutdown(ConnectSocket, SD_SEND);
@@ -107,12 +108,14 @@ int client_oneshot() {
     do {
 
         iResult = recv(ConnectSocket, reinterpret_cast<char*>(reception_buffer.data()), recvbuflen, 0);
-        if ( iResult > 0 )
-            printf("Client: Bytes Received: %d\n", iResult);
+        if ( iResult > 0 ) {
+            printf(CL_CLR "Client: Bytes Received: %d\n", iResult);
+            printf(CL_CLR "Client: Received string: %s\n", reception_buffer.data());
+        }
         else if ( iResult == 0 )
-            printf("Client: Connection closed\n");
+            printf(CL_CLR "Client: Server closed connection\n");
         else
-            printf("Client: recv failed with error: %d\n", WSAGetLastError());
+            printf(CL_CLR "Client: recv failed with error: %d\n", WSAGetLastError());
 
     } while( iResult > 0 );
 

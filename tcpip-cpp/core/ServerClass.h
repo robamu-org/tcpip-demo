@@ -3,7 +3,7 @@
 #include "common.h"
 #include <demo_config.h>
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #endif
@@ -14,13 +14,15 @@
 class ServerClass {
 public:
 
-    ServerClass(tcpip::DemoModes mode);
+    ServerClass(tcpip::DemoConfig& cfg);
 
     virtual~ ServerClass();
 
     int perform_operation();
 private:
     tcpip::DemoModes mode;
+    std::string server_port;
+    std::string server_address;
 
 #ifdef _WIN32
     SOCKET listen_socket = INVALID_SOCKET;

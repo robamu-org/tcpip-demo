@@ -17,7 +17,7 @@ int server_application(tcpip::DemoConfig cfg) {
         return server_oneshot(cfg.server_address);
     }
     case(DemoModes::MD_1_OOP_CLIENT_ONE_SERVER_ECHO): {
-        ServerClass serverClass(cfg.mode);
+        ServerClass serverClass(cfg);
         return serverClass.perform_operation();
     }
     case(DemoModes::MD_2_OOP_CLIENT_NONE_SERVER_ONE):
