@@ -17,8 +17,8 @@ int client_application(tcpip::DemoConfig cfg) {
     }
     else {
         if(cfg.prot == DemoProtocols::TCP) {
-            TcpClientClass client(cfg, tcpip::BUFFER_SIZES);
-            return client.perform_operation();
+            TcpClientClass tcpClient(cfg, tcpip::BUFFER_SIZES);
+            return tcpClient.perform_operation();
         }
         else {
             std::cerr << "server_application: Protocol not implemented yet!" << std::endl;
