@@ -37,4 +37,6 @@ private:
     int perform_mode_operation();
 
     int perform_simple_echo_op();
+
+    int common_tcp_server_setup(struct addrinfo& hints);
 };

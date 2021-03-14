@@ -26,7 +26,7 @@ int TcpClientClass::common_tcp_client_setup(struct addrinfo& hints, socket_t& co
         std::cout << "Client: Attempting connection to address " << ip << std::endl;
         /* Create a socket for connecting to server */
         conn_sock = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
-        if (conn_sock == INVALID_SOCKET) {
+        if (conn_sock < 0) {
 #ifdef _WIN32
             int error =  WSAGetLastError();
 #elif defined(__unix__)
@@ -39,7 +39,7 @@ int TcpClientClass::common_tcp_client_setup(struct addrinfo& hints, socket_t& co
 
         /* Connect to server. */
         retval = connect(conn_sock, ptr->ai_addr, (int)ptr->ai_addrlen);
-        if (retval == SOCKET_ERROR) {
+        if (retval != 0) {
             conn_sock = INVALID_SOCKET;
             continue;
         }
@@ -50,7 +50,7 @@ int TcpClientClass::common_tcp_client_setup(struct addrinfo& hints, socket_t& co
 
     freeaddrinfo(result);
 
-    if (conn_sock == INVALID_SOCKET) {
+    if (conn_sock < 0) {
         std::cout << "Unable to connect to server!" << std::endl;
         return 1;
     }
