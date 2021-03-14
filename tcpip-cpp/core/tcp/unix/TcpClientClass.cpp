@@ -5,13 +5,8 @@
 #include <iostream>
 #include <iomanip>
 
-TcpClientClass::TcpClientClass(tcpip::DemoConfig& cfg, size_t reception_buffer_size):
-        TcpipBase(cfg, reception_buffer_size) {
-}
-
 TcpClientClass::~TcpClientClass() {
     close(connect_socket);
-
 }
 
 int TcpClientClass::perform_operation() {

@@ -18,7 +18,7 @@ int TcpClientClass::perform_operation() {
         return 0;
     }
 
-    int retval = attempt_connection();
+    int retval = common_connection_attempt();
     if(retval != 0) {
         return retval;
     }
