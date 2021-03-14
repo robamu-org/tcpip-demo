@@ -30,7 +30,7 @@ int TcpClientClass::perform_operation() {
 }
 
 int TcpClientClass::setup(struct addrinfo &hints) {
-    return 0;
+    return common_tcp_client_setup(hints, connect_socket);
 }
 
 int TcpClientClass::attempt_connection() {

@@ -7,7 +7,7 @@
 #include <stdexcept>
 
 TcpServerClass::TcpServerClass(tcpip::DemoConfig& cfg, size_t reception_buffer_size):
-        TcpipBase(cfg, reception_buffer_size) {
+TcpipBase(cfg, reception_buffer_size) {
 }
 
 TcpServerClass::~TcpServerClass() {

@@ -49,5 +49,4 @@ protected:
 
     std::vector<uint8_t> reception_buffer;
 
-    virtual int common_tcp_client_setup(struct addrinfo& hints, socket_t& conn_sock);
 };

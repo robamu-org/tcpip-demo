@@ -186,7 +186,7 @@ int server_oneshot(std::string ip_address) {
     // Create a SOCKET for connecting to server
     listen_socket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
     if (listen_socket == 0) {
-        printf("socket failed with error: %d\n", errno);
+        printf("Server: socket failed with error: %d\n", errno);
         freeaddrinfo(result);
         return 1;
     }

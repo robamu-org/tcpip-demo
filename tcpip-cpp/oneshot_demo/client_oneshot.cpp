@@ -159,7 +159,7 @@ int client_oneshot() {
         // Create a SOCKET for connecting to server
         connect_socket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
         if (connect_socket == 0) {
-            printf("socket failed with error: %d\n", errno);
+            printf("Client: socket failed with error: %d\n", errno);
             return 1;
         }
 

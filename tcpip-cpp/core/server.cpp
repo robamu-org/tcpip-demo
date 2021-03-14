@@ -1,4 +1,4 @@
-#include <core/TcpServerClass.h>
+#include <core/tcp/TcpServerClass.h>
 #include "demo_config.h"
 #include <iostream>
 

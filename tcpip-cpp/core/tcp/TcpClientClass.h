@@ -36,4 +36,6 @@ private:
 
     int perform_simple_send_op();
     int perform_echo_recv_operation();
+
+    int common_tcp_client_setup(struct addrinfo& hints, socket_t& conn_sock);
 };

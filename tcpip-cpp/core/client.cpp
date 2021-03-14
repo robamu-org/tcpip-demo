@@ -1,4 +1,4 @@
-#include <core/TcpClientClass.h>
+#include <core/tcp/TcpClientClass.h>
 #include "demo_config.h"
 #include <iostream>
 
@@ -18,8 +18,9 @@ int client_application(tcpip::DemoConfig cfg) {
 	}
 	case(DemoModes::MD_1_OOP_CLIENT_ONE_SERVER_ECHO): {
 	    if(cfg.prot == DemoProtocols::TCP){
-	        TcpClientClass clientClass(cfg, tcpip::BUFFER_SIZES);
-	        return clientClass.perform_operation();
+	        //TcpClientClass clientClass(cfg, tcpip::BUFFER_SIZES);
+	        //return clientClass.perform_operation();
+	        return client_oneshot();
 	    }
 	    else {
 	        std::cerr << "client_application: Protocol not implemented yet!" << std::endl;
