@@ -1,5 +1,6 @@
 #pragma once
 
+#include <core/TcpipBase.h>
 #include "common.h"
 #include <demo_config.h>
 
@@ -11,18 +12,17 @@
 #include <vector>
 #include <cstdint>
 
-class ServerClass {
+class ServerClass: public TcpipBase {
 public:
 
-    ServerClass(tcpip::DemoConfig& cfg);
+    ServerClass(tcpip::DemoConfig& cfg, size_t reception_buf_size);
+
+    ServerClass() = delete;
 
     virtual~ ServerClass();
 
-    int perform_operation();
+    int perform_operation() override;
 private:
-    tcpip::DemoModes mode;
-    std::string server_port;
-    std::string server_address;
 
 #ifdef _WIN32
     SOCKET listen_socket = INVALID_SOCKET;
@@ -31,8 +31,6 @@ private:
     int listen_socket = 0;
     int client_socket = 0;
 #endif
-
-    std::vector<uint8_t> reception_buffer;
 
     int setup_server();
     int accept_connection();

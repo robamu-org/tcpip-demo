@@ -5,9 +5,8 @@
 #include <iomanip>
 
 
-ClientClass::ClientClass(tcpip::DemoConfig& cfg): mode(cfg.mode),
-        server_address(cfg.server_address), server_port(cfg.server_port),
-        reception_buffer(tcpip::BUFFER_SIZES) {
+ClientClass::ClientClass(tcpip::DemoConfig& cfg, size_t reception_buf_size):
+        TcpipBase(cfg, reception_buf_size) {
     WSADATA wsaData;
     // Initialize Winsock
     int retval = WSAStartup(MAKEWORD(2,2), &wsaData);
@@ -23,6 +22,10 @@ ClientClass::~ClientClass() {
 }
 
 int ClientClass::perform_operation() {
+    if(type == tcpip::DemoTypes::SERVER_ONLY) {
+        return 0;
+    }
+
     int retval = attempt_connection();
     if(retval != 0) {
         return retval;
@@ -32,12 +35,12 @@ int ClientClass::perform_operation() {
             << "Connection to server established" << std::endl;
 
     /* We are not connected and can perform send and receive operations */
-    retval = perform_send_operation(mode);
+    retval = perform_send_operation();
     if(retval != 0) {
         return retval;
     }
 
-    retval = perform_recv_operation(mode);
+    retval = perform_recv_operation();
     if(retval != 0) {
         return retval;
     }
@@ -95,7 +98,7 @@ int ClientClass::attempt_connection() {
     return 0;
 }
 
-int ClientClass::perform_send_operation(tcpip::DemoModes mode) {
+int ClientClass::perform_send_operation() {
     int retval = 0;
     using dm = tcpip::DemoModes;
     switch(mode) {
@@ -113,7 +116,7 @@ int ClientClass::perform_send_operation(tcpip::DemoModes mode) {
     return retval;
 }
 
-int ClientClass::perform_recv_operation(tcpip::DemoModes mode) {
+int ClientClass::perform_recv_operation() {
     int retval = 0;
     using dm = tcpip::DemoModes;
     switch(mode) {

@@ -18,7 +18,7 @@ int client_application(tcpip::DemoConfig cfg) {
 	}
 	case(DemoModes::MD_1_OOP_CLIENT_ONE_SERVER_ECHO): {
 	    //return client_oneshot();
-	    ClientClass clientClass(cfg);
+	    ClientClass clientClass(cfg, tcpip::BUFFER_SIZES);
 	    return clientClass.perform_operation();
 	}
 	case(DemoModes::MD_2_OOP_CLIENT_NONE_SERVER_ONE):

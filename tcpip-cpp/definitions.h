@@ -46,6 +46,10 @@ struct DemoConfig {
 
 }
 
+//! Demo protocols
+#define TCPIP_PROT_0_TCP                                 0
+#define TCPIP_PROT_1_UDP                                 1
+
 //! Demo types
 #define TCPIP_TP_0_CLIENT_AND_SERVER                     0
 #define TCPIP_TP_1_SERVER_ONLY                           1

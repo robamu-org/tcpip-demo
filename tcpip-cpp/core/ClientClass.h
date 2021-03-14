@@ -1,5 +1,6 @@
 #pragma once
 
+#include <core/TcpipBase.h>
 #include <demo_config.h>
 
 #ifdef _WIN32
@@ -9,18 +10,17 @@
 
 #include <vector>
 
-class ClientClass {
+class ClientClass: public TcpipBase {
 public:
 
-    ClientClass(tcpip::DemoConfig& cfg);
+    ClientClass(tcpip::DemoConfig& cfg, size_t reception_buf_size);
+
+    ClientClass() = delete;
 
     virtual~ ClientClass();
 
-    int perform_operation();
+    int perform_operation() override;
 private:
-    tcpip::DemoModes mode;
-    std::string server_address;
-    std::string server_port;
 
 #ifdef _WIN32
     SOCKET connect_socket = INVALID_SOCKET;
@@ -28,11 +28,9 @@ private:
     int connect_socket = 0;
 #endif
 
-    std::vector<uint8_t> reception_buffer;
-
     int attempt_connection();
-    int perform_send_operation(tcpip::DemoModes mode);
-    int perform_recv_operation(tcpip::DemoModes mode);
+    int perform_send_operation();
+    int perform_recv_operation();
 
     int perform_simple_send_op();
     int perform_echo_recv_operation();
