@@ -23,14 +23,6 @@ public:
 
 private:
 
-#ifdef _WIN32
-    static constexpr int SHUT_SEND = SD_SEND;
-    static constexpr int SHUT_RECV = SD_RECEIVE;
-    static constexpr int SHUT_BOTH = SD_BOTH;
-#else
-
-#endif
-
     socket_t connect_socket;
 
     int setup(struct addrinfo& hints) override;

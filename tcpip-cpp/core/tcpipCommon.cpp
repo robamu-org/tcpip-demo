@@ -8,8 +8,8 @@
 
 int tcpip::get_last_error() {
 #ifdef _WIN32
-    return WSAGet
+    return WSAGetLastError();
 #elif defined(__unix__)
-            return errno;
+    return errno;
 #endif
 }
