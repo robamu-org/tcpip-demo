@@ -19,6 +19,14 @@
 #include <iostream>
 
 int udp_client_oneshot(std::string server_address) {
+    WSADATA wsaData;
+    /* Initialize Winsock */
+    int retval = WSAStartup(MAKEWORD(2,2), &wsaData);
+    if (retval!= 0) {
+        printf("WSAStartup failed with error: %d\n", retval);
+        return 1;
+    }
+
     struct addrinfo *result = nullptr;
     struct addrinfo hints = {};
 
@@ -29,7 +37,6 @@ int udp_client_oneshot(std::string server_address) {
     socket_t server_socket = INVALID_SOCKET;
 
     /* Resolve the server address and port */
-    int retval = 0;
     if(server_address == "any" or server_address == "") {
         retval = getaddrinfo(nullptr, tcpip::SERVER_PORT, &hints, &result);
     }
@@ -40,6 +47,7 @@ int udp_client_oneshot(std::string server_address) {
     if (retval != 0) {
         std::cerr << "udp_client_oneshot: getaddrinfo failed with error: " <<
                 retval << std::endl;
+        WSACleanup();
         return 1;
     }
     /* Create a socket for connecting to server */
@@ -48,6 +56,7 @@ int udp_client_oneshot(std::string server_address) {
         std::cerr << "udp_client_oneshot: socket failed with error: " <<
                 tcpip::get_last_error() << std::endl;
         freeaddrinfo(result);
+        WSACleanup();
         return 1;
     }
 
@@ -64,6 +73,8 @@ int udp_client_oneshot(std::string server_address) {
         int error = tcpip::get_last_error();
         std::cerr << "UdpClientClass::perform_send_operation: sendto failed with error: " <<
                  error << std::endl;
+        WSACleanup();
+        return 1;
     }
     return 0;
 }
