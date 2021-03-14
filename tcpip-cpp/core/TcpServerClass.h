@@ -1,8 +1,8 @@
 #pragma once
 
-#include "common.h"
 #include <core/TcpipBase.h>
 #include <demo_config.h>
+#include "tcpipCommon.h"
 
 #ifdef _WIN32
 #include <winsock2.h>

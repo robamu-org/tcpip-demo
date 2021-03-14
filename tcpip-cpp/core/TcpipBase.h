@@ -27,6 +27,11 @@ public:
 
 protected:
 
+#ifdef __unix__
+    static constexpr int INVALID_SOCKET = 0;
+    static constexpr int SOCKET_ERROR = -1;
+#endif
+
     virtual int setup(struct addrinfo& hints) = 0;
 
     tcpip::DemoProtocols prot;
@@ -36,4 +41,6 @@ protected:
     std::string server_port;
 
     std::vector<uint8_t> reception_buffer;
+
+    virtual int common_tcp_client_setup(struct addrinfo& hints, int& conn_sock);
 };
