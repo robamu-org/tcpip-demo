@@ -19,8 +19,8 @@
 #include <vector>
 
 
-#ifdef WIN32
-int server_oneshot() {
+#ifdef _WIN32
+int server_oneshot(std::string ip_address) {
     /* Totally not copied from https://docs.microsoft.com/en-us/windows/win32/winsock/complete-server-code */
     WSADATA wsaData;
     int iResult;
@@ -31,9 +31,9 @@ int server_oneshot() {
     struct addrinfo *result = NULL;
     struct addrinfo hints;
 
-    std::vector<uint8_t> reception_buffer(RECEIVE_BUFFER_SIZE);
+    std::vector<uint8_t> reception_buffer(tcpip::BUFFER_SIZES);
     int iSendResult;
-    int recvbuflen = RECEIVE_BUFFER_SIZE;
+    int recvbuflen = reception_buffer.size();
 
     // Initialize Winsock
     iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
@@ -48,7 +48,13 @@ int server_oneshot() {
     hints.ai_protocol = IPPROTO_TCP;
 
     // Resolve the server address and port
-    iResult = getaddrinfo(nullptr, tcpip::SERVER_PORT, &hints, &result);
+    if(ip_address == "" or ip_address == "any") {
+        iResult = getaddrinfo(nullptr, tcpip::SERVER_PORT, &hints, &result);
+    }
+    else {
+        iResult = getaddrinfo(ip_address.c_str(), tcpip::SERVER_PORT, &hints, &result);
+    }
+
     if ( iResult != 0 ) {
         printf("getaddrinfo failed with error: %d\n", iResult);
         WSACleanup();

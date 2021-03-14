@@ -1,8 +1,12 @@
 #include "utility.h"
 #include "demo_config.h"
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #include <iostream>
-#include <thread>     
+#include <thread>
 
 /* Forward declarations */
 int startup_code(tcpip::DemoConfig& cfg);

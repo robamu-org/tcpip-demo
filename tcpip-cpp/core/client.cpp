@@ -12,15 +12,15 @@ int client_application(tcpip::DemoConfig cfg) {
 	}
 
 	switch(cfg.mode) {
-	case(DemoModes::PROCEDURAL_DEMO): {
+	case(DemoModes::MD_0_PROCEDURAL_DEMO): {
 	    return client_oneshot();
 	}
-	case(DemoModes::OOP_CLIENT_ONE_SERVER_ECHO): {
+	case(DemoModes::MD_1_OOP_CLIENT_ONE_SERVER_ECHO): {
 	    return client_oneshot();
 	}
-	case(DemoModes::OOP_CLIENT_NONE_SERVER_ONE):
-	case(DemoModes::OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY):
-	case(DemoModes::OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE):
+	case(DemoModes::MD_2_OOP_CLIENT_NONE_SERVER_ONE):
+	case(DemoModes::MD_3_OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY):
+	case(DemoModes::MD_4_OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE):
 	default: {
 	    std::cerr << "client_application: Mode not implemented yet!" << std::endl;
 	    return -1;

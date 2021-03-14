@@ -98,12 +98,12 @@ int ServerClass::accept_connection() {
 int ServerClass::perform_mode_operation() {
     using md = tcpip::DemoModes;
     switch(mode) {
-    case(md::CLIENT_ONE_PACKET_SERVER_ECHO): {
+    case(md::MD_1_OOP_CLIENT_ONE_SERVER_ECHO): {
         return perform_simple_echo_op();
     }
-    case(md::CLIENT_NO_DATA_SERVER_REPLY):
-    case(md::CLIENT_MUTLIPLE_DATA_SERVER_NO_REPLY):
-    case(md::CLIENT_MULTIPLE_DATA_SERVER_MULTIPLE_REPLY):
+    case(md::MD_2_OOP_CLIENT_NONE_SERVER_ONE):
+    case(md::MD_3_OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY):
+    case(md::MD_4_OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE):
     default: {
         std::cout << "ServerClass::perform_mode_operatio: Mode handling not implemented for mode" <<
                 static_cast<int>(mode) << "!" << std::endl;

@@ -21,12 +21,12 @@ enum DemoTypes {
 
 enum DemoModes {
     //! Simplest demo, procedural one shot with echo handling
-    PROCEDURAL_DEMO,
+    MD_0_PROCEDURAL_DEMO,
     //! Now more complex demos implemented with classes
-    OOP_CLIENT_ONE_SERVER_ECHO,
-    OOP_CLIENT_NONE_SERVER_ONE,
-    OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY,
-    OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE
+    MD_1_OOP_CLIENT_ONE_SERVER_ECHO,
+    MD_2_OOP_CLIENT_NONE_SERVER_ONE,
+    MD_3_OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY,
+    MD_4_OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE
 };
 
 struct DemoConfig {
