@@ -56,6 +56,7 @@ int startup_code(tcpip::DemoConfig& cfg) {
 #else
     cfg.type = static_cast<tcpip::DemoTypes>(TCPIP_DEMO_TYPE);
     cfg.mode = static_cast<tcpip::DemoModes>(TCPIP_DEMO_MODE);
+    cfg.prot = static_cast<tcpip::DemoProtocols>(TCPIP_DEMO_PROT);
     cfg.server_address = tcpip::SERVER_ADDRESS;
     cfg.server_port = tcpip::SERVER_PORT;
 #endif

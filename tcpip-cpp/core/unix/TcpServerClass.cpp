@@ -30,6 +30,16 @@ int TcpServerClass::perform_operation() {
     return retval;
 }
 
+int TcpServerClass::setup_server() {
+    struct addrinfo hints = {};
+
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;
+    hints.ai_flags = AI_PASSIVE;
+    return setup(hints);
+}
+
 int TcpServerClass::setup(struct addrinfo &hints) {
     struct addrinfo *result = nullptr;
 
@@ -75,16 +85,6 @@ int TcpServerClass::setup(struct addrinfo &hints) {
         return 1;
     }
     return 0;
-}
-
-int TcpServerClass::setup_server() {
-    struct addrinfo hints = {};
-
-    hints.ai_family = AF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_protocol = IPPROTO_TCP;
-    hints.ai_flags = AI_PASSIVE;
-    return setup(hints);
 }
 
 int TcpServerClass::accept_connection() {

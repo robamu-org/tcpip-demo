@@ -1,3 +1,4 @@
+
 cmake_minimum_required (VERSION 3.13)
 
 # Specify the C++ standard
@@ -37,3 +38,6 @@ endif()
 target_include_directories(${TARGET_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
+
+include (${CMAKE_CURRENT_SOURCE_DIR}/BuildType.cmake)
+set_build_type()

@@ -16,8 +16,8 @@
 namespace tcpip {
 
 enum DemoProtocols {
-    UDP,
-    TCP
+    TCP,
+    UDP
 };
 
 enum DemoTypes {
