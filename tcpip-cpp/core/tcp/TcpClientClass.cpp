@@ -79,10 +79,27 @@ int TcpClientClass::perform_op_common(Steps step) {
            return -1;
         }
     }
-    case(dm::MD_3_OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY):
+    case(dm::MD_3_OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY): {
+        if(step == Steps::SEND) {
+            std::string string1 = "Hello, this is packet 1";
+            std::string string2 = "Hello this is packet 2";
+            std::string string3 = "Hello this is packet 3";
+            std::queue<std::string> string_queue;
+            string_queue.push(string1);
+            string_queue.push(string2);
+            string_queue.push(string3);
+            return send_packets(string_queue);
+        }
+        else if(step == Steps::READ) {
+            return tcp_read_operation();
+        }
+        else {
+            return -1;
+        }
+    }
     case(dm::MD_4_OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE):
     default: {
-        std::cout << "Send operation not implmented yet" << std::endl;
+        std::cout << "Client: Send operation not implemented yet" << std::endl;
     }
     }
     return retval;
@@ -122,7 +139,7 @@ int TcpClientClass::perform_simple_send_op() {
         std::cerr << "TcpClientClass::perform_send_operation: shutdown failed with error: " <<
                 tcpip::get_last_error() << std::endl;
     }
-    return 0;
+    return retval;
 }
 
 int TcpClientClass::common_tcp_client_setup(struct addrinfo& hints, socket_t& conn_sock) {
@@ -198,3 +215,33 @@ int TcpClientClass::tcp_read_operation() {
     } while(retval > 0 );
     return 0;
 }
+
+
+int TcpClientClass::send_packets(std::queue<std::string>& string_queue) {
+    int retval = 0;
+    int idx = 0;
+    while(not string_queue.empty()) {
+        const auto string_ref = string_queue.front();
+        std::cout << CL_CLR <<"Client: Sending string " << idx << ": " << string_ref.data() <<
+                std::endl;
+        int retval = send(connect_socket, reinterpret_cast<const char*>(string_ref.data()),
+                string_ref.size(), 0);
+        idx++;
+        if (retval == SOCKET_ERROR) {
+            std::cerr << "TcpClientClass::perform_send_operation: Send failed with error: " <<
+                    tcpip::get_last_error() << std::endl;
+            /* Clear the queue nonetheless */
+            std::queue<std::string>().swap(string_queue);
+            return 1;
+        }
+        string_queue.pop();
+    }
+
+    retval = shutdown(connect_socket, SHUT_SEND);
+    if(retval != 0) {
+        std::cerr << "TcpClientClass::perform_send_operation: shutdown failed with error: " <<
+                tcpip::get_last_error() << std::endl;
+    }
+    return retval;
+}
+

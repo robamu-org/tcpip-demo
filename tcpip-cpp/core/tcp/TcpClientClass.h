@@ -8,6 +8,7 @@
 #include <ws2tcpip.h>
 #endif
 
+#include <queue>
 #include <vector>
 
 class TcpClientClass: public TcpipBase {
@@ -37,6 +38,7 @@ private:
     int perform_op_common(Steps step);
 
     int perform_simple_send_op();
+    int send_packets(std::queue<std::string>& packet_queue);
     int tcp_read_operation();
 
     int common_connection_attempt();

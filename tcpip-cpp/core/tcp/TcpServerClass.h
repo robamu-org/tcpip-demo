@@ -35,6 +35,7 @@ private:
 
     int perform_mode_1_echo();
     int perform_mode_2();
+    int perform_mode_3();
 
     int perform_shutdown();
 };

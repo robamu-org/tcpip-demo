@@ -40,6 +40,29 @@ int TcpServerClass::perform_operation() {
     return perform_shutdown();
 }
 
+int TcpServerClass::perform_mode_operation() {
+    using md = tcpip::DemoModes;
+    switch(mode) {
+    case(md::MD_0_PROCEDURAL_DEMO):
+    case(md::MD_1_OOP_CLIENT_ONE_SERVER_ECHO): {
+        return perform_mode_1_echo();
+    }
+    case(md::MD_2_OOP_CLIENT_NONE_SERVER_ONE): {
+        return perform_mode_2();
+    }
+    case(md::MD_3_OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY): {
+        return perform_mode_3();
+    }
+    case(md::MD_4_OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE):
+    default: {
+        std::cout << "TcpServerClass::perform_mode_operatio: Mode handling not implemented "
+                "for mode" << static_cast<int>(mode) << "!" << std::endl;
+    }
+    }
+
+    return 0;
+}
+
 int TcpServerClass::setup_server() {
     struct addrinfo hints = {};
 
@@ -54,6 +77,21 @@ int TcpServerClass::setup_server() {
 
 int TcpServerClass::setup(struct addrinfo &hints) {
     return common_tcp_server_setup(hints);
+}
+
+
+int TcpServerClass::accept_connection() {
+    /* Accept a client socket */
+    client_socket = accept(listen_socket, NULL, NULL);
+    if (client_socket < 0) {
+        std::cerr << "TcpServerClass::setup_server: accept failed with error: " <<
+                tcpip::get_last_error() << std::endl;
+        return 1;
+    }
+
+    /* No longer need server socket */
+    tcpip::close_socket(listen_socket);
+    return 0;
 }
 
 int TcpServerClass::common_tcp_server_setup(struct addrinfo& hints) {
@@ -100,41 +138,6 @@ int TcpServerClass::common_tcp_server_setup(struct addrinfo& hints) {
                 tcpip::get_last_error() << std::endl;
         return 1;
     }
-    return 0;
-}
-
-int TcpServerClass::accept_connection() {
-    /* Accept a client socket */
-    client_socket = accept(listen_socket, NULL, NULL);
-    if (client_socket < 0) {
-        std::cerr << "TcpServerClass::setup_server: accept failed with error: " <<
-                tcpip::get_last_error() << std::endl;
-        return 1;
-    }
-
-    /* No longer need server socket */
-    tcpip::close_socket(listen_socket);
-    return 0;
-}
-
-int TcpServerClass::perform_mode_operation() {
-    using md = tcpip::DemoModes;
-    switch(mode) {
-    case(md::MD_0_PROCEDURAL_DEMO):
-    case(md::MD_1_OOP_CLIENT_ONE_SERVER_ECHO): {
-        return perform_mode_1_echo();
-    }
-    case(md::MD_2_OOP_CLIENT_NONE_SERVER_ONE): {
-        return perform_mode_2();
-    }
-    case(md::MD_3_OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY):
-    case(md::MD_4_OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE):
-    default: {
-        std::cout << "TcpServerClass::perform_mode_operatio: Mode handling not implemented "
-                "for mode" << static_cast<int>(mode) << "!" << std::endl;
-    }
-    }
-
     return 0;
 }
 
@@ -210,6 +213,31 @@ int TcpServerClass::perform_mode_2() {
             else {
                 std::cerr << "Server: More than 1 packet received from client!" << std::endl;
             }
+        }
+        else {
+            std::cerr << "Server: recv failed with error: " << tcpip::get_last_error() << std::endl;
+            return 1;
+        }
+    } while (retval > 0);
+    return 0;
+}
+
+int TcpServerClass::perform_mode_3() {
+    int retval = 0;
+    int index = 0;
+    /* Receive until the peer shuts down the connection */
+    do {
+        int send_result;
+        retval = recv(client_socket, reinterpret_cast<char*>(reception_buffer.data()),
+                reception_buffer.capacity() - 1, 0);
+        bool reply_sent = false;
+        if(retval > 0) {
+            std::cout << SRV_CLR << "Server: Received packet " << index << " with " << retval <<
+                    " bytes" << std::endl;
+            index++;
+        }
+        else if(retval == 0) {
+            std::cout << SRV_CLR << "Server: Client closed connection" << std::endl;
         }
         else {
             std::cerr << "Server: recv failed with error: " << tcpip::get_last_error() << std::endl;
