@@ -6,6 +6,7 @@
 #include <iostream>
 
 int tcp_server_oneshot(std::string ip_address);
+int udp_server_oneshot(std::string ip_address);
 
 int server_application(tcpip::DemoConfig cfg) {
     using namespace tcpip;
@@ -20,7 +21,7 @@ int server_application(tcpip::DemoConfig cfg) {
             return tcp_server_oneshot(cfg.server_address);
         }
         else {
-            return 0;
+            return udp_server_oneshot(cfg.server_address);
         }
     }
     else {

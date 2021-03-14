@@ -5,6 +5,7 @@
 #include <core/udp/UdpClientClass.h>
 
 int tcp_client_oneshot(std::string server_address);
+int udp_client_oneshot(std::string server_address);
 
 int client_application(tcpip::DemoConfig cfg) {
     using namespace tcpip;
@@ -19,7 +20,7 @@ int client_application(tcpip::DemoConfig cfg) {
             return tcp_client_oneshot(cfg.server_address);
         }
         else {
-            return 0;
+            return udp_client_oneshot(cfg.server_address);
         }
     }
     else {
