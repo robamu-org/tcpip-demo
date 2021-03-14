@@ -5,9 +5,6 @@
 #include <iomanip>
 
 
-TcpClientClass::TcpClientClass(tcpip::DemoConfig& cfg, size_t reception_buf_size):
-        TcpipBase(cfg, reception_buf_size) {
-}
 
 TcpClientClass::~TcpClientClass() {
     closesocket(connect_socket);

@@ -24,10 +24,15 @@ public:
 private:
 
 #ifdef _WIN32
-    SOCKET connect_socket = INVALID_SOCKET;
+    static constexpr int SHUT_SEND = SD_SEND;
+    static constexpr int SHUT_RECV = SD_RECEIVE;
+    static constexpr int SHUT_BOTH = SD_BOTH;
 #else
-    int connect_socket = 0;
+
 #endif
+
+    socket_t connect_socket;
+
     int setup(struct addrinfo& hints) override;
 
 
