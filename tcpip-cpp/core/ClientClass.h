@@ -1,7 +1,6 @@
 #pragma once
 
 #include <demo_config.h>
-#include "common.h"
 
 #ifdef _WIN32
 #include <winsock2.h>
@@ -17,7 +16,7 @@ public:
 
     virtual~ ClientClass();
 
-    int performOperation();
+    int perform_operation();
 private:
     tcpip::DemoModes mode;
     std::string server_address;
@@ -31,4 +30,10 @@ private:
 
     std::vector<uint8_t> reception_buffer;
 
+    int attempt_connection();
+    int perform_send_operation(tcpip::DemoModes mode);
+    int perform_recv_operation(tcpip::DemoModes mode);
+
+    int perform_simple_send_op();
+    int perform_echo_recv_operation();
 };

@@ -1,5 +1,7 @@
 #include "../ServerClass.h"
 
+#include <utility.h>
+
 #include <iostream>
 #include <stdexcept>
 
@@ -123,7 +125,11 @@ int ServerClass::perform_simple_echo_op() {
         retval = recv(client_socket, reinterpret_cast<char*>(reception_buffer.data()),
                 reception_buffer_len, 0);
         if (retval > 0) {
-            std::cout << "Server: Bytes Received: " << retval << std::endl;
+            {
+                auto pg = print_guard();
+                std::cout << SRV_CLR << "Server: Bytes Received: " << retval << std::endl;
+            }
+
             size_t bytes_to_sendback = retval;
             // Echo the buffer back to the sender
             send_result = send(client_socket, reinterpret_cast<char*>(reception_buffer.data()),
@@ -132,10 +138,15 @@ int ServerClass::perform_simple_echo_op() {
                 std::cerr << "send failed with error: " << WSAGetLastError() << std::endl;
                 return 1;
             }
-            std::cout << "Server: Bytes sent: " << send_result << std::endl;
+
+            {
+                auto pg = print_guard();
+                std::cout << SRV_CLR << "Server: Bytes echoed back: " << send_result << std::endl;
+            }
         }
-        else if (retval == 0)
-            printf("Server: Connection closing...\n");
+        else if (retval == 0) {
+            std::cout << SRV_CLR << "Server: Client closed connection" << std::endl;
+        }
         else  {
             std::cerr << "Server: recv failed with error: " << WSAGetLastError() << std::endl;
             return 1;
@@ -143,6 +154,7 @@ int ServerClass::perform_simple_echo_op() {
 
     } while (retval > 0);
 
+    std::cout << "Server: Closing connection" << std::endl;
     // shutdown the connection since we're done
     retval = shutdown(client_socket, SD_SEND);
     if (retval == SOCKET_ERROR) {

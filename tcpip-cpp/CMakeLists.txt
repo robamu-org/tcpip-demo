@@ -14,6 +14,7 @@ add_executable(${TARGET_NAME})
 
 target_sources(${TARGET_NAME} PRIVATE
 	main.cpp
+	utility.cpp
 )
 
 add_subdirectory(oneshot_demo)

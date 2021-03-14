@@ -1,4 +1,5 @@
 #include "demo_config.h"
+#include <core/ClientClass.h>
 #include <iostream>
 
 int client_oneshot();
@@ -16,7 +17,9 @@ int client_application(tcpip::DemoConfig cfg) {
 	    return client_oneshot();
 	}
 	case(DemoModes::MD_1_OOP_CLIENT_ONE_SERVER_ECHO): {
-	    return client_oneshot();
+	    //return client_oneshot();
+	    ClientClass clientClass(cfg);
+	    return clientClass.perform_operation();
 	}
 	case(DemoModes::MD_2_OOP_CLIENT_NONE_SERVER_ONE):
 	case(DemoModes::MD_3_OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY):

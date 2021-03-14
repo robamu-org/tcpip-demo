@@ -1,17 +1,15 @@
-#include <string>
+#pragma once
 
-std::string get_os_name() {
-    #ifdef WIN32
-    return "Windows";
-    #elif __APPLE__ || __MACH__
-    return "Mac OSX";
-    #elif __linux__
-    return "Linux";
-    #elif __FreeBSD__
-    return "FreeBSD";
-    #elif __unix || __unix__
-    return "Unix";
-    #else
-    return "Other";
-    #endif
-}     
+#include <string>
+#include <chrono>
+#include <mutex>
+
+std::string get_os_name();
+
+struct std::tm* get_local_time();
+
+/**
+ * Can be used to prevent garbled output when using multiple threads.
+ * @return
+ */
+std::unique_lock<std::mutex> print_guard();

@@ -1,5 +1,4 @@
-#ifndef DEFINITIONS_H_
-#define DEFINITIONS_H_
+#pragma once
 
 #include <string>
 
@@ -55,5 +54,3 @@ struct DemoConfig {
 #define TCPIP_MD_2_OOP_CLIENT_NONE_SERVER_ONE            2
 #define TCPIP_MD_3_OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY   3
 #define TCPIP_MD_4_OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE   4
-
-#endif /* DEFINITIONS_H_ */

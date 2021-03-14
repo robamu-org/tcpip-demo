@@ -1,9 +1,6 @@
-#ifndef CORE_WIN32_COMMON_H_
-#define CORE_WIN32_COMMON_H_
+#pragma once
 
 namespace tcpip {
 
 
 }
-
-#endif /* CORE_WIN32_COMMON_H_ */
