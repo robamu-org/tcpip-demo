@@ -10,14 +10,14 @@
 
 #include <vector>
 
-class ClientClass: public TcpipBase {
+class TcpClientClass: public TcpipBase {
 public:
 
-    ClientClass(tcpip::DemoConfig& cfg, size_t reception_buf_size);
+    TcpClientClass(tcpip::DemoConfig& cfg, size_t reception_buf_size);
 
-    ClientClass() = delete;
+    TcpClientClass() = delete;
 
-    virtual~ ClientClass();
+    virtual~ TcpClientClass();
 
     int perform_operation() override;
 

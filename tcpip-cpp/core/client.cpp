@@ -17,9 +17,14 @@ int client_application(tcpip::DemoConfig cfg) {
 	    return client_oneshot();
 	}
 	case(DemoModes::MD_1_OOP_CLIENT_ONE_SERVER_ECHO): {
-	    //return client_oneshot();
-	    ClientClass clientClass(cfg, tcpip::BUFFER_SIZES);
-	    return clientClass.perform_operation();
+	    if(cfg.prot == DemoProtocols::TCP){
+	        TcpClientClass clientClass(cfg, tcpip::BUFFER_SIZES);
+	        return clientClass.perform_operation();
+	    }
+	    else {
+	        std::cerr << "client_application: Protocol not implemented yet!" << std::endl;
+	    }
+	    return 0;
 	}
 	case(DemoModes::MD_2_OOP_CLIENT_NONE_SERVER_ONE):
 	case(DemoModes::MD_3_OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY):

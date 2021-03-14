@@ -12,14 +12,14 @@
 #include <vector>
 #include <cstdint>
 
-class ServerClass: public TcpipBase {
+class TcpServerClass: public TcpipBase {
 public:
 
-    ServerClass(tcpip::DemoConfig& cfg, size_t reception_buf_size);
+    TcpServerClass(tcpip::DemoConfig& cfg, size_t reception_buf_size);
 
-    ServerClass() = delete;
+    TcpServerClass() = delete;
 
-    virtual~ ServerClass();
+    virtual~ TcpServerClass();
 
     int perform_operation() override;
 private:
