@@ -1,7 +1,7 @@
 #pragma once
 
-#include <core/TcpipBase.h>
 #include "common.h"
+#include <core/TcpipBase.h>
 #include <demo_config.h>
 
 #ifdef _WIN32
@@ -31,6 +31,7 @@ private:
     int listen_socket = 0;
     int client_socket = 0;
 #endif
+    int setup(struct addrinfo& hints) override;
 
     int setup_server();
     int accept_connection();

@@ -20,6 +20,7 @@ public:
     virtual~ ClientClass();
 
     int perform_operation() override;
+
 private:
 
 #ifdef _WIN32
@@ -27,6 +28,7 @@ private:
 #else
     int connect_socket = 0;
 #endif
+    int setup(struct addrinfo& hints) override;
 
     int attempt_connection();
     int perform_send_operation();

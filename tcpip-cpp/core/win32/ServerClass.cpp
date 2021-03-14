@@ -8,13 +8,11 @@
 
 ServerClass::ServerClass(tcpip::DemoConfig& cfg, size_t reception_buf_size):
         TcpipBase(cfg, reception_buf_size) {
-    WSADATA wsaData;
-    // Initialize Winsock
-    int retval = WSAStartup(MAKEWORD(2,2), &wsaData);
-    if (retval != 0) {
-        std::cerr << "WSAStartup failed with error: " << retval << std::endl;
-        throw std::runtime_error("WSAStartup failed!");
-    }
+}
+
+ServerClass::~ServerClass() {
+    closesocket(listen_socket);
+    closesocket(client_socket);
 }
 
 int ServerClass::perform_operation() {
@@ -32,23 +30,23 @@ int ServerClass::perform_operation() {
     return retval;
 }
 
-ServerClass::~ServerClass() {
-    closesocket(listen_socket);
-    closesocket(client_socket);
-    WSACleanup();
-}
 
 int ServerClass::setup_server() {
-    struct addrinfo *result = NULL;
-    struct addrinfo hints;
-
+    struct addrinfo hints = {};
     ZeroMemory( &hints, sizeof(hints) );
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
 
+    return setup(hints);
+}
+
+int ServerClass::setup(struct addrinfo &hints) {
+    struct addrinfo *result = NULL;
+    int retval = 0;
+
     // Resolve the server address and port
-    int retval = getaddrinfo(nullptr, tcpip::SERVER_PORT, &hints, &result);
+    retval = getaddrinfo(nullptr, tcpip::SERVER_PORT, &hints, &result);
     if (retval != 0) {
         std::cerr << "ServerClass::setup_server: getaddrinfo failed with error: " <<
                 retval << std::endl;

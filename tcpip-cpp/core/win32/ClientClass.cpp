@@ -7,18 +7,10 @@
 
 ClientClass::ClientClass(tcpip::DemoConfig& cfg, size_t reception_buf_size):
         TcpipBase(cfg, reception_buf_size) {
-    WSADATA wsaData;
-    // Initialize Winsock
-    int retval = WSAStartup(MAKEWORD(2,2), &wsaData);
-    if (retval != 0) {
-        std::cerr << "WSAStartup failed with error: " << retval << std::endl;
-        throw std::runtime_error("WSAStartup failed!");
-    }
 }
 
 ClientClass::~ClientClass() {
     closesocket(connect_socket);
-    WSACleanup();
 }
 
 int ClientClass::perform_operation() {
@@ -48,15 +40,18 @@ int ClientClass::perform_operation() {
 }
 
 int ClientClass::attempt_connection() {
-    int retval = 0;
-
-    struct addrinfo *result = nullptr;
     struct addrinfo hints = {};
 
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
 
+    return setup(hints);
+}
+
+int ClientClass::setup(struct addrinfo &hints) {
+    int retval = 0;
+    struct addrinfo *result = nullptr;
     if(server_address == "" or server_address == "nullptr") {
         int retval = getaddrinfo(nullptr, server_port.c_str(), &hints, &result);
     }
@@ -97,6 +92,7 @@ int ClientClass::attempt_connection() {
     }
     return 0;
 }
+
 
 int ClientClass::perform_send_operation() {
     int retval = 0;
