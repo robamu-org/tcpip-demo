@@ -7,8 +7,7 @@
 #include <stdexcept>
 
 ServerClass::ServerClass(tcpip::DemoConfig& cfg):  mode(cfg.mode), server_port(cfg.server_port),
-        server_address(cfg.server_address), reception_buffer(tcpip::BUFFER_SIZES),
-        reception_buffer_len(reception_buffer.size()) {
+        server_address(cfg.server_address), reception_buffer(tcpip::BUFFER_SIZES) {
     WSADATA wsaData;
     // Initialize Winsock
     int retval = WSAStartup(MAKEWORD(2,2), &wsaData);

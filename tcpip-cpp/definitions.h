@@ -15,6 +15,11 @@
 
 namespace tcpip {
 
+enum DemoProtocols {
+    UDP,
+    TCP
+};
+
 enum DemoTypes {
     CLIENT_AND_SERVER,
     SERVER_ONLY,
@@ -32,6 +37,7 @@ enum DemoModes {
 };
 
 struct DemoConfig {
+    tcpip::DemoProtocols prot;
     tcpip::DemoTypes type;
     tcpip::DemoModes mode;
     std::string server_address;

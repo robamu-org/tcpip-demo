@@ -32,7 +32,7 @@ int main() {
 	std::thread client_thread(client_application, cfg);
 	server_thread.join();
 	client_thread.join();
-	std::cout << "Demo finished." << std::endl;
+	std::cout << ANSI_COLOR_RESET << "Demo finished." << std::endl;
 #if AUTO_TERMINATE_DEMO == 0
 	std::cout << "Press enter to finish program" << std::endl;
 	std::cin.ignore();
