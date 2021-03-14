@@ -1,6 +1,8 @@
-#include <core/tcp/TcpClientClass.h>
 #include "demo_config.h"
 #include <iostream>
+
+#include <core/tcp/TcpClientClass.h>
+#include <core/udp/UdpClientClass.h>
 
 int client_oneshot(std::string server_address);
 
@@ -21,7 +23,8 @@ int client_application(tcpip::DemoConfig cfg) {
             return tcpClient.perform_operation();
         }
         else if(cfg.prot == DemoProtocols::UDP) {
-            return 0;
+            UdpClientClass udpClient(cfg, tcpip::BUFFER_SIZES);
+            return udpClient.perform_operation();
         }
         else {
             std::cerr << "client_application: Protocol unknown or not implemented"

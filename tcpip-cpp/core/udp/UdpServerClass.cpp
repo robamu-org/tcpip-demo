@@ -83,20 +83,27 @@ int UdpServerClass::setup(struct addrinfo &hints) {
 }
 
 int UdpServerClass::listener_function() {
-
+    std::cout << "Server: Listening for UDP packets.." << std::endl;
+    int len = sizeof(sender);
     int retval = recvfrom(
             server_socket,
             reinterpret_cast<char*>(reception_buffer.data()),
             reception_buffer.capacity() - 1,
             udp_flags,
             &sender,
-            &sender_sock_len
+            &len
     );
+
 
     if(retval > 0) {
         std::lock_guard<std::mutex> lock(packet_lock);
         std::vector<uint8_t> packet(reception_buffer.begin(), reception_buffer.begin() + retval);
         packet_queue.push(packet);
+    }
+    else if(retval == SOCKET_ERROR) {
+        std::cerr << "Client: UdpServerClass::listener_function: failed with " <<
+                tcpip::get_last_error() << std::endl;
+        return -1;
     }
     return 0;
 }
@@ -104,7 +111,7 @@ int UdpServerClass::listener_function() {
 int UdpServerClass::packet_handler() {
     std::vector<uint8_t> packet;
     while(true) {
-        std::lock_guard<std::mutex> lock(packet_lock);
+        packet_lock.lock();
         if(packet_queue.size() > 0) {
             packet = packet_queue.front();
             int send_ret = sendto(
@@ -121,15 +128,18 @@ int UdpServerClass::packet_handler() {
             }
             else {
                 std::cerr << "Server: Sending back packet failed!" << std::endl;
+                packet_lock.unlock();
                 return -1;
             }
         }
         else {
             using namespace std::chrono_literals;
+            packet_lock.unlock();
             std::this_thread::sleep_for(50ms);
         }
     }
 
+    packet_lock.unlock();
     std::cout << CL_CLR << "Client: Received and echoed back " << packet.size() << " bytes"<<
             std::endl;
     return 0;

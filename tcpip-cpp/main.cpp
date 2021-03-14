@@ -35,7 +35,7 @@ int main() {
 #endif
 
 	std::thread server_thread(server_application, cfg);
-	std::this_thread::sleep_for(10ms);
+	std::this_thread::sleep_for(100ms);
 	std::thread client_thread(client_application, cfg);
 	server_thread.join();
 	client_thread.join();
