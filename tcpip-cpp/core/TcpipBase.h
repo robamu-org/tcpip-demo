@@ -28,8 +28,15 @@ public:
 protected:
 
 #ifdef __unix__
-    static constexpr int INVALID_SOCKET = 0;
+
+    static constexpr int INVALID_SOCKET = -1;
     static constexpr int SOCKET_ERROR = -1;
+    using socket_t = int;
+
+#elif defined(_WIN32)
+
+    using socket_t = SOCKET;
+
 #endif
 
     virtual int setup(struct addrinfo& hints) = 0;
@@ -42,5 +49,5 @@ protected:
 
     std::vector<uint8_t> reception_buffer;
 
-    virtual int common_tcp_client_setup(struct addrinfo& hints, int& conn_sock);
+    virtual int common_tcp_client_setup(struct addrinfo& hints, socket_t& conn_sock);
 };

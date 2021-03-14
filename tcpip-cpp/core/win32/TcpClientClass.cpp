@@ -5,15 +5,15 @@
 #include <iomanip>
 
 
-ClientClass::ClientClass(tcpip::DemoConfig& cfg, size_t reception_buf_size):
+TcpClientClass::TcpClientClass(tcpip::DemoConfig& cfg, size_t reception_buf_size):
         TcpipBase(cfg, reception_buf_size) {
 }
 
-ClientClass::~ClientClass() {
+TcpClientClass::~TcpClientClass() {
     closesocket(connect_socket);
 }
 
-int ClientClass::perform_operation() {
+int TcpClientClass::perform_operation() {
     if(type == tcpip::DemoTypes::SERVER_ONLY) {
         return 0;
     }
@@ -39,7 +39,7 @@ int ClientClass::perform_operation() {
     return retval;
 }
 
-int ClientClass::attempt_connection() {
+int TcpClientClass::attempt_connection() {
     struct addrinfo hints = {};
 
     hints.ai_family = AF_UNSPEC;
@@ -49,52 +49,12 @@ int ClientClass::attempt_connection() {
     return setup(hints);
 }
 
-int ClientClass::setup(struct addrinfo &hints) {
-    int retval = 0;
-    struct addrinfo *result = nullptr;
-    if(server_address == "" or server_address == "nullptr") {
-        int retval = getaddrinfo(nullptr, server_port.c_str(), &hints, &result);
-    }
-    else {
-        int retval = getaddrinfo(server_address.c_str(), server_port.c_str(), &hints, &result);
-    }
-    if(retval != 0) {
-        std::cerr << "getaddrinfo failed with error: " << retval << std::endl;
-    }
-
-    for(auto ptr = result; ptr != nullptr; ptr = ptr->ai_next) {
-        struct sockaddr_in *addr_in = (struct sockaddr_in *)ptr->ai_addr;
-        char *ip = inet_ntoa(addr_in->sin_addr);
-        std::cout << "Client: Attempting connection to address " << ip << std::endl;
-        /* Create a socket for connecting to server */
-        connect_socket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
-        if (connect_socket == INVALID_SOCKET) {
-            printf("socket failed with error: %ld\n", WSAGetLastError());
-            return 1;
-        }
-
-        /* Connect to server. */
-        retval = connect(connect_socket, ptr->ai_addr, (int)ptr->ai_addrlen);
-        if (retval == SOCKET_ERROR) {
-            connect_socket = INVALID_SOCKET;
-            continue;
-        }
-
-        std::cout << "Client: Connected successfully to " << ip << std::endl;
-        break;
-    }
-
-    freeaddrinfo(result);
-
-    if (connect_socket == INVALID_SOCKET) {
-        std::cout << "Unable to connect to server!" << std::endl;
-        return 1;
-    }
-    return 0;
+int TcpClientClass::setup(struct addrinfo &hints) {
+    return common_tcp_client_setup(hints, connect_socket);
 }
 
 
-int ClientClass::perform_send_operation() {
+int TcpClientClass::perform_send_operation() {
     int retval = 0;
     using dm = tcpip::DemoModes;
     switch(mode) {
@@ -112,7 +72,7 @@ int ClientClass::perform_send_operation() {
     return retval;
 }
 
-int ClientClass::perform_recv_operation() {
+int TcpClientClass::perform_recv_operation() {
     int retval = 0;
     using dm = tcpip::DemoModes;
     switch(mode) {
@@ -130,11 +90,11 @@ int ClientClass::perform_recv_operation() {
     return 0;
 }
 
-int ClientClass::perform_simple_send_op() {
+int TcpClientClass::perform_simple_send_op() {
     std::string send_buf = "this is a test";
     int retval = send(connect_socket, send_buf.c_str(), send_buf.size(), 0 );
     if (retval == SOCKET_ERROR) {
-        std::cerr << "ClientClass::perform_send_operation: Send failed with error: " <<
+        std::cerr << "TcpClientClass::perform_send_operation: Send failed with error: " <<
                 WSAGetLastError() << std::endl;
         return 1;
     }
@@ -147,13 +107,13 @@ int ClientClass::perform_simple_send_op() {
 
     retval = shutdown(connect_socket, SD_SEND);
     if(retval != 0) {
-        std::cerr << "ClientClass::perform_send_operation: shutdown failed with error: " <<
+        std::cerr << "TcpClientClass::perform_send_operation: shutdown failed with error: " <<
                 WSAGetLastError() << std::endl;
     }
     return 0;
 }
 
-int ClientClass::perform_echo_recv_operation() {
+int TcpClientClass::perform_echo_recv_operation() {
     int retval = 0;
     /* Receive until the peer closes the connection */
     do {

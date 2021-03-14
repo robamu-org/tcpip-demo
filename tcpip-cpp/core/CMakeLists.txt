@@ -2,7 +2,7 @@ target_sources(${TARGET_NAME} PRIVATE
     client.cpp 
     server.cpp 
     TcpipBase.cpp
-    tmtcipCommon.cpp
+    tcpipCommon.cpp
 )
 
 if(WIN32)

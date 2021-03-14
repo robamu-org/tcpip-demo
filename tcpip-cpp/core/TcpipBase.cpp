@@ -28,7 +28,7 @@ TcpipBase::~TcpipBase() {
 #endif
 }
 
-int TcpipBase::common_tcp_client_setup(struct addrinfo& hints, int& conn_sock) {
+int TcpipBase::common_tcp_client_setup(struct addrinfo& hints, socket_t& conn_sock) {
     struct addrinfo* result = nullptr;
     int retval = 0;
 

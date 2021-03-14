@@ -5,16 +5,16 @@
 #include <iomanip>
 #include <stdexcept>
 
-ServerClass::ServerClass(tcpip::DemoConfig& cfg, size_t reception_buf_size):
+TcpServerClass::TcpServerClass(tcpip::DemoConfig& cfg, size_t reception_buf_size):
         TcpipBase(cfg, reception_buf_size) {
 }
 
-ServerClass::~ServerClass() {
+TcpServerClass::~TcpServerClass() {
     closesocket(listen_socket);
     closesocket(client_socket);
 }
 
-int ServerClass::perform_operation() {
+int TcpServerClass::perform_operation() {
     if(type == tcpip::DemoTypes::CLIENT_ONLY) {
         return 0;
     }
@@ -34,7 +34,7 @@ int ServerClass::perform_operation() {
 }
 
 
-int ServerClass::setup_server() {
+int TcpServerClass::setup_server() {
     struct addrinfo hints = {};
     ZeroMemory( &hints, sizeof(hints) );
     hints.ai_family = AF_UNSPEC;
@@ -44,14 +44,14 @@ int ServerClass::setup_server() {
     return setup(hints);
 }
 
-int ServerClass::setup(struct addrinfo &hints) {
+int TcpServerClass::setup(struct addrinfo &hints) {
     struct addrinfo *result = NULL;
     int retval = 0;
 
     // Resolve the server address and port
     retval = getaddrinfo(nullptr, tcpip::SERVER_PORT, &hints, &result);
     if (retval != 0) {
-        std::cerr << "ServerClass::setup_server: getaddrinfo failed with error: " <<
+        std::cerr << "TcpServerClass::setup_server: getaddrinfo failed with error: " <<
                 retval << std::endl;
         return 1;
     }
@@ -59,7 +59,7 @@ int ServerClass::setup(struct addrinfo &hints) {
     // Create a SOCKET for connecting to server
     listen_socket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
     if (listen_socket == INVALID_SOCKET) {
-        std::cerr << "ServerClass::setup_server: socket failed with error: " <<
+        std::cerr << "TcpServerClass::setup_server: socket failed with error: " <<
                 WSAGetLastError() << std::endl;
         freeaddrinfo(result);
         return 1;
@@ -68,7 +68,7 @@ int ServerClass::setup(struct addrinfo &hints) {
     // Setup the TCP listening socket
     retval = bind(listen_socket, result->ai_addr, (int)result->ai_addrlen);
     if (retval == SOCKET_ERROR) {
-        std::cerr << "ServerClass::setup_server: bind failed with error: " <<
+        std::cerr << "TcpServerClass::setup_server: bind failed with error: " <<
                 WSAGetLastError() << std::endl;
         freeaddrinfo(result);
         return 1;
@@ -78,18 +78,18 @@ int ServerClass::setup(struct addrinfo &hints) {
 
     retval = listen(listen_socket, SOMAXCONN);
     if (retval == SOCKET_ERROR) {
-        std::cerr << "ServerClass::setup_server: listen failed with error: " <<
+        std::cerr << "TcpServerClass::setup_server: listen failed with error: " <<
                 WSAGetLastError() << std::endl;
         return 1;
     }
     return 0;
 }
 
-int ServerClass::accept_connection() {
+int TcpServerClass::accept_connection() {
     // Accept a client socket
     client_socket = accept(listen_socket, NULL, NULL);
     if (client_socket == INVALID_SOCKET) {
-        std::cerr << "ServerClass::setup_server: accept failed with error: " <<
+        std::cerr << "TcpServerClass::setup_server: accept failed with error: " <<
                 WSAGetLastError() << std::endl;
         return 1;
     }
@@ -99,7 +99,7 @@ int ServerClass::accept_connection() {
     return 0;
 }
 
-int ServerClass::perform_mode_operation() {
+int TcpServerClass::perform_mode_operation() {
     using md = tcpip::DemoModes;
     switch(mode) {
     case(md::MD_1_OOP_CLIENT_ONE_SERVER_ECHO): {
@@ -109,7 +109,7 @@ int ServerClass::perform_mode_operation() {
     case(md::MD_3_OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY):
     case(md::MD_4_OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE):
     default: {
-        std::cout << "ServerClass::perform_mode_operatio: Mode handling not implemented for mode" <<
+        std::cout << "TcpServerClass::perform_mode_operatio: Mode handling not implemented for mode" <<
                 static_cast<int>(mode) << "!" << std::endl;
     }
     }
@@ -117,7 +117,7 @@ int ServerClass::perform_mode_operation() {
     return 0;
 }
 
-int ServerClass::perform_simple_echo_op() {
+int TcpServerClass::perform_simple_echo_op() {
     int retval = 0;
     // Receive until the peer shuts down the connection
     do {
