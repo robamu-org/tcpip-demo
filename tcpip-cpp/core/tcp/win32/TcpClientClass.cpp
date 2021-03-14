@@ -88,7 +88,7 @@ int TcpClientClass::perform_simple_send_op() {
                 "Sent " << send_buf.size() << " bytes string: " << send_buf << std::endl;
     }
 
-    retval = shutdown(connect_socket, SD_SEND);
+    retval = shutdown(connect_socket, SHUT_SEND);
     if(retval != 0) {
         std::cerr << "TcpClientClass::perform_send_operation: shutdown failed with error: " <<
                 WSAGetLastError() << std::endl;

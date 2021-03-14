@@ -105,7 +105,7 @@ int TcpServerClass::perform_simple_echo_op() {
     } while (retval > 0);
 
     // shutdown the connection since we're done
-    retval = shutdown(client_socket, SHUT_WR);
+    retval = shutdown(client_socket, SHUT_SEND);
     if (retval != 0) {
         std::cerr << "shutdown failed with error: " << errno << std::endl;
         return 1;
