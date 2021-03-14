@@ -6,6 +6,10 @@
 
 std::string get_os_name();
 
+/**
+ * Can be used with std::put_time to print out current time with output streams.
+ * @return
+ */
 struct std::tm* get_local_time();
 
 /**
