@@ -3,6 +3,7 @@
 #include <utility.h>
 
 #include <iostream>
+#include <iomanip>
 #include <stdexcept>
 
 ServerClass::ServerClass(tcpip::DemoConfig& cfg):  mode(cfg.mode), server_port(cfg.server_port),
@@ -127,7 +128,7 @@ int ServerClass::perform_simple_echo_op() {
         if (retval > 0) {
             {
                 auto pg = print_guard();
-                std::cout << SRV_CLR << "Server: Bytes Received: " << retval << std::endl;
+                std::cout << SRV_CLR << "Server: Bytes received: " << retval << std::endl;
             }
 
             size_t bytes_to_sendback = retval;
@@ -154,7 +155,11 @@ int ServerClass::perform_simple_echo_op() {
 
     } while (retval > 0);
 
-    std::cout << "Server: Closing connection" << std::endl;
+    {
+        auto pg = print_guard();
+        std::cout << "Server: Closing connection" << std::endl;
+    }
+
     // shutdown the connection since we're done
     retval = shutdown(client_socket, SD_SEND);
     if (retval == SOCKET_ERROR) {

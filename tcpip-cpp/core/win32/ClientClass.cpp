@@ -28,6 +28,8 @@ int ClientClass::perform_operation() {
         return retval;
     }
 
+    std::cout << CL_CLR << "Client: " << std::put_time(get_local_time(), "%H:%M:%S") << " | "
+            << "Connection to server established." << std::endl;
     /* We are not connected and can perform send and receive operations */
     retval = perform_send_operation(mode);
     if(retval != 0) {
@@ -161,8 +163,7 @@ int ClientClass::perform_echo_recv_operation() {
                 reception_buffer.capacity(), 0);
         if (retval > 0 ) {
             auto pg = print_guard();
-            std::cout  << CL_CLR << "Client: " <<std::put_time(get_local_time(), "%T") <<
-                    "Bytes received: " << retval << std::endl;
+            std::cout  << CL_CLR << "Client: Bytes received: " << retval << std::endl;
             std::cout << CL_CLR << "Client: Received string: " << reception_buffer.data() <<
                     std::endl;
         }
