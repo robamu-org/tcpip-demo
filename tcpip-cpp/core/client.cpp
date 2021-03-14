@@ -4,7 +4,7 @@
 #include <core/tcp/TcpClientClass.h>
 #include <core/udp/UdpClientClass.h>
 
-int client_oneshot(std::string server_address);
+int tcp_client_oneshot(std::string server_address);
 
 int client_application(tcpip::DemoConfig cfg) {
     using namespace tcpip;
@@ -15,7 +15,12 @@ int client_application(tcpip::DemoConfig cfg) {
 	}
 
     if(cfg.mode == DemoModes::MD_0_PROCEDURAL_DEMO) {
-        return client_oneshot(cfg.server_address);
+        if(cfg.prot == DemoProtocols::TCP) {
+            return tcp_client_oneshot(cfg.server_address);
+        }
+        else {
+            return 0;
+        }
     }
     else {
         if(cfg.prot == DemoProtocols::TCP) {

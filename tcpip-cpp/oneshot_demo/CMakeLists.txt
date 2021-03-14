@@ -1,4 +1,4 @@
 target_sources(${TARGET_NAME} PRIVATE
-    client_oneshot.cpp
-    server_oneshot.cpp
+    tcp_client_oneshot.cpp
+    tcp_server_oneshot.cpp
 )

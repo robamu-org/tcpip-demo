@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-int server_oneshot(std::string ip_address);
+int tcp_server_oneshot(std::string ip_address);
 
 int server_application(tcpip::DemoConfig cfg) {
     using namespace tcpip;
@@ -16,7 +16,12 @@ int server_application(tcpip::DemoConfig cfg) {
     }
 
     if(cfg.mode == DemoModes::MD_0_PROCEDURAL_DEMO) {
-        return server_oneshot(cfg.server_address);
+        if(cfg.prot == DemoProtocols::TCP) {
+            return tcp_server_oneshot(cfg.server_address);
+        }
+        else {
+            return 0;
+        }
     }
     else {
         if(cfg.prot == DemoProtocols::TCP) {
