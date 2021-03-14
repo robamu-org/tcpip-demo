@@ -6,3 +6,4 @@ target_sources(${TARGET_NAME} PRIVATE
 )
 
 add_subdirectory(tcp)
+add_subdirectory(udp)

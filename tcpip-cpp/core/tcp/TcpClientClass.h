@@ -42,6 +42,5 @@ private:
     int tcp_read_operation();
 
     int common_connection_attempt();
-    int common_tcp_client_setup(struct addrinfo& hints, socket_t& conn_sock);
 
 };

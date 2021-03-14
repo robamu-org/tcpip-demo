@@ -20,8 +20,12 @@ int client_application(tcpip::DemoConfig cfg) {
             TcpClientClass tcpClient(cfg, tcpip::BUFFER_SIZES);
             return tcpClient.perform_operation();
         }
+        else if(cfg.prot == DemoProtocols::UDP) {
+            return 0;
+        }
         else {
-            std::cerr << "server_application: Protocol not implemented yet!" << std::endl;
+            std::cerr << "client_application: Protocol unknown or not implemented"
+                    " yet!" << std::endl;
             return 0;
         }
     }

@@ -76,25 +76,6 @@ int TcpServerClass::setup_server() {
 }
 
 int TcpServerClass::setup(struct addrinfo &hints) {
-    return common_tcp_server_setup(hints);
-}
-
-
-int TcpServerClass::accept_connection() {
-    /* Accept a client socket */
-    client_socket = accept(listen_socket, NULL, NULL);
-    if (client_socket < 0) {
-        std::cerr << "TcpServerClass::setup_server: accept failed with error: " <<
-                tcpip::get_last_error() << std::endl;
-        return 1;
-    }
-
-    /* No longer need server socket */
-    tcpip::close_socket(listen_socket);
-    return 0;
-}
-
-int TcpServerClass::common_tcp_server_setup(struct addrinfo& hints) {
     struct addrinfo *result = nullptr;
 
     /* Resolve the server address and port */
@@ -141,6 +122,21 @@ int TcpServerClass::common_tcp_server_setup(struct addrinfo& hints) {
     return 0;
 }
 
+
+int TcpServerClass::accept_connection() {
+    /* Accept a client socket */
+    client_socket = accept(listen_socket, NULL, NULL);
+    if (client_socket < 0) {
+        std::cerr << "TcpServerClass::setup_server: accept failed with error: " <<
+                tcpip::get_last_error() << std::endl;
+        return 1;
+    }
+
+    /* No longer need server socket */
+    tcpip::close_socket(listen_socket);
+    return 0;
+}
+
 int TcpServerClass::perform_mode_1_echo() {
     int retval = 0;
     /* Receive until the peer shuts down the connection */
@@ -162,7 +158,7 @@ int TcpServerClass::perform_mode_1_echo() {
             send_result = send(client_socket, reinterpret_cast<char*>(reception_buffer.data()),
                     bytes_to_sendback, 0);
             if (send_result == SOCKET_ERROR) {
-                std::cerr << "Server: TcpServerClass::perform_simple_echo_op: "
+                std::cerr << "TCP Server: TcpServerClass::perform_simple_echo_op: "
                         "Send failed with error: " << tcpip::get_last_error() << std::endl;
                 return 1;
             }

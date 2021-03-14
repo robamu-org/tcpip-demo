@@ -15,7 +15,7 @@ int determine_config_from_user(tcpip::DemoConfig& cfg);
 #endif
 int server_application(tcpip::DemoConfig cfg);
 int client_application(tcpip::DemoConfig cfg);
-void print_mode_info(tcpip::DemoModes mode);
+void print_mode_info(tcpip::DemoConfig& cfg);
 void enable_win_term_colors();
 
 
@@ -31,7 +31,7 @@ int main() {
 	    return result;
 	}
 #if TCPIP_DEMO_PRINT_MODE_INFO == 1
-	print_mode_info(cfg.mode);
+	print_mode_info(cfg);
 #endif
 
 	std::thread server_thread(server_application, cfg);
@@ -67,12 +67,20 @@ int startup_code(tcpip::DemoConfig& cfg) {
 }
 
 
-void print_mode_info(tcpip::DemoModes mode) {
+void print_mode_info(tcpip::DemoConfig& cfg) {
     using md = tcpip::DemoModes;
-    std::cout << "Mode information. Selected mode: " << static_cast<int>(mode) << std::endl;
+
+    if(cfg.prot == tcpip::DemoProtocols::UDP) {
+        std::cout << "Chosen protocol: UDP" << std::endl;
+    }
+    else if(cfg.prot == tcpip::DemoProtocols::TCP) {
+        std::cout << "Chosen protocol: TCP" << std::endl;
+    }
+
+    std::cout << "Mode information. Selected mode: " << static_cast<int>(cfg.mode) << std::endl;
     std::string server_pr = std::string(SRV_CLR) + "Server" + std::string(ANSI_COLOR_RESET);
     std::string client_pr = std::string(CL_CLR) + "Client" + std::string(ANSI_COLOR_RESET);
-    switch(mode) {
+    switch(cfg.mode) {
     case(md::MD_1_OOP_CLIENT_ONE_SERVER_ECHO): {
         std::cout << client_pr <<  " will send one packet, " << server_pr << " will echo back." <<
                 std::endl;

@@ -1,5 +1,8 @@
-#include <core/tcp/TcpServerClass.h>
 #include "demo_config.h"
+
+#include <core/tcp/TcpServerClass.h>
+#include <core/udp/UdpServerClass.h>
+
 #include <iostream>
 
 int server_oneshot(std::string ip_address);
@@ -20,9 +23,13 @@ int server_application(tcpip::DemoConfig cfg) {
             TcpServerClass tcpServer(cfg, tcpip::BUFFER_SIZES);
             return tcpServer.perform_operation();
         }
+        else if(cfg.prot == DemoProtocols::UDP) {
+            UdpServerClass udpServer(cfg, tcpip::BUFFER_SIZES);
+            return udpServer.perform_operation();
+        }
         else {
-            std::cerr << "server_application: Protocol not implemented yet!" << std::endl;
-            return 0;
+            std::cerr << "server_application: Unknown or unimplemented protocol!" << std::endl;
+            return 1;
         }
     }
 }

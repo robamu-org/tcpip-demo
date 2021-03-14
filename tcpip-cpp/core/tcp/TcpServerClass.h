@@ -26,10 +26,9 @@ private:
     socket_t listen_socket = INVALID_SOCKET;
     socket_t client_socket = INVALID_SOCKET;
 
-    int setup(struct addrinfo& hints) override;
-    int common_tcp_server_setup(struct addrinfo& hints);
-
     int setup_server();
+    int setup(struct addrinfo& hints) override;
+
     int accept_connection();
     int perform_mode_operation();
 
