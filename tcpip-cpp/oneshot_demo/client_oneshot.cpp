@@ -20,7 +20,7 @@
 
 
 #ifdef _WIN32
-int client_oneshot() {
+int client_oneshot(std::string server_address) {
     /* Totally not copied from https://docs.microsoft.com/en-us/windows/win32/winsock/complete-client-code */
     WSADATA wsaData;
     SOCKET ConnectSocket = INVALID_SOCKET;
@@ -43,7 +43,7 @@ int client_oneshot() {
     hints.ai_protocol = IPPROTO_TCP;
 
     // Resolve the server address and port
-    iResult = getaddrinfo(tcpip::SERVER_ADDRESS, tcpip::SERVER_PORT, &hints, &result);
+    iResult = getaddrinfo(server_address.c_str(), tcpip::SERVER_PORT, &hints, &result);
     if ( iResult != 0 ) {
         printf("getaddrinfo failed with error: %d\n", iResult);
         WSACleanup();
@@ -128,7 +128,7 @@ int client_oneshot() {
 
 #elif defined(__unix__)
 
-int client_oneshot() {
+int client_oneshot(std::string server_address) {
     /* Based on https://docs.microsoft.com/en-us/windows/win32/winsock/complete-client-code */
     int connect_socket = 0;
     struct addrinfo *result = NULL;
@@ -144,7 +144,7 @@ int client_oneshot() {
     hints.ai_protocol = IPPROTO_TCP;
 
     // Resolve the server address and port
-    retval = getaddrinfo(tcpip::SERVER_ADDRESS, tcpip::SERVER_PORT, &hints, &result);
+    retval = getaddrinfo(server_address.c_str(), tcpip::SERVER_PORT, &hints, &result);
     if (retval != 0) {
         printf("getaddrinfo failed with error: %d\n", retval);
         return 1;

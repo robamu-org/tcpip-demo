@@ -12,11 +12,10 @@ int server_application(tcpip::DemoConfig cfg) {
         return 0;
     }
 
-    switch(cfg.mode) {
-    case(DemoModes::MD_0_PROCEDURAL_DEMO): {
+    if(cfg.mode == DemoModes::MD_0_PROCEDURAL_DEMO) {
         return server_oneshot(cfg.server_address);
     }
-    case(DemoModes::MD_1_OOP_CLIENT_ONE_SERVER_ECHO): {
+    else {
         if(cfg.prot == DemoProtocols::TCP) {
             TcpServerClass serverClass(cfg, tcpip::BUFFER_SIZES);
             return serverClass.perform_operation();
@@ -25,14 +24,6 @@ int server_application(tcpip::DemoConfig cfg) {
             std::cerr << "server_application: Protocol not implemented yet!" << std::endl;
             return 0;
         }
-    }
-    case(DemoModes::MD_2_OOP_CLIENT_NONE_SERVER_ONE):
-    case(DemoModes::MD_3_OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY):
-    case(DemoModes::MD_4_OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE):
-    default: {
-        std::cerr << "client_application: Mode not implemented yet!" << std::endl;
-        return -1;
-    }
     }
 }
 

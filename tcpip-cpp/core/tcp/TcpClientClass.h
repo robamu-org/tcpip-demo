@@ -28,7 +28,7 @@ private:
         READ
     };
 
-    socket_t connect_socket;
+    socket_t connect_socket = INVALID_SOCKET;
 
     int setup(struct addrinfo& hints) override;
 

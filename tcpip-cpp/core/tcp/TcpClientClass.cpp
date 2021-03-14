@@ -9,6 +9,9 @@
 #include <iomanip>
 #include <iostream>
 
+TcpClientClass::TcpClientClass(tcpip::DemoConfig &cfg, size_t reception_buf_size):
+        TcpipBase(cfg, reception_buf_size) {
+}
 
 TcpClientClass::~TcpClientClass() {
     tcpip::close_socket(connect_socket);
@@ -97,8 +100,8 @@ int TcpClientClass::perform_simple_send_op() {
 
     {
         auto pg = print_guard();
-        std::cout  << CL_CLR << "Client: " << std::put_time(get_local_time(), "%T") <<
-                "Sent " << send_buf.size() << " bytes string: " << send_buf << std::endl;
+        std::cout  << CL_CLR << "Client: Sent " << send_buf.size() << " bytes string: " <<
+                send_buf << std::endl;
     }
 
     retval = shutdown(connect_socket, SHUT_SEND);
@@ -108,7 +111,6 @@ int TcpClientClass::perform_simple_send_op() {
     }
     return 0;
 }
-
 
 int TcpClientClass::common_tcp_client_setup(struct addrinfo& hints, socket_t& conn_sock) {
     struct addrinfo* result = nullptr;

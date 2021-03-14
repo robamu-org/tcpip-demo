@@ -2,7 +2,7 @@
 #include "demo_config.h"
 #include <iostream>
 
-int client_oneshot();
+int client_oneshot(std::string server_address);
 
 int client_application(tcpip::DemoConfig cfg) {
     using namespace tcpip;
@@ -12,28 +12,18 @@ int client_application(tcpip::DemoConfig cfg) {
 	    return 0;
 	}
 
-	switch(cfg.mode) {
-	case(DemoModes::MD_0_PROCEDURAL_DEMO): {
-	    return client_oneshot();
-	}
-	case(DemoModes::MD_1_OOP_CLIENT_ONE_SERVER_ECHO): {
-	    if(cfg.prot == DemoProtocols::TCP){
-	        //TcpClientClass clientClass(cfg, tcpip::BUFFER_SIZES);
-	        //return clientClass.perform_operation();
-	        return client_oneshot();
-	    }
-	    else {
-	        std::cerr << "client_application: Protocol not implemented yet!" << std::endl;
-	    }
-	    return 0;
-	}
-	case(DemoModes::MD_2_OOP_CLIENT_NONE_SERVER_ONE):
-	case(DemoModes::MD_3_OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY):
-	case(DemoModes::MD_4_OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE):
-	default: {
-	    std::cerr << "client_application: Mode not implemented yet!" << std::endl;
-	    return -1;
-	}
-	}
+    if(cfg.mode == DemoModes::MD_0_PROCEDURAL_DEMO) {
+        return client_oneshot(cfg.server_address);
+    }
+    else {
+        if(cfg.prot == DemoProtocols::TCP) {
+            TcpClientClass client(cfg, tcpip::BUFFER_SIZES);
+            return client.perform_operation();
+        }
+        else {
+            std::cerr << "server_application: Protocol not implemented yet!" << std::endl;
+            return 0;
+        }
+    }
 }
 
