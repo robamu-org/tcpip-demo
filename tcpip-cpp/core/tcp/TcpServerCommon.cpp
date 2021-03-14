@@ -52,3 +52,17 @@ int TcpServerClass::common_tcp_server_setup(struct addrinfo& hints) {
     }
     return 0;
 }
+
+int TcpServerClass::accept_connection() {
+    /* Accept a client socket */
+    client_socket = accept(listen_socket, NULL, NULL);
+    if (client_socket < 0) {
+        std::cerr << "TcpServerClass::setup_server: accept failed with error: " <<
+                tcpip::get_last_error() << std::endl;
+        return 1;
+    }
+
+    /* No longer need server socket */
+    tcpip::close_socket(listen_socket);
+    return 0;
+}

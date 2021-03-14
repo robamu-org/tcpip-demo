@@ -85,20 +85,6 @@ int TcpServerClass::setup(struct addrinfo &hints) {
     return 0;
 }
 
-int TcpServerClass::accept_connection() {
-    // Accept a client socket
-    client_socket = accept(listen_socket, NULL, NULL);
-    if (client_socket == INVALID_SOCKET) {
-        std::cerr << "TcpServerClass::setup_server: accept failed with error: " <<
-                WSAGetLastError() << std::endl;
-        return 1;
-    }
-
-    // No longer need server socket
-    closesocket(listen_socket);
-    return 0;
-}
-
 int TcpServerClass::perform_mode_operation() {
     using md = tcpip::DemoModes;
     switch(mode) {

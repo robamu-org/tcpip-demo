@@ -7,7 +7,7 @@
 #include <stdexcept>
 
 TcpServerClass::TcpServerClass(tcpip::DemoConfig& cfg, size_t reception_buffer_size):
-TcpipBase(cfg, reception_buffer_size) {
+        TcpipBase(cfg, reception_buffer_size) {
 }
 
 TcpServerClass::~TcpServerClass() {
@@ -44,20 +44,6 @@ int TcpServerClass::setup(struct addrinfo &hints) {
     return common_tcp_server_setup(hints);
 }
 
-int TcpServerClass::accept_connection() {
-    /* Accept a client socket */
-    client_socket = accept(listen_socket, NULL, NULL);
-    if (client_socket < 0) {
-        std::cerr << "TcpServerClass::setup_server: accept failed with error: " <<
-                errno << std::endl;
-        return 1;
-    }
-
-    /* No longer need server socket */
-    close(listen_socket);
-    return 0;
-}
-
 int TcpServerClass::perform_mode_operation() {
     using md = tcpip::DemoModes;
     switch(mode) {
@@ -67,8 +53,8 @@ int TcpServerClass::perform_mode_operation() {
     case(md::MD_3_OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY):
     case(md::MD_4_OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE):
     default: {
-        std::cout << "TcpServerClass::perform_mode_operatio: Mode handling not implemented for mode" <<
-                static_cast<int>(mode) << "!" << std::endl;
+        std::cout << "TcpServerClass::perform_mode_operatio: Mode handling not implemented "
+                "for mode" << static_cast<int>(mode) << "!" << std::endl;
     }
     }
 
@@ -90,7 +76,8 @@ int TcpServerClass::perform_simple_echo_op() {
             send_result = send(client_socket, reinterpret_cast<char*>(reception_buffer.data()),
                     bytes_to_sendback, 0);
             if (send_result < 0) {
-                std::cerr << "send failed with error: " << errno << std::endl;
+                std::cerr << "Server: Send failed with error: " << tcpip::get_last_error() <<
+                        std::endl;
                 return 1;
             }
             std::cout << "Server: Bytes sent: " << send_result << std::endl;
@@ -98,7 +85,7 @@ int TcpServerClass::perform_simple_echo_op() {
         else if (retval == 0)
             printf("Server: Connection closing...\n");
         else  {
-            std::cerr << "Server: recv failed with error: " << errno << std::endl;
+            std::cerr << "Server: recv failed with error: " << tcpip::get_last_error() << std::endl;
             return 1;
         }
 

@@ -6,7 +6,7 @@
 #include <iomanip>
 
 TcpClientClass::~TcpClientClass() {
-    close(connect_socket);
+    tcpip::close_socket(connect_socket);
 }
 
 int TcpClientClass::perform_operation() {

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "tcpipCommon.h"
 #include <demo_config.h>
 #include <vector>
 
@@ -29,7 +30,6 @@ protected:
 
 
 #ifdef _WIN32
-    using socket_t = SOCKET;
 
     static constexpr int SHUT_RECV = SD_RECEIVE;
     static constexpr int SHUT_SEND = SD_SEND;
@@ -43,8 +43,6 @@ protected:
     static constexpr int SHUT_RECV = SHUT_RD;
     static constexpr int SHUT_SEND = SHUT_WR;
     static constexpr int SHUT_BOTH = SHUT_RDWR;
-
-    using socket_t = int;
 
 #endif
 
