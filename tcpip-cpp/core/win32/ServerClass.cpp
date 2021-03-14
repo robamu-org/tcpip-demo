@@ -124,11 +124,13 @@ int ServerClass::perform_simple_echo_op() {
         int send_result;
 
         retval = recv(client_socket, reinterpret_cast<char*>(reception_buffer.data()),
-                reception_buffer_len, 0);
+                reception_buffer.capacity() - 1, 0);
         if (retval > 0) {
             {
                 auto pg = print_guard();
-                std::cout << SRV_CLR << "Server: Bytes received: " << retval << std::endl;
+                reception_buffer[retval] = '\0';
+                std::cout << SRV_CLR << "Server: Received " << retval << " bytes string: "
+                        << reception_buffer.data() << std::endl;
             }
 
             size_t bytes_to_sendback = retval;
