@@ -6,61 +6,6 @@
 #include <iostream>
 #include <stdexcept>
 
-TcpServerClass::TcpServerClass(tcpip::DemoConfig& cfg, size_t reception_buffer_size):
-        TcpipBase(cfg, reception_buffer_size) {
-}
-
-TcpServerClass::~TcpServerClass() {
-    close(listen_socket);
-    close(client_socket);
-}
-
-int TcpServerClass::perform_operation() {
-    int retval = setup_server();
-    if(retval != 0) {
-        return retval;
-    }
-
-    retval = accept_connection();
-    if(retval != 0) {
-        return retval;
-    }
-
-    retval = perform_mode_operation();
-    return retval;
-}
-
-int TcpServerClass::setup_server() {
-    struct addrinfo hints = {};
-
-    hints.ai_family = AF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_protocol = IPPROTO_TCP;
-    hints.ai_flags = AI_PASSIVE;
-    return setup(hints);
-}
-
-int TcpServerClass::setup(struct addrinfo &hints) {
-    return common_tcp_server_setup(hints);
-}
-
-int TcpServerClass::perform_mode_operation() {
-    using md = tcpip::DemoModes;
-    switch(mode) {
-    case(md::MD_1_OOP_CLIENT_ONE_SERVER_ECHO): {
-        return perform_simple_echo_op();
-    }
-    case(md::MD_3_OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY):
-    case(md::MD_4_OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE):
-    default: {
-        std::cout << "TcpServerClass::perform_mode_operatio: Mode handling not implemented "
-                "for mode" << static_cast<int>(mode) << "!" << std::endl;
-    }
-    }
-
-    return 0;
-}
-
 int TcpServerClass::perform_simple_echo_op() {
     int retval = 0;
     // Receive until the peer shuts down the connection
@@ -83,7 +28,7 @@ int TcpServerClass::perform_simple_echo_op() {
             std::cout << "Server: Bytes sent: " << send_result << std::endl;
         }
         else if (retval == 0)
-            printf("Server: Connection closing...\n");
+            std::cout << "Server: Client closed connection" << std::endl;
         else  {
             std::cerr << "Server: recv failed with error: " << tcpip::get_last_error() << std::endl;
             return 1;

@@ -1,6 +1,6 @@
 target_sources(${TARGET_NAME} PRIVATE
     TcpClientCommon.cpp
-    TcpServerCommon.cpp
+    TcpServerClass.cpp
 )
 
 if(WIN32)

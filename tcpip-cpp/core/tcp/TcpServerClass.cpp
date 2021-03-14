@@ -1,17 +1,20 @@
-#include <core/tcp/TcpServerClass.h>
+#include "TcpServerClass.h"
+
 #include <utility.h>
 
-#include <iostream>
-#include <iomanip>
-#include <stdexcept>
+#ifdef __unix__
+#include <arpa/inet.h>
+#endif
 
-TcpServerClass::TcpServerClass(tcpip::DemoConfig& cfg, size_t reception_buf_size):
-        TcpipBase(cfg, reception_buf_size) {
+#include <iostream>
+
+TcpServerClass::TcpServerClass(tcpip::DemoConfig& cfg, size_t reception_buffer_size):
+        TcpipBase(cfg, reception_buffer_size) {
 }
 
 TcpServerClass::~TcpServerClass() {
-    closesocket(listen_socket);
-    closesocket(client_socket);
+    tcpip::close_socket(listen_socket);
+    tcpip::close_socket(client_socket);
 }
 
 int TcpServerClass::perform_operation() {
@@ -33,43 +36,54 @@ int TcpServerClass::perform_operation() {
     return retval;
 }
 
-
 int TcpServerClass::setup_server() {
     struct addrinfo hints = {};
-    ZeroMemory( &hints, sizeof(hints) );
+
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
-
+#ifdef __unix__
+    hints.ai_flags = AI_PASSIVE;
+#endif
     return setup(hints);
 }
 
 int TcpServerClass::setup(struct addrinfo &hints) {
-    struct addrinfo *result = NULL;
-    int retval = 0;
+    return common_tcp_server_setup(hints);
+}
 
-    // Resolve the server address and port
-    retval = getaddrinfo(nullptr, tcpip::SERVER_PORT, &hints, &result);
+int TcpServerClass::common_tcp_server_setup(struct addrinfo& hints) {
+    struct addrinfo *result = nullptr;
+
+    /* Resolve the server address and port */
+    int retval = 0;
+    if(server_address == "any" or server_address == "") {
+        retval = getaddrinfo(nullptr, server_port.c_str(), &hints, &result);
+    }
+    else {
+        retval = getaddrinfo(server_address.c_str(), server_port.c_str(), &hints, &result);
+    }
+
     if (retval != 0) {
         std::cerr << "TcpServerClass::setup_server: getaddrinfo failed with error: " <<
                 retval << std::endl;
         return 1;
     }
 
-    // Create a SOCKET for connecting to server
+    /* Create a socket for connecting to server */
     listen_socket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
-    if (listen_socket == INVALID_SOCKET) {
+    if (listen_socket < 0) {
         std::cerr << "TcpServerClass::setup_server: socket failed with error: " <<
-                WSAGetLastError() << std::endl;
+                errno << std::endl;
         freeaddrinfo(result);
         return 1;
     }
 
-    // Setup the TCP listening socket
+    /* Setup the TCP listening socket */
     retval = bind(listen_socket, result->ai_addr, (int)result->ai_addrlen);
-    if (retval == SOCKET_ERROR) {
+    if (retval != 0) {
         std::cerr << "TcpServerClass::setup_server: bind failed with error: " <<
-                WSAGetLastError() << std::endl;
+                tcpip::get_last_error() << std::endl;
         freeaddrinfo(result);
         return 1;
     }
@@ -77,17 +91,32 @@ int TcpServerClass::setup(struct addrinfo &hints) {
     freeaddrinfo(result);
 
     retval = listen(listen_socket, SOMAXCONN);
-    if (retval == SOCKET_ERROR) {
+    if (retval != 0) {
         std::cerr << "TcpServerClass::setup_server: listen failed with error: " <<
-                WSAGetLastError() << std::endl;
+                tcpip::get_last_error() << std::endl;
         return 1;
     }
+    return 0;
+}
+
+int TcpServerClass::accept_connection() {
+    /* Accept a client socket */
+    client_socket = accept(listen_socket, NULL, NULL);
+    if (client_socket < 0) {
+        std::cerr << "TcpServerClass::setup_server: accept failed with error: " <<
+                tcpip::get_last_error() << std::endl;
+        return 1;
+    }
+
+    /* No longer need server socket */
+    tcpip::close_socket(listen_socket);
     return 0;
 }
 
 int TcpServerClass::perform_mode_operation() {
     using md = tcpip::DemoModes;
     switch(mode) {
+    case(md::MD_0_PROCEDURAL_DEMO):
     case(md::MD_1_OOP_CLIENT_ONE_SERVER_ECHO): {
         return perform_simple_echo_op();
     }
@@ -95,8 +124,8 @@ int TcpServerClass::perform_mode_operation() {
     case(md::MD_3_OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY):
     case(md::MD_4_OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE):
     default: {
-        std::cout << "TcpServerClass::perform_mode_operatio: Mode handling not implemented for mode" <<
-                static_cast<int>(mode) << "!" << std::endl;
+        std::cout << "TcpServerClass::perform_mode_operatio: Mode handling not implemented "
+                "for mode" << static_cast<int>(mode) << "!" << std::endl;
     }
     }
 
@@ -105,7 +134,7 @@ int TcpServerClass::perform_mode_operation() {
 
 int TcpServerClass::perform_simple_echo_op() {
     int retval = 0;
-    // Receive until the peer shuts down the connection
+    /* Receive until the peer shuts down the connection */
     do {
         int send_result;
 
@@ -124,7 +153,8 @@ int TcpServerClass::perform_simple_echo_op() {
             send_result = send(client_socket, reinterpret_cast<char*>(reception_buffer.data()),
                     bytes_to_sendback, 0);
             if (send_result == SOCKET_ERROR) {
-                std::cerr << "send failed with error: " << WSAGetLastError() << std::endl;
+                std::cerr << "Server: TcpServerClass::perform_simple_echo_op: "
+                        "Send failed with error: " << tcpip::get_last_error() << std::endl;
                 return 1;
             }
 
@@ -137,21 +167,18 @@ int TcpServerClass::perform_simple_echo_op() {
             std::cout << SRV_CLR << "Server: Client closed connection" << std::endl;
         }
         else  {
-            std::cerr << "Server: recv failed with error: " << WSAGetLastError() << std::endl;
+            std::cerr << "Server: recv failed with error: " << tcpip::get_last_error() << std::endl;
             return 1;
         }
 
     } while (retval > 0);
 
-    {
-        auto pg = print_guard();
-        std::cout << "Server: Closing connection" << std::endl;
-    }
+    std::cout << "Server: Closing connection" << std::endl;
 
-    // shutdown the connection since we're done
-    retval = shutdown(client_socket, SD_SEND);
+    /* shutdown the connection since we're done */
+    retval = shutdown(client_socket, SHUT_SEND);
     if (retval == SOCKET_ERROR) {
-        std::cerr << "shutdown failed with error: " << WSAGetLastError() << std::endl;
+        std::cerr << "shutdown failed with error: " << tcpip::get_last_error() << std::endl;
         return 1;
     }
     return 0;
