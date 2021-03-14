@@ -78,7 +78,7 @@ int TcpClientClass::perform_simple_send_op() {
     int retval = send(connect_socket, send_buf.c_str(), send_buf.size(), 0 );
     if (retval == SOCKET_ERROR) {
         std::cerr << "TcpClientClass::perform_send_operation: Send failed with error: " <<
-                WSAGetLastError() << std::endl;
+                tcpip::get_last_error() << std::endl;
         return 1;
     }
 
@@ -91,7 +91,7 @@ int TcpClientClass::perform_simple_send_op() {
     retval = shutdown(connect_socket, SHUT_SEND);
     if(retval != 0) {
         std::cerr << "TcpClientClass::perform_send_operation: shutdown failed with error: " <<
-                WSAGetLastError() << std::endl;
+                tcpip::get_last_error() << std::endl;
     }
     return 0;
 }
