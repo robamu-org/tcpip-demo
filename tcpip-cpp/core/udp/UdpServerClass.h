@@ -24,7 +24,7 @@ private:
     int send_flags = 0;
 
     struct sockaddr sender;
-    int sender_sock_len = 0;
+    int sender_sock_len = sizeof(sender);
 
     std::mutex packet_lock;
     std::queue<std::vector<uint8_t>> packet_queue;

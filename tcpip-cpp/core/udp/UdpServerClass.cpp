@@ -84,16 +84,19 @@ int UdpServerClass::setup(struct addrinfo &hints) {
 
 int UdpServerClass::listener_function() {
     std::cout << "Server: Listening for UDP packets.." << std::endl;
-    int len = sizeof(sender);
+    int error = 0;
     int retval = recvfrom(
             server_socket,
             reinterpret_cast<char*>(reception_buffer.data()),
             reception_buffer.capacity() - 1,
             udp_flags,
             &sender,
-            &len
+            &sender_sock_len
     );
 
+    if(retval < 0) {
+        error = tcpip::get_last_error();
+    }
 
     if(retval > 0) {
         std::lock_guard<std::mutex> lock(packet_lock);
@@ -102,7 +105,7 @@ int UdpServerClass::listener_function() {
     }
     else if(retval == SOCKET_ERROR) {
         std::cerr << "Client: UdpServerClass::listener_function: failed with " <<
-                tcpip::get_last_error() << std::endl;
+                error << std::endl;
         return -1;
     }
     return 0;

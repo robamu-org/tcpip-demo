@@ -65,6 +65,8 @@ int UdpClientClass::setup(struct addrinfo &hints) {
 
 int UdpClientClass::perform_send_operation() {
     std::string string = "This is a UDP test";
+    std::cout << "Client: Sending string with " << string.size() << " bytes: " <<
+            string << std::endl;
     int retval = sendto(server_socket, string.data(), string.size(), 0, server_addr->ai_addr,
             server_addr->ai_addrlen);
     if(retval > 0) {
