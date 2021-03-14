@@ -61,11 +61,24 @@ int TcpClientClass::perform_op_common(Steps step) {
             return perform_simple_send_op();
         }
         else if(step == Steps::READ) {
-            retval = perform_echo_recv_operation();
+            retval = tcp_read_operation();
+        }
+        else {
+            return -1;
         }
         break;
     }
-    case(dm::MD_2_OOP_CLIENT_NONE_SERVER_ONE):
+    case(dm::MD_2_OOP_CLIENT_NONE_SERVER_ONE): {
+        if(step == Steps::SEND) {
+            return shutdown(connect_socket, SHUT_SEND);
+        }
+        else if(step == Steps::READ) {
+            return tcp_read_operation();
+        }
+        else {
+           return -1;
+        }
+    }
     case(dm::MD_3_OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY):
     case(dm::MD_4_OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE):
     default: {
@@ -160,7 +173,7 @@ int TcpClientClass::common_tcp_client_setup(struct addrinfo& hints, socket_t& co
 
 
 
-int TcpClientClass::perform_echo_recv_operation() {
+int TcpClientClass::tcp_read_operation() {
     int retval = 0;
     /* Receive until the peer closes the connection */
     do {
@@ -169,6 +182,7 @@ int TcpClientClass::perform_echo_recv_operation() {
         if (retval > 0 ) {
             auto pg = print_guard();
             reception_buffer[retval] = '\0';
+            uint8_t* ptr = reception_buffer.data();
             std::cout  << CL_CLR << "Client: Received " << retval << " bytes string: " <<
                     reception_buffer.data() << std::endl;
         }

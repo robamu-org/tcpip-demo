@@ -10,9 +10,13 @@
 
 /* Forward declarations */
 int startup_code(tcpip::DemoConfig& cfg);
+#if CLI_MODE == 1
 int determine_config_from_user(tcpip::DemoConfig& cfg);
+#endif
 int server_application(tcpip::DemoConfig cfg);
 int client_application(tcpip::DemoConfig cfg);
+void print_mode_info(tcpip::DemoModes mode);
+void enable_win_term_colors();
 
 
 int main() {
@@ -26,6 +30,9 @@ int main() {
 	if(result != 0) {
 	    return result;
 	}
+#if TCPIP_DEMO_PRINT_MODE_INFO == 1
+	print_mode_info(cfg.mode);
+#endif
 
 	std::thread server_thread(server_application, cfg);
 	std::this_thread::sleep_for(10ms);
@@ -33,7 +40,7 @@ int main() {
 	server_thread.join();
 	client_thread.join();
 	std::cout << ANSI_COLOR_RESET << "Demo finished." << std::endl;
-#if AUTO_TERMINATE_DEMO == 0
+#if TCPIP_DEMO_AUTOTERMINATE == 0
 	std::cout << "Press enter to finish program" << std::endl;
 	std::cin.ignore();
 #endif
@@ -44,11 +51,7 @@ int startup_code(tcpip::DemoConfig& cfg) {
     using namespace std;
 
 #ifdef _WIN32
-    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    DWORD dwMode = 0;
-    GetConsoleMode(hOut, &dwMode);
-    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-    SetConsoleMode(hOut, dwMode);
+    enable_win_term_colors();
 #endif
 
 #if CLI_MODE == 1
@@ -63,97 +66,32 @@ int startup_code(tcpip::DemoConfig& cfg) {
     return 0;
 }
 
-int determine_config_from_user(tcpip::DemoConfig& cfg) {
-    using namespace std;
-    string type_string;
-    while(true) {
-        cout << "Select demo type [h for available types or index]: " << std::endl;
-        getline(cin, type_string);
-        if(type_string == "h") {
-            cout << "Available types: \n";
-            cout << "0: Server and Client type\n";
-            cout << "1: Server type\n";
-            cout << "2: Client type\n";
-            cout << endl;
-            continue;
-        }
-        int type_index = 0;
-        try {
-             type_index = std::stoi(type_string);
-        }
-        catch(const std::invalid_argument&) {
-            cout << "Invalid argument. Try again." << endl;
-            continue;
-        }
-        if(type_index < 0 or type_index > 2) {
-            cout << "Invalid argument. Try again." << endl;
-            continue;
-        }
-        cfg.type = static_cast<tcpip::DemoTypes>(type_index);
+
+void print_mode_info(tcpip::DemoModes mode) {
+    using md = tcpip::DemoModes;
+    std::cout << "Mode information. Selected mode: " << static_cast<int>(mode) << std::endl;
+    std::string server_pr = std::string(SRV_CLR) + "Server" + std::string(ANSI_COLOR_RESET);
+    std::string client_pr = std::string(CL_CLR) + "Client" + std::string(ANSI_COLOR_RESET);
+    switch(mode) {
+    case(md::MD_1_OOP_CLIENT_ONE_SERVER_ECHO): {
+        std::cout << client_pr <<  " will send one packet, " << server_pr << " will echo back." <<
+                std::endl;
         break;
     }
-
-    string mode_string;
-    while(true) {
-        cout << "Please enter demo mode [h for modes or index]: " << endl;
-        getline(cin, mode_string);
-        if(mode_string == "h") {
-            cout << "Available modes: \n";
-            cout << "0: Simple oneshot echo\n";
-            cout << "1: OOP Client One Server Reply\n";
-            cout << "2: OOP Client None Server Reply \n";
-            cout << "3: OOP Client Multiple Server None\n";
-            cout << "4: OOP client Multiple Server Multiple\n";
-            cout << endl;
-            continue;
-        }
-        int mode_index = 0;
-        try {
-             mode_index = std::stoi(mode_string);
-        }
-        catch(const std::invalid_argument&) {
-            cout << "Invalid argument. Try again." << endl;
-            continue;
-        }
-        if(mode_index < 0 or mode_index > 4) {
-            cout << "Invalid argument. Try again." << endl;
-            continue;
-        }
-        cfg.mode = static_cast<tcpip::DemoModes>(mode_index);
+    case(md::MD_2_OOP_CLIENT_NONE_SERVER_ONE): {
+        std::cout << client_pr << " will send nothing, " << server_pr << " will send "
+                "unrequested reply." << std::endl;
         break;
     }
-
-
-    while(true) {
-        cout << "Please type in port [nothing for default port from demo_config.h]:" << endl;
-        string port_string;
-        getline(cin, port_string);
-        if(port_string.empty()) {
-            port_string = tcpip::SERVER_PORT;
-        }
-        cout << "Confirm port [y/Y]: " << port_string << endl;
-        string confirmation;
-        getline(cin, confirmation);
-        if(confirmation == "y" or confirmation == "Y" or confirmation == "1") {
-            break;
-        }
+    case(md::MD_3_OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY): {
+        std::cout << client_pr << " will send multiple packets, " << server_pr << " will not reply "
+                "anything." << std::endl;
+        break;
     }
-
-    while(true) {
-        cout << "Please type in address [nothing for localhost, localhost, any or IP address]" <<
-                endl;
-        string ip_address;
-        getline(cin, ip_address);
-        if(ip_address == "") {
-            ip_address = "localhost";
-        }
-
-        cout << "Confirm address [y/Y]: " << ip_address << endl;
-        string confirmation;
-        getline(cin, confirmation);
-        if(confirmation == "y" or confirmation == "Y" or confirmation == "1") {
-            break;
-        }
+    case(md::MD_4_OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE): {
+        std::cout << client_pr << " will send multiple packets, " << server_pr << " "
+                "echo all of them." << std::endl;
+        break;
     }
-    return 0;
+    }
 }

@@ -23,20 +23,18 @@ public:
     int perform_operation() override;
 private:
 
-#ifdef _WIN32
-    SOCKET listen_socket = INVALID_SOCKET;
-    SOCKET client_socket = INVALID_SOCKET;
-#elif defined(__unix__)
-    int listen_socket = 0;
-    int client_socket = 0;
-#endif
+    socket_t listen_socket = INVALID_SOCKET;
+    socket_t client_socket = INVALID_SOCKET;
+
     int setup(struct addrinfo& hints) override;
+    int common_tcp_server_setup(struct addrinfo& hints);
 
     int setup_server();
     int accept_connection();
     int perform_mode_operation();
 
-    int perform_simple_echo_op();
+    int perform_mode_1_echo();
+    int perform_mode_2();
 
-    int common_tcp_server_setup(struct addrinfo& hints);
+    int perform_shutdown();
 };

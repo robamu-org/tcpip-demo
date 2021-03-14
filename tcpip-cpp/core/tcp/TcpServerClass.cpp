@@ -33,7 +33,11 @@ int TcpServerClass::perform_operation() {
     }
 
     retval = perform_mode_operation();
-    return retval;
+    if(retval != 0) {
+        return retval;
+    }
+
+    return perform_shutdown();
 }
 
 int TcpServerClass::setup_server() {
@@ -118,9 +122,11 @@ int TcpServerClass::perform_mode_operation() {
     switch(mode) {
     case(md::MD_0_PROCEDURAL_DEMO):
     case(md::MD_1_OOP_CLIENT_ONE_SERVER_ECHO): {
-        return perform_simple_echo_op();
+        return perform_mode_1_echo();
     }
-    case(md::MD_2_OOP_CLIENT_NONE_SERVER_ONE):
+    case(md::MD_2_OOP_CLIENT_NONE_SERVER_ONE): {
+        return perform_mode_2();
+    }
     case(md::MD_3_OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY):
     case(md::MD_4_OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE):
     default: {
@@ -132,7 +138,7 @@ int TcpServerClass::perform_mode_operation() {
     return 0;
 }
 
-int TcpServerClass::perform_simple_echo_op() {
+int TcpServerClass::perform_mode_1_echo() {
     int retval = 0;
     /* Receive until the peer shuts down the connection */
     do {
@@ -172,11 +178,55 @@ int TcpServerClass::perform_simple_echo_op() {
         }
 
     } while (retval > 0);
+    return 0;
+}
 
-    std::cout << "Server: Closing connection" << std::endl;
+int TcpServerClass::perform_mode_2() {
+    int retval = 0;
+    /* Receive until the peer shuts down the connection */
+    do {
+        int send_result;
+        retval = recv(client_socket, reinterpret_cast<char*>(reception_buffer.data()),
+                reception_buffer.capacity() - 1, 0);
+        bool reply_sent = false;
+        if(retval > 0) {
+            std::cerr << "Server: Packet received from client "
+                    "when none should have been sent!" << std::endl;
+        }
+        else if(retval == 0) {
+            std::cout << SRV_CLR << "Server: No packets received from client" << std::endl;
+            if(not reply_sent) {
+                std::cout << SRV_CLR << "Server: Sending back unrequested reply" << std::endl;
+                std::string reply = "Hello, this is my unrequested reply";
+                send_result = send(client_socket, reinterpret_cast<char*>(reply.data()),
+                        reply.size(), 0);
+                if (send_result == SOCKET_ERROR) {
+                    std::cerr << "Server: TcpServerClass::perform_simple_echo_op: "
+                            "Send failed with error: " << tcpip::get_last_error() << std::endl;
+                    return 1;
+                }
+                reply_sent = true;
+            }
+            else {
+                std::cerr << "Server: More than 1 packet received from client!" << std::endl;
+            }
+        }
+        else {
+            std::cerr << "Server: recv failed with error: " << tcpip::get_last_error() << std::endl;
+            return 1;
+        }
+    } while (retval > 0);
+    return 0;
+}
+
+int TcpServerClass::perform_shutdown() {
+    {
+        auto pg = print_guard();
+        std::cout << SRV_CLR << "Server: Closing connection" << std::endl;
+    }
 
     /* shutdown the connection since we're done */
-    retval = shutdown(client_socket, SHUT_SEND);
+    int retval = shutdown(client_socket, SHUT_SEND);
     if (retval == SOCKET_ERROR) {
         std::cerr << "shutdown failed with error: " << tcpip::get_last_error() << std::endl;
         return 1;

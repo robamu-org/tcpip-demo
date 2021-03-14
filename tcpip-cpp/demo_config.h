@@ -18,11 +18,14 @@ constexpr char SERVER_PORT[] = "27015";
 //! These values will be prompted from the user in CLI mode.
 #define TCPIP_DEMO_PROT                             TCPIP_PROT_0_TCP
 #define TCPIP_DEMO_TYPE                             TCPIP_TP_0_CLIENT_AND_SERVER
-#define TCPIP_DEMO_MODE                             TCPIP_MD_1_OOP_CLIENT_ONE_SERVER_ECHO
+#define TCPIP_DEMO_MODE                             TCPIP_MD_2_OOP_CLIENT_NONE_SERVER_ONE
 
 
 //! If this in 1, the program will exit automatically instead of prompting an enter command
-#define AUTO_TERMINATE_DEMO                         1
+#define TCPIP_DEMO_AUTOTERMINATE                    1
+
+//! Print what the mode does
+#define TCPIP_DEMO_PRINT_MODE_INFO                  1
 
 
 

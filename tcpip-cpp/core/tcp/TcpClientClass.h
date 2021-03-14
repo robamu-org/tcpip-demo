@@ -37,7 +37,7 @@ private:
     int perform_op_common(Steps step);
 
     int perform_simple_send_op();
-    int perform_echo_recv_operation();
+    int tcp_read_operation();
 
     int common_connection_attempt();
     int common_tcp_client_setup(struct addrinfo& hints, socket_t& conn_sock);
