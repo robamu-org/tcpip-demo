@@ -5,6 +5,10 @@ operating systems and IDEs.
 
 # C++
 
+The demo can be configured by editing the `demo_config.h` file before build it.
+Alternatively, use can use the CL mode by setting `CLI_MODE` to 1. Then you will be 
+prompted for all required variables.
+
 ## Build instructions 
 
 Project template for building C++ and C projects with CMake and various different compilers
