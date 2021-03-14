@@ -6,8 +6,9 @@
 #include <iostream>
 #include <stdexcept>
 
-ServerClass::ServerClass(tcpip::DemoModes mode):  mode(mode), reception_buffer(tcpip::BUFFER_SIZES),
-        reception_buffer_len(reception_buffer.size()) {
+ServerClass::ServerClass(tcpip::DemoConfig& cfg):  mode(cfg.mode),
+        server_address(cfg.server_address), server_port(cfg.server_port),
+        reception_buffer(tcpip::BUFFER_SIZES){
 }
 
 int ServerClass::perform_operation() {
@@ -40,7 +41,14 @@ int ServerClass::setup_server() {
     hints.ai_flags = AI_PASSIVE;
 
     // Resolve the server address and port
-    int retval = getaddrinfo(nullptr, tcpip::SERVER_PORT, &hints, &result);
+    int retval = 0;
+    if(server_address == "any" or server_address == "") {
+        retval = getaddrinfo(nullptr, server_port.c_str(), &hints, &result);
+    }
+    else {
+        retval = getaddrinfo(server_address.c_str(), server_port.c_str(), &hints, &result);
+    }
+
     if (retval != 0) {
         std::cerr << "ServerClass::setup_server: getaddrinfo failed with error: " <<
                 retval << std::endl;
@@ -114,7 +122,7 @@ int ServerClass::perform_simple_echo_op() {
         int send_result;
 
         retval = recv(client_socket, reinterpret_cast<char*>(reception_buffer.data()),
-                reception_buffer_len, 0);
+                reception_buffer.capacity(), 0);
         if (retval > 0) {
             std::cout << "Server: Bytes Received: " << retval << std::endl;
             size_t bytes_to_sendback = retval;

@@ -33,7 +33,6 @@ private:
 #endif
 
     std::vector<uint8_t> reception_buffer;
-    size_t reception_buffer_len;
 
     int setup_server();
     int accept_connection();

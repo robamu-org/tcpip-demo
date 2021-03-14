@@ -225,9 +225,9 @@ int server_oneshot(std::string ip_address) {
 
         retval = recv(client_socket, reinterpret_cast<char*>(reception_buffer.data()), recvbuflen, 0);
         if (retval > 0) {
-            printf(ANSI_COLOR_GREEN "Server: Bytes received: %d\n", retval);
-            printf(ANSI_COLOR_GREEN "Server: Received string: %s\n", reception_buffer.data());
-            printf(ANSI_COLOR_GREEN "Server: Echoing back string\n");
+            printf(SRV_CLR "Server: Bytes received: %d\n", retval);
+            printf(SRV_CLR "Server: Received string: %s\n", reception_buffer.data());
+            printf(SRV_CLR "Server: Echoing back string\n");
             // Echo the buffer back to the sender
             send_result = send(client_socket, reinterpret_cast<char*>(reception_buffer.data()), retval, 0 );
             if (send_result < 0) {
@@ -235,10 +235,10 @@ int server_oneshot(std::string ip_address) {
                 close(client_socket);
                 return 1;
             }
-            printf(ANSI_COLOR_GREEN "Server: Bytes echoed back: %d\n", send_result);
+            printf(SRV_CLR "Server: Bytes echoed back: %d\n", send_result);
         }
         else if (retval == 0)
-            printf(ANSI_COLOR_GREEN "Server: Connection closing...\n");
+            printf(SRV_CLR "Server: Client closed connection\n");
         else  {
             printf("Server: recv failed with error: %d\n", errno);
             close(client_socket);
