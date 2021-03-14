@@ -31,8 +31,8 @@ protected:
 #ifdef _WIN32
     using socket_t = SOCKET;
 
-    static constexpr int SHUT_SEND = SD_SEND;
     static constexpr int SHUT_RECV = SD_RECEIVE;
+    static constexpr int SHUT_SEND = SD_SEND;
     static constexpr int SHUT_BOTH = SD_BOTH;
 
 #elif defined(__unix__)
@@ -40,7 +40,7 @@ protected:
     static constexpr int INVALID_SOCKET = -1;
     static constexpr int SOCKET_ERROR = -1;
 
-    static constexpr int SHUT_SEND = SHUT_RD;
+    static constexpr int SHUT_RECV = SHUT_RD;
     static constexpr int SHUT_SEND = SHUT_WR;
     static constexpr int SHUT_BOTH = SHUT_RDWR;
 
