@@ -1,4 +1,4 @@
 target_sources(${TARGET_NAME} PRIVATE
-    ClientClass.cpp 
-    ServerClass.cpp 
+    TcpClientClass.cpp 
+    TcpServerClass.cpp 
 )

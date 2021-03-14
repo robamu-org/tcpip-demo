@@ -1,5 +1,5 @@
+#include <core/TcpClientClass.h>
 #include "demo_config.h"
-#include <core/ClientClass.h>
 #include <iostream>
 
 int client_oneshot();

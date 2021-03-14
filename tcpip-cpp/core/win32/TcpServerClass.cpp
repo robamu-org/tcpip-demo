@@ -1,5 +1,4 @@
-#include "../ServerClass.h"
-
+#include <core/TcpServerClass.h>
 #include <utility.h>
 
 #include <iostream>
@@ -16,6 +15,10 @@ ServerClass::~ServerClass() {
 }
 
 int ServerClass::perform_operation() {
+    if(type == tcpip::DemoTypes::CLIENT_ONLY) {
+        return 0;
+    }
+
     int retval = setup_server();
     if(retval != 0) {
         return retval;

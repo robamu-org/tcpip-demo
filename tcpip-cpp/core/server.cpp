@@ -1,5 +1,5 @@
+#include <core/TcpServerClass.h>
 #include "demo_config.h"
-#include <core/ServerClass.h>
 #include <iostream>
 
 int server_oneshot(std::string ip_address);

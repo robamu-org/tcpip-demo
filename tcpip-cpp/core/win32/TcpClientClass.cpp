@@ -1,4 +1,4 @@
-#include "../ClientClass.h"
+#include <core/TcpClientClass.h>
 #include <utility.h>
 
 #include <iostream>
@@ -66,14 +66,14 @@ int ClientClass::setup(struct addrinfo &hints) {
         struct sockaddr_in *addr_in = (struct sockaddr_in *)ptr->ai_addr;
         char *ip = inet_ntoa(addr_in->sin_addr);
         std::cout << "Client: Attempting connection to address " << ip << std::endl;
-        // Create a SOCKET for connecting to server
+        /* Create a socket for connecting to server */
         connect_socket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
         if (connect_socket == INVALID_SOCKET) {
             printf("socket failed with error: %ld\n", WSAGetLastError());
             return 1;
         }
 
-        // Connect to server.
+        /* Connect to server. */
         retval = connect(connect_socket, ptr->ai_addr, (int)ptr->ai_addrlen);
         if (retval == SOCKET_ERROR) {
             connect_socket = INVALID_SOCKET;
