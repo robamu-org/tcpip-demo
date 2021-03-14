@@ -30,12 +30,13 @@ private:
 #endif
     int setup(struct addrinfo& hints) override;
 
-    int attempt_connection();
+
     int perform_send_operation();
     int perform_recv_operation();
 
     int perform_simple_send_op();
     int perform_echo_recv_operation();
 
+    int common_connection_attempt();
     int common_tcp_client_setup(struct addrinfo& hints, socket_t& conn_sock);
 };

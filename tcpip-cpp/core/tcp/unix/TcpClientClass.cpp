@@ -19,21 +19,13 @@ int TcpClientClass::perform_operation() {
         return 0;
     }
 
-    int retval = attempt_connection();
+    int retval = common_connection_attempt();
     if(retval != 0) {
         return retval;
     }
 
     std::cout << CL_CLR << "Client: " << std::put_time(get_local_time(), "%H:%M:%S") << " | "
             << "Connection to server established" << std::endl;
-    return 0;
-}
-
-int TcpClientClass::setup(struct addrinfo &hints) {
-    return common_tcp_client_setup(hints, connect_socket);
-}
-
-int TcpClientClass::attempt_connection() {
     return 0;
 }
 

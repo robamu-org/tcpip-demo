@@ -6,6 +6,21 @@
 
 #include <iostream>
 
+int TcpClientClass::common_connection_attempt() {
+    struct addrinfo hints = {};
+
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;
+
+    return setup(hints);
+}
+
+int TcpClientClass::setup(struct addrinfo& hints) {
+    return common_tcp_client_setup(hints, connect_socket);
+}
+
+
 int TcpClientClass::common_tcp_client_setup(struct addrinfo& hints, socket_t& conn_sock) {
     struct addrinfo* result = nullptr;
     int retval = 0;

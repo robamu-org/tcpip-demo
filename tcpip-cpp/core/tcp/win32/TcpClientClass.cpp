@@ -1,4 +1,4 @@
-#include <core/TcpClientClass.h>
+#include <core/tcp/TcpClientClass.h>
 #include <utility.h>
 
 #include <iostream>
@@ -37,20 +37,6 @@ int TcpClientClass::perform_operation() {
         return retval;
     }
     return retval;
-}
-
-int TcpClientClass::attempt_connection() {
-    struct addrinfo hints = {};
-
-    hints.ai_family = AF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_protocol = IPPROTO_TCP;
-
-    return setup(hints);
-}
-
-int TcpClientClass::setup(struct addrinfo &hints) {
-    return common_tcp_client_setup(hints, connect_socket);
 }
 
 
