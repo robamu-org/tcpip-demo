@@ -20,26 +20,24 @@ int UdpServerClass::perform_operation() {
         return retval;
     }
 
-    std::thread listener_thread(&UdpServerClass::listener_function, this);
+    //std::thread listener_thread(&UdpServerClass::listener_function, this);
 
-    retval = packet_handler();
+    retval = listen_for_packets();
     if(retval != 0) {
         return retval;
     }
 
-    listener_thread.join();
+    //listener_thread.join();
     return 0;
 }
 
 int UdpServerClass::setup_server() {
     struct addrinfo hints = {};
 
-    hints.ai_family = AF_UNSPEC;
+    hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_DGRAM;
     hints.ai_protocol = IPPROTO_UDP;
-#ifdef __unix__
-    hints.ai_flags = AI_PASSIVE;
-#endif
+
     return setup(hints);
 }
 
@@ -82,7 +80,7 @@ int UdpServerClass::setup(struct addrinfo &hints) {
     return 0;
 }
 
-int UdpServerClass::listener_function() {
+int UdpServerClass::listen_for_packets() {
     std::cout << "Server: Listening for UDP packets.." << std::endl;
     int error = 0;
     int retval = recvfrom(
@@ -96,54 +94,34 @@ int UdpServerClass::listener_function() {
 
     if(retval < 0) {
         error = tcpip::get_last_error();
-    }
-
-    if(retval > 0) {
-        std::lock_guard<std::mutex> lock(packet_lock);
-        std::vector<uint8_t> packet(reception_buffer.begin(), reception_buffer.begin() + retval);
-        packet_queue.push(packet);
-    }
-    else if(retval == SOCKET_ERROR) {
-        std::cerr << "Client: UdpServerClass::listener_function: failed with " <<
+        std::cerr << "Client: UdpServerClass::listen_for_packets: recvfrom failed with " <<
                 error << std::endl;
         return -1;
     }
-    return 0;
+    reception_buffer[retval] = '\0';
+    std::cout << SRV_CLR <<"Server: Received " << retval << " bytes: " <<
+            reception_buffer.data() << std::endl;
+
+    return perform_echo_operation(retval);
 }
 
-int UdpServerClass::packet_handler() {
-    std::vector<uint8_t> packet;
-    while(true) {
-        packet_lock.lock();
-        if(packet_queue.size() > 0) {
-            packet = packet_queue.front();
-            int send_ret = sendto(
-                    server_socket,
-                    reinterpret_cast<const char*>(packet.data()),
-                    packet.size(),
-                    send_flags,
-                    &sender,
-                    sender_sock_len
-            );
-            if(send_ret > 0) {
-                packet_queue.pop();
-                break;
-            }
-            else {
-                std::cerr << "Server: Sending back packet failed!" << std::endl;
-                packet_lock.unlock();
-                return -1;
-            }
-        }
-        else {
-            using namespace std::chrono_literals;
-            packet_lock.unlock();
-            std::this_thread::sleep_for(50ms);
-        }
+int UdpServerClass::perform_echo_operation(size_t bytes_to_send) {
+    int send_flags = 0;
+    int send_ret = sendto(
+            server_socket,
+            reinterpret_cast<char*>(reception_buffer.data()),
+            bytes_to_send,
+            send_flags,
+            &sender,
+            sender_sock_len
+    );
+    if(send_ret < 0) {
+        int error = tcpip::get_last_error();
+        std::cerr << "Client: UdpServerClass::listen_for_packets: sendto failed with " <<
+                error << std::endl;
+        return -1;
     }
 
-    packet_lock.unlock();
-    std::cout << CL_CLR << "Client: Received and echoed back " << packet.size() << " bytes"<<
-            std::endl;
+    std::cout << SRV_CLR << "Server: Echoed back packet" << std::endl;
     return 0;
 }

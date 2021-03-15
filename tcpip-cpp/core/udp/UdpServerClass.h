@@ -23,6 +23,8 @@ private:
     int udp_flags = 0;
     int send_flags = 0;
 
+    socket_t server_socket = INVALID_SOCKET;
+
     struct sockaddr sender;
     int sender_sock_len = sizeof(sender);
 
@@ -32,10 +34,9 @@ private:
     int setup(struct addrinfo& hints) override;
 
     int setup_server();
-    int listener_function();
-    int packet_handler();
 
-    socket_t server_socket = INVALID_SOCKET;
+    int listen_for_packets();
+    int perform_echo_operation(size_t bytes_to_send);
 };
 
 

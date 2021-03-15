@@ -23,4 +23,6 @@ private:
     int setup_client();
 
     int perform_send_operation();
+
+    int listen_for_replies();
 };

@@ -21,16 +21,20 @@ int UdpClientClass::perform_operation() {
         return retval;
     }
 
-    return perform_send_operation();
+    retval = perform_send_operation();
+    if(retval != 0) {
+        return retval;
+    }
+
+    return listen_for_replies();
 }
 
 int UdpClientClass::setup_client() {
     struct addrinfo hints = {};
 
-    hints.ai_family = AF_UNSPEC;
+    hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_DGRAM;
     hints.ai_protocol = IPPROTO_UDP;
-    hints.ai_flags = AI_PASSIVE;
 
     return setup(hints);
 }
@@ -77,5 +81,23 @@ int UdpClientClass::perform_send_operation() {
         std::cerr << "UdpClientClass::perform_send_operation: sendto failed with error: " <<
                 tcpip::get_last_error() << std::endl;
     }
+    return 0;
+}
+
+int UdpClientClass::listen_for_replies() {
+    int recv_flags = 0;
+    int retval = recv(
+            server_socket,
+            reinterpret_cast<char*>(reception_buffer.data()),
+            reception_buffer.capacity() - 1,
+            recv_flags
+    );
+    if(retval < 0) {
+        std::cerr << "UdpClientClass::listen_for_replies: recv failed with error: " <<
+                tcpip::get_last_error() << std::endl;
+    }
+    reception_buffer[retval] = '\0';
+    std::cout << CL_CLR << "Client: Received back " << retval << " bytes: " <<
+            reception_buffer.data() << std::endl;
     return 0;
 }
