@@ -27,10 +27,12 @@ int udp_client_oneshot(std::string server_address) {
         return 1;
     }
 
+    std::vector<uint8_t> rec_buf(tcpip::BUFFER_SIZES);
+
     struct addrinfo *result = nullptr;
     struct addrinfo hints = {};
 
-    hints.ai_family = AF_UNSPEC;
+    hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_DGRAM;
     hints.ai_protocol = IPPROTO_UDP;
 
@@ -68,10 +70,25 @@ int udp_client_oneshot(std::string server_address) {
     if(retval > 0) {
         std::cout << "Client: Sent string with " << string.size() << " bytes successfully"
                 << std::endl;
+        int recv_flags = 0;
+        retval = recv(server_socket,
+                reinterpret_cast<char*>(rec_buf.data()),
+                rec_buf.capacity() - 1,
+                recv_flags
+        );
+        if(retval < 0) {
+            int error = tcpip::get_last_error();
+            std::cerr << "udp_client_oneshot: recv failed with error: " << error << std::endl;
+            WSACleanup();
+            return 1;
+        }
+        rec_buf[retval] = '\0';
+        std::cout << CL_CLR << "Client: Reply with " << retval << " bytes received: " <<
+                rec_buf.data() << std::endl;
     }
     else {
         int error = tcpip::get_last_error();
-        std::cerr << "UdpClientClass::perform_send_operation: sendto failed with error: " <<
+        std::cerr << "udp_client_oneshot: sendto failed with error: " <<
                  error << std::endl;
         WSACleanup();
         return 1;

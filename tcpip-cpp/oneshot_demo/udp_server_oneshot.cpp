@@ -30,10 +30,9 @@ int udp_server_oneshot(std::string server_address) {
     struct addrinfo *result = nullptr;
     struct addrinfo hints = {};
 
-    hints.ai_family = AF_UNSPEC;
+    hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_DGRAM;
     hints.ai_protocol = IPPROTO_UDP;
-    hints.ai_flags = AI_PASSIVE;
 
     std::vector<uint8_t> rec_buf(tcpip::BUFFER_SIZES);
     socket_t server_socket = INVALID_SOCKET;
@@ -87,7 +86,19 @@ int udp_server_oneshot(std::string server_address) {
             &sender_sock_len
     );
     if(retval > 0) {
-        std::cout << "Server: Packet with " << retval << " bytes received" << std::endl;
+        std::cout << SRV_CLR <<"Server: Packet with " << retval << " bytes received" << std::endl;
+        int send_flags = 0;
+        int send_ret = sendto(
+                server_socket,
+                reinterpret_cast<char*>(rec_buf.data()),
+                retval,
+                send_flags,
+                &sender,
+                sender_sock_len
+        );
+        if(send_ret > 0) {
+            std::cout << SRV_CLR << "Server: Echoed back packet successfully" << std::endl;
+        }
     }
     else if(retval == 0) {
         std::cout << "Server: Empty packet received" << std::endl;
