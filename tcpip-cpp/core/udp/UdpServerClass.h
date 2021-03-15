@@ -27,16 +27,14 @@ private:
 
     struct sockaddr sender;
     int sender_sock_len = sizeof(sender);
-
-    std::mutex packet_lock;
-    std::queue<std::vector<uint8_t>> packet_queue;
+    size_t bytes_to_send = 0;
 
     int setup(struct addrinfo& hints) override;
 
     int setup_server();
 
     int listen_for_packets();
-    int perform_echo_operation(size_t bytes_to_send);
+    int perform_echo_operation();
 };
 
 

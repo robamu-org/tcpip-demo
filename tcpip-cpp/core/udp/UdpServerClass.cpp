@@ -20,15 +20,12 @@ int UdpServerClass::perform_operation() {
         return retval;
     }
 
-    //std::thread listener_thread(&UdpServerClass::listener_function, this);
-
     retval = listen_for_packets();
     if(retval != 0) {
         return retval;
     }
 
-    //listener_thread.join();
-    return 0;
+    return perform_echo_operation();
 }
 
 int UdpServerClass::setup_server() {
@@ -101,11 +98,11 @@ int UdpServerClass::listen_for_packets() {
     reception_buffer[retval] = '\0';
     std::cout << SRV_CLR <<"Server: Received " << retval << " bytes: " <<
             reception_buffer.data() << std::endl;
-
-    return perform_echo_operation(retval);
+    bytes_to_send = retval;
+    return 0;
 }
 
-int UdpServerClass::perform_echo_operation(size_t bytes_to_send) {
+int UdpServerClass::perform_echo_operation() {
     int send_flags = 0;
     int send_ret = sendto(
             server_socket,

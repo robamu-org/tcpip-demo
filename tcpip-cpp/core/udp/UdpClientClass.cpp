@@ -73,11 +73,7 @@ int UdpClientClass::perform_send_operation() {
             string << std::endl;
     int retval = sendto(server_socket, string.data(), string.size(), 0, server_addr->ai_addr,
             server_addr->ai_addrlen);
-    if(retval > 0) {
-        std::cout << "Client: Sent string with " << string.size() << " bytes successfully"
-                << std::endl;
-    }
-    else {
+    if(retval < 0) {
         std::cerr << "UdpClientClass::perform_send_operation: sendto failed with error: " <<
                 tcpip::get_last_error() << std::endl;
     }
