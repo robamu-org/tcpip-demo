@@ -16,7 +16,7 @@ static const char* const SERVER_PORT =              "27015";
 #define CLI_MODE                                    0
 
 //! These values will be prompted from the user in CLI mode.
-#define TCPIP_DEMO_PROT                             TCPIP_PROT_1_UDP
+#define TCPIP_DEMO_PROT                             TCPIP_PROT_0_TCP
 #define TCPIP_DEMO_TYPE                             TCPIP_TP_0_CLIENT_AND_SERVER
 #define TCPIP_DEMO_MODE                             TCPIP_MD_0_PROCEDURAL_DEMO
 
