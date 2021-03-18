@@ -1,5 +1,4 @@
 #include "demo_config.h"
-#include <iostream>
 
 #ifdef _WIN32
 
@@ -15,23 +14,30 @@
 
 #endif
 
-#include <vector>
-#include <cstring>
-
+#include <stdint.h>
+#include <stdio.h>
 
 #ifdef _WIN32
-int tcp_client_oneshot(std::string server_address) {
+DWORD tcp_client_oneshot(LPVOID cfg) {
     // Totally not copied from https://docs.microsoft.com/en-us/windows/win32/winsock/complete-client-code
-    WSADATA wsaData;
-    SOCKET ConnectSocket = INVALID_SOCKET;
+    WSADATA wsa_data;
+    SOCKET connect_socket = INVALID_SOCKET;
+    OneShotConfig* one_shot_config = (OneShotConfig*) cfg;
+    if(one_shot_config == NULL) {
+        printf("Invalid passed config handle!\n");
+        return 1;
+    }
+    const char* server_address = one_shot_config->server_address;
+    const char* server_port = one_shot_config->server_port;
+
     struct addrinfo *result = NULL, *ptr = NULL, hints;
     const char *sendbuf = "this is a test";
-    std::vector<uint8_t> reception_buffer(tcpip::BUFFER_SIZES);
+    uint8_t rec_buf[BUFFER_SIZES];
     int iResult;
-    int recvbuflen = tcpip::BUFFER_SIZES;
+    int recvbuflen = sizeof(rec_buf);
 
     // Initialize Winsock
-    iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
+    iResult = WSAStartup(MAKEWORD(2,2), &wsa_data);
     if (iResult != 0) {
         printf("WSAStartup failed with error: %d\n", iResult);
         return 1;
@@ -43,7 +49,7 @@ int tcp_client_oneshot(std::string server_address) {
     hints.ai_protocol = IPPROTO_TCP;
 
     // Resolve the server address and port
-    iResult = getaddrinfo(server_address.c_str(), tcpip::SERVER_PORT, &hints, &result);
+    iResult = getaddrinfo(server_address, server_port, &hints, &result);
     if ( iResult != 0 ) {
         printf("getaddrinfo failed with error: %d\n", iResult);
         WSACleanup();
@@ -54,40 +60,40 @@ int tcp_client_oneshot(std::string server_address) {
     for(ptr=result; ptr != NULL ;ptr=ptr->ai_next) {
         struct sockaddr_in *addr_in = (struct sockaddr_in *)ptr->ai_addr;
         char *ip = inet_ntoa(addr_in->sin_addr);
-        std::cout << "Client: Attempting connection to address " << ip << std::endl;
+        printf("Client: Attempting connection to address %s\n", ip);
         // Create a SOCKET for connecting to server
-        ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
-        if (ConnectSocket == INVALID_SOCKET) {
+        connect_socket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
+        if (connect_socket == INVALID_SOCKET) {
             printf("socket failed with error: %ld\n", WSAGetLastError());
             WSACleanup();
             return 1;
         }
 
         // Connect to server.
-        iResult = connect( ConnectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
+        iResult = connect( connect_socket, ptr->ai_addr, (int)ptr->ai_addrlen);
         if (iResult == SOCKET_ERROR) {
-            closesocket(ConnectSocket);
-            ConnectSocket = INVALID_SOCKET;
+            closesocket(connect_socket);
+            connect_socket = INVALID_SOCKET;
             continue;
         }
 
-        std::cout << "Client: Connected successfully to " << ip << std::endl;
+        printf("Client: Connected successfully to %s\n", ip);
         break;
     }
 
     freeaddrinfo(result);
 
-    if (ConnectSocket == INVALID_SOCKET) {
+    if (connect_socket == INVALID_SOCKET) {
         printf("Unable to connect to server!\n");
         WSACleanup();
         return 1;
     }
 
     // Send an initial buffer
-    iResult = send( ConnectSocket, sendbuf, (int)strlen(sendbuf), 0 );
+    iResult = send( connect_socket, sendbuf, (int)strlen(sendbuf), 0 );
     if (iResult == SOCKET_ERROR) {
         printf("send failed with error: %d\n", WSAGetLastError());
-        closesocket(ConnectSocket);
+        closesocket(connect_socket);
         WSACleanup();
         return 1;
     }
@@ -96,10 +102,10 @@ int tcp_client_oneshot(std::string server_address) {
     printf(CL_CLR "Client: Sent string: %s\n", sendbuf);
 
     // shutdown the connection since no more data will be sent
-    iResult = shutdown(ConnectSocket, SD_SEND);
+    iResult = shutdown(connect_socket, SD_SEND);
     if (iResult == SOCKET_ERROR) {
         printf("shutdown failed with error: %d\n", WSAGetLastError());
-        closesocket(ConnectSocket);
+        closesocket(connect_socket);
         WSACleanup();
         return 1;
     }
@@ -107,10 +113,10 @@ int tcp_client_oneshot(std::string server_address) {
     // Receive until the peer closes the connection
     do {
 
-        iResult = recv(ConnectSocket, reinterpret_cast<char*>(reception_buffer.data()), recvbuflen, 0);
+        iResult = recv(connect_socket, rec_buf, recvbuflen, 0);
         if ( iResult > 0 ) {
             printf(CL_CLR "Client: Bytes Received: %d\n", iResult);
-            printf(CL_CLR "Client: Received string: %s\n", reception_buffer.data());
+            printf(CL_CLR "Client: Received string: %s\n", rec_buf);
         }
         else if ( iResult == 0 )
             printf(CL_CLR "Client: Server closed connection\n");
@@ -120,7 +126,7 @@ int tcp_client_oneshot(std::string server_address) {
     } while( iResult > 0 );
 
     // cleanup
-    closesocket(ConnectSocket);
+    closesocket(connect_socket);
     WSACleanup();
 
     return 0;

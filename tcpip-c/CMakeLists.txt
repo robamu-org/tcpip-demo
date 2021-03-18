@@ -10,6 +10,7 @@ add_executable(${TARGET_NAME})
 
 target_sources(${TARGET_NAME} PRIVATE
 	main.c
+	utility.c
 )
 
 add_subdirectory(oneshot_demo)

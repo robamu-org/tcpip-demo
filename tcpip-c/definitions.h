@@ -1,4 +1,10 @@
-#pragma once
+#ifndef DEFINITIONS_H_
+#define DEFINITIONS_H_
+
+typedef struct _OneShotConfig {
+const char* server_address;
+const char* server_port;
+} OneShotConfig;
 
 #define ANSI_COLOR_RED      "\x1b[31m"
 #define ANSI_COLOR_GREEN    "\x1b[32m"
@@ -29,3 +35,5 @@
 #define TCPIP_MD_2_OOP_CLIENT_NONE_SERVER_ONE            2
 #define TCPIP_MD_3_OOP_CLIENT_MUTLIPLE_SERVER_NO_REPLY   3
 #define TCPIP_MD_4_OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE   4
+
+#endif /* DEFINITIONS_H_ */
