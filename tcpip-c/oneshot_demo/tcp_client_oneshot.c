@@ -20,13 +20,25 @@
 #include <string.h>
 #include <errno.h>
 
+int tcp_client_oneshot_generic(void* args);
+
 #ifdef _WIN32
 DWORD tcp_client_oneshot(LPVOID cfg) {
+    return tcp_client_oneshot_generic(cfg);
+}
+#elif defined(__unix__)
+void * tcp_client_oneshot(void* cfg) {
+    tcp_client_oneshot_generic(args);
+    return NULL;
+}
+#endif
+
+int tcp_client_oneshot_generic(void* args) {
     socket_t connect_socket = INVALID_SOCKET;
     // Totally not copied from https://docs.microsoft.com/en-us/windows/win32/winsock/complete-client-code
     const char* server_address = NULL;
     const char* server_port = NULL;
-    int retval = setup_sockets(cfg, &server_address, &server_port);
+    int retval = setup_sockets(args, &server_address, &server_port);
     if (retval != 0) {
         return retval;
     }
@@ -127,14 +139,7 @@ DWORD tcp_client_oneshot(LPVOID cfg) {
     return 0;
 }
 
-#elif defined(__unix__)
-
-int tcp_client_oneshot_main(void* args);
-
-void* tcp_client_oneshot(void* args) {
-    tcp_client_oneshot_main(args);
-    return NULL;
-}
+#if defined(__unix__)
 
 int tcp_client_oneshot_main(void* args) {
     /* Based on https://docs.microsoft.com/en-us/windows/win32/winsock/complete-client-code */
