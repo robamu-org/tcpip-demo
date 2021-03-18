@@ -53,7 +53,7 @@ int start_win_demo(int protocol, int demo_type, int demo_mode) {
     HANDLE thread_handle_server = NULL;
     if(protocol == TCPIP_PROT_0_TCP) {
         if(demo_type == TCPIP_TP_2_CLIENT_ONLY || demo_type == TCPIP_TP_0_CLIENT_AND_SERVER) {
-            thread_handle_client =  CreateThread(NULL, 16000, tcp_client_oneshot,
+            thread_handle_client =  CreateThread(NULL, 0, tcp_client_oneshot,
                     (void*) &one_shot_config, 0, NULL);
             if(thread_handle_client == NULL) {
                 printf("Windows thread creation failed with error %d!\n", GetLastError());
@@ -61,7 +61,7 @@ int start_win_demo(int protocol, int demo_type, int demo_mode) {
             }
         }
         if(demo_type == TCPIP_TP_1_SERVER_ONLY || demo_type == TCPIP_TP_0_CLIENT_AND_SERVER) {
-            thread_handle_server =  CreateThread(NULL, 16000, tcp_server_oneshot,
+            thread_handle_server =  CreateThread(NULL, 0, tcp_server_oneshot,
                     (void*) &one_shot_config, 0, NULL);
             if(thread_handle_server == NULL) {
                 printf("Windows thread creation failed with error %d!\n", GetLastError());
