@@ -11,9 +11,20 @@ const char* server_port;
 } OneShotConfig;
 
 #ifdef _WIN32
+
 typedef SOCKET socket_t;
+
+static const int SHUT_RECV =            SD_RECEIVE;
+static const int SHUT_SEND =            SD_SEND;
+static const int SHUT_BOTH =            SD_BOTH;
+
 #elif defined(__unix__)
+
 typedef int socket_t;
+static const int INVALID_SOCKET =       -1;
+static const int SOCKET_ERROR =         -1;
+
+
 #endif
 
 #define ANSI_COLOR_RED      "\x1b[31m"
