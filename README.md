@@ -118,17 +118,33 @@ Coming soon.
 
 # C
 
+This demo can be configured via the `demo_config.h` file as well.
+
 ## Windows - GCC
 
 ### Using MinGW Makefiles
 
-Perform same steps as specified above for C++.
-Then build the application with
+Perform the same preparation steps as specified in the C++ chapter for MinGW Makefiles,
+then build the application with
 
 ```cpp
 mkdir Debug-MinGW64
 cd Debug-MinGW64
 cmake .. -G "MinGW Makefiles"
+cmake --build . -j
+```
+
+## Linux - GCC
+
+### Using Makefiles
+
+Perform the preparation steps as specified above for Unix Makefiles,
+then build the application with
+
+```cpp
+mkdir Debug-Unix
+cd Debug-Unix
+cmake ..
 cmake --build . -j
 ```
 
