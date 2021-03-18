@@ -73,7 +73,5 @@ int start_demo(int protocol, int demo_type, int demo_mode) {
         }
     }
 
-    printf(ANSI_COLOR_RESET "Demo finsihed\n");
-
     return 0;
 }
