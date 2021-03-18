@@ -1,5 +1,5 @@
 # CMake
-build*
+/build/
 Debug*
 Release*
 RelWithDeb*
