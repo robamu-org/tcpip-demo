@@ -1,4 +1,5 @@
 #include "utility.h"
+#include "main.h"
 #include "demo_config.h"
 #include <stdio.h>
 
@@ -23,5 +24,11 @@ int main() {
     int protocol = TCPIP_DEMO_PROT;
     int demo_type = TCPIP_DEMO_TYPE;
     int demo_mode = TCPIP_DEMO_MODE;
+    if(protocol == TCPIP_PROT_0_TCP) {
+        printf("Chosen protocol: TCP\n");
+    }
+    else if (protocol == TCPIP_PROT_1_UDP) {
+        printf("Chosen protocol: UDP\n");
+    }
     return start_demo(protocol, demo_type, demo_mode);
 }
