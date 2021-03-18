@@ -4,9 +4,7 @@ message(STATUS "Used build generator: ${CMAKE_GENERATOR}")
 
 # Set a default build type if none was specified
 set(DEFAULT_BUILD_TYPE "RelWithDebInfo")
-if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
-	set(DEFAULT_BUILD_TYPE "Debug")
-endif()
+set(DEFAULT_BUILD_TYPE "Debug")
 
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 	message(STATUS 

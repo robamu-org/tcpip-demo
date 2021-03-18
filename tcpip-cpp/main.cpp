@@ -19,6 +19,13 @@ void print_mode_info(tcpip::DemoConfig& cfg);
 void enable_win_term_colors();
 
 
+/**
+ * @brief   TCP/IP C++ demo entry point.
+ * @details
+ * This program can be configured by tweaking the demo_config.h file.
+ * @author  R. Mueller
+ * @return
+ */
 int main() {
 	using namespace std::chrono_literals;
 	using namespace tcpip;
