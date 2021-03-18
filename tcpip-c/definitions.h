@@ -1,10 +1,20 @@
 #ifndef DEFINITIONS_H_
 #define DEFINITIONS_H_
 
+#ifdef _WIN32
+#include <winsock2.h>
+#endif
+
 typedef struct _OneShotConfig {
 const char* server_address;
 const char* server_port;
 } OneShotConfig;
+
+#ifdef _WIN32
+typedef SOCKET socket_t;
+#elif defined(__unix__)
+typedef int socket_t;
+#endif
 
 #define ANSI_COLOR_RED      "\x1b[31m"
 #define ANSI_COLOR_GREEN    "\x1b[32m"

@@ -23,7 +23,7 @@
 DWORD tcp_client_oneshot(LPVOID cfg) {
     // Totally not copied from https://docs.microsoft.com/en-us/windows/win32/winsock/complete-client-code
     WSADATA wsa_data;
-    SOCKET connect_socket = INVALID_SOCKET;
+    socket_t connect_socket = INVALID_SOCKET;
     OneShotConfig* one_shot_config = (OneShotConfig*) cfg;
     if(one_shot_config == NULL) {
         printf("Invalid passed config handle!\n");
