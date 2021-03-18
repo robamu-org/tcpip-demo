@@ -116,6 +116,22 @@ there are good instructions on how to set up Visual Studio Code
 
 Coming soon.
 
+# C
+
+## Windows - GCC
+
+### Using MinGW Makefiles
+
+Perform same steps as specified above for C++.
+Then build the application with
+
+```cpp
+mkdir Debug-MinGW64
+cd Debug-MinGW64
+cmake .. -G "MinGW Makefiles"
+cmake --build . -j
+```
+
 # Python
 
 # Go
