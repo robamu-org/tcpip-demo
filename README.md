@@ -34,6 +34,7 @@ pacman -S git mingw-w64-x86_64-gdb mingw-w64-x86_64-make mingw-w64-x86_64-cmake 
 Then build the application with
 
 ```cpp
+cd tcpip-cpp
 mkdir Debug-MinGW64
 cd Debug-MinGW64
 cmake .. -G "MinGW Makefiles"
@@ -63,6 +64,7 @@ You can generate Visual Studio project files with the following command
 (here, for Visual Studio 2019)
 
 ```cpp
+cd tcpip-cpp
 mkdir Debug-VS2019
 cd Debug-VS2019
 cmake .. -G "Visual Studio 16 2019"
@@ -94,6 +96,7 @@ sudo apt-get install build-essential gdb
 Build the project like this: 
 
 ```cpp
+cd tcpip-cpp
 mkdir Debug-Unix
 cd Debug-Unix
 cmake .. 
@@ -130,6 +133,7 @@ Perform the same preparation steps as specified in the C++ chapter for MinGW Mak
 then build the application with
 
 ```cpp
+cd tcpip-c
 mkdir Debug-MinGW64
 cd Debug-MinGW64
 cmake .. -G "MinGW Makefiles"
@@ -144,6 +148,7 @@ Perform the preparation steps as specified above for Unix Makefiles,
 then build the application with
 
 ```cpp
+cd tcpip-c
 mkdir Debug-Unix
 cd Debug-Unix
 cmake ..
