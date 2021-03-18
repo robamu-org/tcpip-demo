@@ -5,7 +5,8 @@ operating systems and IDEs.
 
 # C++
 
-The demo can be configured by editing the `demo_config.h` file before build it.
+The demo is located inside the `tcpip-cpp` folder and 
+can be configured by editing the `demo_config.h` file.
 Alternatively, use can use the CL mode by setting `CLI_MODE` to 1. Then you will be 
 prompted for all required variables.
 
@@ -118,7 +119,8 @@ Coming soon.
 
 # C
 
-This demo can be configured via the `demo_config.h` file as well.
+The demo is located inside the `tcpip-c` folder and 
+can be configured by editing the `demo_config.h` file.
 
 ## Windows - GCC
 
