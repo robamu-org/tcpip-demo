@@ -8,7 +8,9 @@
 int udp_server_oneshot_generic(void* args);
 
 #ifdef _WIN32
-DWORD udp_server_oneshot(LPVOID args);
+DWORD udp_server_oneshot(LPVOID args) {
+    return udp_server_oneshot_generic(args);
+}
 #else
 void* udp_server_oneshot(void* args) {
     udp_server_oneshot_generic(args);

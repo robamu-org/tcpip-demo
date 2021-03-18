@@ -30,5 +30,7 @@ int main() {
     else if (protocol == TCPIP_PROT_1_UDP) {
         printf("Chosen protocol: UDP\n");
     }
-    return start_demo(protocol, demo_type, demo_mode);
+    int retval = start_demo(protocol, demo_type, demo_mode);
+    printf(ANSI_COLOR_RESET "Demo finished.\n");
+    return retval;
 }

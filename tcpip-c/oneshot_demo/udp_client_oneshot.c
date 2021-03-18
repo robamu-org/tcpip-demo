@@ -9,7 +9,7 @@ int udp_client_oneshot_generic(void* args);
 
 #ifdef _WIN32
 DWORD udp_client_oneshot(LPVOID args) {
-
+    return udp_client_oneshot_generic(args);
 }
 #elif defined(__unix__)
 void* udp_client_oneshot(void* args) {
@@ -82,6 +82,7 @@ int udp_client_oneshot_generic(void* args) {
         cleanup_sockets(&server_socket, 1);
         return 1;
     }
-    return 0;
+
     cleanup_sockets(&server_socket, 1);
+    return 0;
 }

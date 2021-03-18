@@ -31,13 +31,11 @@ int tcp_client_oneshot_generic(void* args) {
     }
 
     struct addrinfo *result = NULL;
-    struct addrinfo hints = {0};
+    struct addrinfo hints = { 0 };
     const char *sendbuf = "this is a test";
     uint8_t rec_buf[BUFFER_SIZES];
     int recvbuflen = sizeof(rec_buf);
 
-
-    memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
@@ -54,7 +52,7 @@ int tcp_client_oneshot_generic(void* args) {
     for(struct addrinfo* ptr=result; ptr != NULL ;ptr=ptr->ai_next) {
         struct sockaddr_in *addr_in = (struct sockaddr_in *)ptr->ai_addr;
         char *ip = inet_ntoa(addr_in->sin_addr);
-        printf("Client: Attempting connection to address %s\n", ip);
+        printf(CL_CLR "Client: Attempting connection to address %s\n", ip);
         // Create a SOCKET for connecting to server
         connect_socket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
         if (connect_socket == INVALID_SOCKET) {
@@ -71,7 +69,7 @@ int tcp_client_oneshot_generic(void* args) {
             continue;
         }
 
-        printf("Client: Connected successfully to %s\n", ip);
+        printf(CL_CLR "Client: Connected successfully to %s\n", ip);
         break;
     }
 
