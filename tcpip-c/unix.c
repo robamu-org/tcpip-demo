@@ -25,7 +25,7 @@ int start_demo(int protocol, int demo_type, int demo_mode) {
                 return 1;
             }
         }
-        int sleep_dur_micros = 2 * 1000;
+        int sleep_dur_micros = 1 * 1000;
         usleep(sleep_dur_micros);
         if(demo_type == TCPIP_TP_2_CLIENT_ONLY || demo_type == TCPIP_TP_0_CLIENT_AND_SERVER) {
             retval = pthread_create(&client_handle, NULL, tcp_client_oneshot,

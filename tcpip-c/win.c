@@ -2,6 +2,7 @@
 
 #include <windows.h>
 #include <processthreadsapi.h>
+#include <synchapi.h>
 
 #include <stdio.h>
 #include <stddef.h>
@@ -22,6 +23,7 @@ int start_demo(int protocol, int demo_type, int demo_mode) {
                 return 1;
             }
         }
+        Sleep(1);
         /* Start the client */
         if(demo_type == TCPIP_TP_2_CLIENT_ONLY || demo_type == TCPIP_TP_0_CLIENT_AND_SERVER) {
             thread_handle_client =  CreateThread(NULL, 0, tcp_client_oneshot,
