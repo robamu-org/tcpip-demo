@@ -1,19 +1,6 @@
 #include <demo_config.h>
 #include <utility.h>
-
-#ifdef _WIN32
-
-#define WIN32_LEAN_AND_MEAN
-
-#include <winsock2.h>
-#include <ws2tcpip.h>
-
-#elif defined(__unix__)
-
-#include <netdb.h>
-#include <unistd.h>
-
-#endif
+#include <socket_inc.h>
 
 #include <stdio.h>
 #include <stdint.h>

@@ -15,5 +15,6 @@ int get_last_socket_error();
 
 int setup_sockets(void* thread_arg, const char** server_address, const char** server_port);
 int cleanup_sockets(socket_t* socket_array, size_t array_len);
+int close_socket(socket_t socket);
 
 #endif /* UTILITY_H_ */

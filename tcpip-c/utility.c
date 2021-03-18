@@ -77,3 +77,11 @@ int cleanup_sockets(socket_t* socket_array, size_t array_len) {
     return 0;
 }
 
+int close_socket(socket_t socket) {
+#ifdef _WIN32
+    return closesocket(socket);
+#elif defined(__unix__)
+    return close(socket);
+#endif
+}
+

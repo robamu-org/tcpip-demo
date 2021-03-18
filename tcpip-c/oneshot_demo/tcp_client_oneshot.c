@@ -1,19 +1,6 @@
 #include "demo_config.h"
-#include "utility.h"
-
-#ifdef _WIN32
-
-#define WIN32_LEAN_AND_MEAN
-#include <winsock2.h>
-#include <ws2tcpip.h>
-
-#elif defined(__unix__)
-
-#include <netdb.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-
-#endif
+#include <utility.h>
+#include <socket_inc.h>
 
 #include <stdint.h>
 #include <stdio.h>
@@ -79,11 +66,7 @@ int tcp_client_oneshot_generic(void* args) {
         // Connect to server.
         retval = connect( connect_socket, ptr->ai_addr, (int)ptr->ai_addrlen);
         if (retval < 0) {
-#ifdef _WIN32
-            closesocket(connect_socket);
-#elif defined(__unix__)
-            close(connect_socket);
-#endif
+            close_socket(connect_socket);
             connect_socket = INVALID_SOCKET;
             continue;
         }
