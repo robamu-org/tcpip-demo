@@ -4,6 +4,7 @@
 #include <winsock2.h>
 #elif defined(__unix__)
 #include <errno.h>
+#include <unistd.h>
 #endif
 
 #include <stdio.h>

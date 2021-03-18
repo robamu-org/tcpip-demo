@@ -3,6 +3,8 @@
 
 #ifdef _WIN32
 #include <winsock2.h>
+#else
+#include <sys/socket.h>
 #endif
 
 typedef struct _OneShotConfig {
@@ -24,6 +26,9 @@ typedef int socket_t;
 static const int INVALID_SOCKET =       -1;
 static const int SOCKET_ERROR =         -1;
 
+static const int SHUT_RECV =            SHUT_RD;
+static const int SHUT_SEND =            SHUT_WR;
+static const int SHUT_BOTH =            SHUT_RDWR;
 
 #endif
 

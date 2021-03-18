@@ -1,4 +1,5 @@
 #include <demo_config.h>
+#include <utility.h>
 
 #ifdef _WIN32
 
@@ -17,24 +18,23 @@
 #include <stdio.h>
 #include <stdint.h>
 
+int udp_client_oneshot_generic(void* args);
+
 #ifdef _WIN32
-DWORD udp_client_oneshot(LPVOID cfg) {
-    WSADATA wsaData;
+DWORD udp_client_oneshot(LPVOID args) {
 
-    OneShotConfig* one_shot_config = (OneShotConfig*) cfg;
-    if(one_shot_config == NULL) {
-        printf("Invalid passed config handle!\n");
-        return 1;
-    }
-    const char* server_address = one_shot_config->server_address;
-    const char* server_port = one_shot_config->server_port;
+}
+#elif defined(__unix__)
+void* udp_client_oneshot(void* args) {
+    udp_client_oneshot_generic(args);
+    return NULL;
+}
+#endif
 
-    /* Initialize Winsock */
-    int retval = WSAStartup(MAKEWORD(2,2), &wsaData);
-    if (retval!= 0) {
-        printf("WSAStartup failed with error: %d\n", retval);
-        return 1;
-    }
+int udp_client_oneshot_generic(void* args) {
+    const char* server_address = NULL;
+    const char* server_port = NULL;
+    setup_sockets(args, &server_address, &server_port);
 
     uint8_t rec_buf[BUFFER_SIZES];
 
@@ -46,6 +46,7 @@ DWORD udp_client_oneshot(LPVOID cfg) {
     hints.ai_protocol = IPPROTO_UDP;
 
     socket_t server_socket = INVALID_SOCKET;
+    int retval = 0;
 
     /* Resolve the server address and port */
     if(server_address == "any" || server_address == "") {
@@ -57,15 +58,15 @@ DWORD udp_client_oneshot(LPVOID cfg) {
 
     if (retval != 0) {
         printf("udp_client_oneshot: getaddrinfo failed with error: %d\n", retval);
-        WSACleanup();
+        cleanup_sockets(NULL, 0);
         return 1;
     }
     /* Create a socket for connecting to server */
     server_socket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
     if (server_socket < 0) {
-        printf("udp_client_oneshot: socket failed with error: %d\n", WSAGetLastError());
+        printf("udp_client_oneshot: socket failed with error: %d\n", get_last_socket_error());
         freeaddrinfo(result);
-        WSACleanup();
+        cleanup_sockets(NULL, 0);
         return 1;
     }
 
@@ -82,18 +83,18 @@ DWORD udp_client_oneshot(LPVOID cfg) {
                 recv_flags
         );
         if(retval < 0) {
-            printf("udp_client_oneshot: recv failed with error: %d", WSAGetLastError());
-            WSACleanup();
+            printf("udp_client_oneshot: recv failed with error: %d\n", get_last_socket_error());
+            cleanup_sockets(&server_socket, 1);
             return 1;
         }
         rec_buf[retval] = '\0';
-        printf(CL_CLR "Client: Reply with %d bytes received: %s", retval, rec_buf);
+        printf(CL_CLR "Client: Reply with %d bytes received: %s\n", retval, rec_buf);
     }
     else {
-        printf("udp_client_oneshot: sendto failed with error %d\n", WSAGetLastError());
-        WSACleanup();
+        printf("udp_client_oneshot: sendto failed with error %d\n", get_last_socket_error());
+        cleanup_sockets(&server_socket, 1);
         return 1;
     }
     return 0;
+    cleanup_sockets(&server_socket, 1);
 }
-#endif
