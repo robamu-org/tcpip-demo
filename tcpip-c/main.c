@@ -31,6 +31,6 @@ int main() {
         printf("Chosen protocol: UDP\n");
     }
     int retval = start_demo(protocol, demo_type, demo_mode);
-    printf(ANSI_COLOR_RESET "Demo finsihed\n");
+    printf(ANSI_COLOR_RESET "Demo finished.\n");
     return retval;
 }
