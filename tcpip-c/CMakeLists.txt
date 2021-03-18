@@ -13,13 +13,20 @@ target_sources(${TARGET_NAME} PRIVATE
 	utility.c
 )
 
+
 add_subdirectory(oneshot_demo)
 
 if(WIN32)
+    target_sources(${TARGET_NAME} PRIVATE
+        win.c
+    )
     target_link_libraries(${TARGET_NAME}
 	   ws2_32
     )
 elseif(UNIX)
+    target_sources(${TARGET_NAME} PRIVATE
+        unix.c
+    )
     find_package(Threads REQUIRED)
 
     target_link_libraries(${TARGET_NAME} PRIVATE
