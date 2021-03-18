@@ -11,6 +11,7 @@
 
 #include <netdb.h>
 #include <unistd.h>
+#include <errno.h>
 
 #endif
 
@@ -157,8 +158,15 @@ DWORD tcp_server_oneshot(LPVOID cfg) {
 }
 #elif defined(__unix__)
 
-int tcp_server_oneshot(std::string ip_address) {
-    /* Based on https://docs.microsoft.com/en-us/windows/win32/winsock/complete-server-code */
+int tcp_server_oneshot_main(void* args);
+
+void* tcp_server_oneshot(void* args) {
+    tcp_server_oneshot_main(args);
+    return NULL;
+}
+
+int tcp_server_oneshot_main(void* args) {
+    // Based on https://docs.microsoft.com/en-us/windows/win32/winsock/complete-server-code
     int retval = 0;
     int send_result = 0;
     int listen_socket = 0;
@@ -167,8 +175,16 @@ int tcp_server_oneshot(std::string ip_address) {
     struct addrinfo *result = NULL;
     struct addrinfo hints = {};
 
-    std::vector<uint8_t> reception_buffer(tcpip::BUFFER_SIZES);
-    int recvbuflen = reception_buffer.size();
+    OneShotConfig* one_shot_config = (OneShotConfig*) args;
+    if(one_shot_config == NULL) {
+        printf("Invalid passed config handle!\n");
+        return 1;
+    }
+    const char* server_address = one_shot_config->server_address;
+    const char* server_port = one_shot_config->server_port;
+
+    uint8_t rec_buf[BUFFER_SIZES];
+    int recvbuflen = sizeof(rec_buf);
 
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
@@ -179,15 +195,15 @@ int tcp_server_oneshot(std::string ip_address) {
     hints.ai_flags = AI_PASSIVE;
 
     // Resolve the server address and port
-    if(ip_address == "" or ip_address == "any") {
-        retval = getaddrinfo(nullptr, tcpip::SERVER_PORT, &hints, &result);
+    if(server_address == "" || server_address == "any") {
+        retval = getaddrinfo(NULL, server_port, &hints, &result);
     }
     else {
-        retval = getaddrinfo(ip_address.c_str(), tcpip::SERVER_PORT, &hints, &result);
+        retval = getaddrinfo(server_address, server_port, &hints, &result);
     }
 
     if (retval != 0) {
-        printf("getaddrinfo for address %s failed with error: %d\n", ip_address.c_str(), retval);
+        printf("getaddrinfo for address %s failed with error: %d\n", server_address, retval);
         return 1;
     }
 
@@ -231,13 +247,13 @@ int tcp_server_oneshot(std::string ip_address) {
     // Receive until the peer shuts down the connection
     do {
 
-        retval = recv(client_socket, reinterpret_cast<char*>(reception_buffer.data()), recvbuflen, 0);
+        retval = recv(client_socket, rec_buf, recvbuflen, 0);
         if (retval > 0) {
             printf(SRV_CLR "Server: Bytes received: %d\n", retval);
-            printf(SRV_CLR "Server: Received string: %s\n", reception_buffer.data());
+            printf(SRV_CLR "Server: Received string: %s\n", rec_buf);
             printf(SRV_CLR "Server: Echoing back string\n");
             // Echo the buffer back to the sender
-            send_result = send(client_socket, reinterpret_cast<char*>(reception_buffer.data()), retval, 0 );
+            send_result = send(client_socket, rec_buf, retval, 0 );
             if (send_result < 0) {
                 printf("send failed with error: %d\n", errno);
                 close(client_socket);

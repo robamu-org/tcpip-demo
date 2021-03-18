@@ -16,6 +16,8 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
+#include <errno.h>
 
 #ifdef _WIN32
 DWORD tcp_client_oneshot(LPVOID cfg) {
@@ -134,23 +136,37 @@ DWORD tcp_client_oneshot(LPVOID cfg) {
 
 #elif defined(__unix__)
 
-int tcp_client_oneshot(std::string server_address) {
+int tcp_client_oneshot_main(void* args);
+
+void* tcp_client_oneshot(void* args) {
+    tcp_client_oneshot_main(args);
+    return NULL;
+}
+
+int tcp_client_oneshot_main(void* args) {
     /* Based on https://docs.microsoft.com/en-us/windows/win32/winsock/complete-client-code */
     int connect_socket = 0;
     struct addrinfo *result = NULL;
     struct addrinfo hints = {};
 
     const char *sendbuf = "this is a test";
-    std::vector<uint8_t> reception_buffer(tcpip::BUFFER_SIZES);
+    OneShotConfig* one_shot_config = (OneShotConfig*) args;
+    if(one_shot_config == NULL) {
+        printf("Invalid passed config handle!\n");
+        return 1;
+    }
+    const char* server_address = one_shot_config->server_address;
+    const char* server_port = one_shot_config->server_port;
+    uint8_t rec_buf[BUFFER_SIZES];
     int retval;
-    int recvbuflen = tcpip::BUFFER_SIZES;
+    int recvbuflen = sizeof(rec_buf);
 
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
 
     // Resolve the server address and port
-    retval = getaddrinfo(server_address.c_str(), tcpip::SERVER_PORT, &hints, &result);
+    retval = getaddrinfo(server_address, server_port, &hints, &result);
     if (retval != 0) {
         printf("getaddrinfo failed with error: %d\n", retval);
         return 1;
@@ -160,8 +176,7 @@ int tcp_client_oneshot(std::string server_address) {
     for(struct addrinfo* ptr=result; ptr != NULL ;ptr=ptr->ai_next) {
         struct sockaddr_in *addr_in = (struct sockaddr_in *)ptr->ai_addr;
         char *ip = inet_ntoa(addr_in->sin_addr);
-        std::cout << ANSI_COLOR_CYAN << "Client: Attempting connection to address " << ip <<
-                std::endl;
+        printf(ANSI_COLOR_CYAN "Client: Attempting connection to address %s failed!\n", ip);
         // Create a SOCKET for connecting to server
         connect_socket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
         if (connect_socket == 0) {
@@ -177,7 +192,7 @@ int tcp_client_oneshot(std::string server_address) {
             continue;
         }
 
-        std::cout << ANSI_COLOR_CYAN << "Client: Connected successfully to " << ip << std::endl;
+        printf(ANSI_COLOR_CYAN "Client: Connected successfully to %s\n", ip);
         break;
     }
 
@@ -210,10 +225,10 @@ int tcp_client_oneshot(std::string server_address) {
     // Receive until the peer closes the connection
     do {
 
-        retval = recv(connect_socket, reinterpret_cast<char*>(reception_buffer.data()), recvbuflen, 0);
+        retval = recv(connect_socket, rec_buf, recvbuflen, 0);
         if (retval > 0) {
             printf(ANSI_COLOR_CYAN "Client: Bytes received: %d\n", retval);
-            printf(ANSI_COLOR_CYAN "Client: String received back: %s\n", reception_buffer.data());
+            printf(ANSI_COLOR_CYAN "Client: String received back: %s\n", rec_buf);
         }
         else if (retval == 0) {
             printf(ANSI_COLOR_CYAN "Client: Connection closed\n");
