@@ -44,3 +44,8 @@ MinSizeRel*
 *.exe
 *.out
 *.app
+
+# Python
+__pycache__
+.idea
+!.idea/runConfigurations
