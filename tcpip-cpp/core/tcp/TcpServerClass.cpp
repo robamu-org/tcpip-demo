@@ -69,9 +69,7 @@ int TcpServerClass::setup_server() {
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
-#ifdef __unix__
-    hints.ai_flags = AI_PASSIVE;
-#endif
+
     return setup(hints);
 }
 
@@ -81,6 +79,11 @@ int TcpServerClass::setup(struct addrinfo &hints) {
     /* Resolve the server address and port */
     int retval = 0;
     if(server_address == "any" or server_address == "") {
+        /*
+        See: https://man7.org/linux/man-pages/man3/getaddrinfo.3.html
+        and: https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-getaddrinfo
+         */
+        hints.ai_flags = AI_PASSIVE;
         retval = getaddrinfo(nullptr, server_port.c_str(), &hints, &result);
     }
     else {

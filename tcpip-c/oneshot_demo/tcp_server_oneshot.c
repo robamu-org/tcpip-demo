@@ -42,6 +42,11 @@ int tcp_server_oneshot_generic(void* args) {
 
     // Resolve the server address and port
     if(server_address == "" || server_address == "any") {
+        /*
+        See: https://man7.org/linux/man-pages/man3/getaddrinfo.3.html
+        and: https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-getaddrinfo
+         */
+        hints.ai_flags = AI_PASSIVE;
         retval = getaddrinfo(NULL, server_port, &hints, &addr_result);
     }
     else {
