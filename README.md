@@ -5,7 +5,8 @@ operating systems and IDEs.
 
 # C++
 
-The demo can be configured by editing the `demo_config.h` file before build it.
+The demo is located inside the `tcpip-cpp` folder and 
+can be configured by editing the `demo_config.h` file.
 Alternatively, use can use the CL mode by setting `CLI_MODE` to 1. Then you will be 
 prompted for all required variables.
 
@@ -33,6 +34,7 @@ pacman -S git mingw-w64-x86_64-gdb mingw-w64-x86_64-make mingw-w64-x86_64-cmake 
 Then build the application with
 
 ```cpp
+cd tcpip-cpp
 mkdir Debug-MinGW64
 cd Debug-MinGW64
 cmake .. -G "MinGW Makefiles"
@@ -62,6 +64,7 @@ You can generate Visual Studio project files with the following command
 (here, for Visual Studio 2019)
 
 ```cpp
+cd tcpip-cpp
 mkdir Debug-VS2019
 cd Debug-VS2019
 cmake .. -G "Visual Studio 16 2019"
@@ -93,6 +96,7 @@ sudo apt-get install build-essential gdb
 Build the project like this: 
 
 ```cpp
+cd tcpip-cpp
 mkdir Debug-Unix
 cd Debug-Unix
 cmake .. 
@@ -118,17 +122,36 @@ Coming soon.
 
 # C
 
+The demo is located inside the `tcpip-c` folder and 
+can be configured by editing the `demo_config.h` file.
+
 ## Windows - GCC
 
 ### Using MinGW Makefiles
 
-Perform same steps as specified above for C++.
-Then build the application with
+Perform the same preparation steps as specified in the C++ chapter for MinGW Makefiles,
+then build the application with
 
 ```cpp
+cd tcpip-c
 mkdir Debug-MinGW64
 cd Debug-MinGW64
 cmake .. -G "MinGW Makefiles"
+cmake --build . -j
+```
+
+## Linux - GCC
+
+### Using Makefiles
+
+Perform the preparation steps as specified above for Unix Makefiles,
+then build the application with
+
+```cpp
+cd tcpip-c
+mkdir Debug-Unix
+cd Debug-Unix
+cmake ..
 cmake --build . -j
 ```
 
