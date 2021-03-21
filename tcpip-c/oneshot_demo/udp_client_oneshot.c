@@ -26,8 +26,9 @@ int udp_client_oneshot_generic(void* args) {
     uint8_t rec_buf[BUFFER_SIZES];
 
     struct addrinfo *result = NULL;
-    struct addrinfo hints = {0};
+    struct addrinfo hints;
 
+    memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_DGRAM;
     hints.ai_protocol = IPPROTO_UDP;
