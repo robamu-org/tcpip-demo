@@ -11,7 +11,6 @@ def tcp_client():
     target_address = SERVER_ADDRESS, SERVER_PORT
     string = "Hello, this is a UDP test!"
     data = string.encode(encoding='utf-8')
-    data = string.encode(encoding='utf-8')
     conn_socket.connect(target_address)
     bytes_sent = conn_socket.sendto(data, target_address)
     print_protected(f"{AnsiColors.CYAN}Client: Sent {bytes_sent} bytes to server")
