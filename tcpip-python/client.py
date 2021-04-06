@@ -1,4 +1,4 @@
-from socket import socket, AF_INET, SOCK_DGRAM
+from socket import socket, AF_INET, SOCK_DGRAM, SOCK_STREAM, SHUT_WR
 from definitions import SERVER_ADDRESS, SERVER_PORT, AnsiColors
 from config import BUFFER_SIZES
 from utility import print_protected
@@ -7,7 +7,17 @@ ERR_IDX = 0
 
 
 def tcp_client():
-    pass
+    conn_socket = socket(AF_INET, SOCK_STREAM)
+    target_address = SERVER_ADDRESS, SERVER_PORT
+    string = "Hello, this is a UDP test!"
+    data = string.encode(encoding='utf-8')
+    data = string.encode(encoding='utf-8')
+    conn_socket.connect(target_address)
+    bytes_sent = conn_socket.sendto(data, target_address)
+    print_protected(f"{AnsiColors.CYAN}Client: Sent {bytes_sent} bytes to server")
+    conn_socket.shutdown(SHUT_WR)
+    bytes_rcvd = conn_socket.recv(BUFFER_SIZES)
+    print_protected(f"{AnsiColors.CYAN}Client: Received back {len(bytes_rcvd)} bytes: {bytes_rcvd}")
 
 
 def udp_client():

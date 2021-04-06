@@ -28,8 +28,10 @@ def server_function(args: any):
         return
 
     if TCPIP_PROT == Protocols.TCPIP_PROT_0_TCP:
+        print("Selected protocol: TCP")
         tcp_server()
     elif TCPIP_PROT == Protocols.TCPIP_PROT_1_UDP:
+        print("Selected protocol: UDP")
         udp_server()
 
     pass
