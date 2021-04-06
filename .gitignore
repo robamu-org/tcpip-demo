@@ -1,5 +1,5 @@
 # CMake
-/build/
+build*
 Debug*
 Release*
 RelWithDeb*
@@ -49,3 +49,9 @@ MinSizeRel*
 __pycache__
 .idea
 !.idea/runConfigurations
+
+# Gradle
+.gradle
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
