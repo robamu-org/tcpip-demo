@@ -3,12 +3,35 @@
  */
 package tcpip.java;
 
+
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
+    private static Util.AppType appType = Util.AppType.UDP;
+    public static final int BUFFER_SIZE = 1500;
+    public static final int SERVER_PORT = 7301;
+    
+    public static void main(String[] args) {
+    	System.out.println(Util.AnsiColors.ANSI_RESET + "Starting TCP/IP Server/Client Java "
+    		+ "Demo on " + App.getOs());
+    	System.out.println("Selected protocol: " + appType.name());
+    	
+    	var server = new UdpEchoServer();
+    	server.start();
+    	var client = new UdpEchoClient();
+    	client.start();
+    	
+    	try {
+	    server.join();
+	    	client.join();
+	} catch (InterruptedException e) {
+	    e.printStackTrace();
+	    System.exit(1);
+	}
+
+    	System.out.println(Util.AnsiColors.ANSI_RESET + "Finished");
+    }
+    
+    public static String getOs() {
+        return System.getProperty("os.name");
     }
 
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
-    }
 }
