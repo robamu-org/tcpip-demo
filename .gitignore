@@ -9,6 +9,7 @@ MinSizeRel*
 .cproject
 .project
 .settings
+.classpath
 !**/misc/eclipse/.cproject
 !**/misc/eclipse/.project
 
