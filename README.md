@@ -155,6 +155,14 @@ cmake ..
 cmake --build . -j
 ```
 
+# Java
+
+If [Gradle](https://gradle.org/) is installed, you can run the demo with the command
+
+```sh
+./gradlew run
+```
+
 # Python
 
 # Go
