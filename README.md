@@ -165,6 +165,14 @@ If [Gradle](https://gradle.org/) is installed, you can run the demo with the com
 
 # Python
 
+The demo can be configured via `config.py` file.
+
+You can run the demo by executing the `main.py` file. Replaced `python3` with `py` on Windows.
+
+```sh
+python3 main.py
+```
+
 # Go
 
 # Rust
