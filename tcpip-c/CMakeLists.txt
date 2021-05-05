@@ -1,5 +1,7 @@
 cmake_minimum_required (VERSION 3.13)
 
+configure_file(demo_config.h.in demo_config.h)
+
 project (tcpip_demo C)
 
 # Set names and variables
@@ -37,6 +39,7 @@ endif()
 
 # Add include paths for all sources.
 target_include_directories(${TARGET_NAME} PRIVATE
+	${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
