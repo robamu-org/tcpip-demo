@@ -15,7 +15,7 @@ def tcp_server():
         bytes_rcvd = conn_socket.recv(BUFFER_SIZES)
         if len(bytes_rcvd) > 0:
             print_protected(
-                f"{AnsiColors.GREEN}Server: Received {len(bytes_rcvd)} from {conn_addr[0]} "
+                f"{AnsiColors.GREEN}Server: Received {len(bytes_rcvd)} bytes from {conn_addr[0]} "
                 f"and port {conn_addr[1]}"
             )
             bytes_sent = conn_socket.send(bytes_rcvd)
