@@ -1,7 +1,7 @@
 # TCP/IP demo application
 
-Test application including a TCP client and server. Planned for various programming languages,
-operating systems and IDEs.
+Test application including a TCP client and server. Implemented for various programming languages,
+operating systems and IDEs. Applications can generally be configured to run server or client only.
 
 # C++
 
