@@ -11,9 +11,9 @@ public class UdpEchoServer extends Thread {
     private DatagramSocket udpSocket;
     private byte[] buf = new byte[App.BUFFER_SIZE];
 
-    public UdpEchoServer() {
+    public UdpEchoServer(int port) {
 	try {
-	    udpSocket = new DatagramSocket(App.SERVER_PORT);
+	    udpSocket = new DatagramSocket(port);
 	} catch (SocketException e) {
 	    e.printStackTrace();
 	    System.exit(1); 

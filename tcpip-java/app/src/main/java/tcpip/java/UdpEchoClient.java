@@ -13,20 +13,9 @@ public class UdpEchoClient extends Thread {
 
     private byte[] buf;
 
-    public UdpEchoClient() {
-	try {
-	    socket = new DatagramSocket();
-	} catch (SocketException e) {
-	    e.printStackTrace();
-	    System.exit(1);
-	}
-
-	try {
-	    address = InetAddress.getByName("localhost");
-	} catch (UnknownHostException e) {
-	    e.printStackTrace();
-	    System.exit(1);
-	}
+    public UdpEchoClient() throws SocketException, UnknownHostException {
+	socket = new DatagramSocket();
+	address = InetAddress.getByName("localhost");
     }
 
     @Override
@@ -34,6 +23,9 @@ public class UdpEchoClient extends Thread {
 	try {
 	    String msg = "Hello, this is a UDP test";
 	    buf = msg.getBytes();
+	    System.out.println(Util.AnsiColors.ANSI_CYAN + "Client: Sending " + 
+		    buf.length + " bytes");
+
 	    DatagramPacket packet = new DatagramPacket(buf, buf.length, address, App.SERVER_PORT);
 
 	    socket.send(packet);

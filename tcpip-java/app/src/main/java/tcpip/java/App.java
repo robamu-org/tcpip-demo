@@ -3,35 +3,46 @@
  */
 package tcpip.java;
 
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
 public class App {
     private static Util.AppType appType = Util.AppType.UDP;
     public static final int BUFFER_SIZE = 1500;
     public static final int SERVER_PORT = 7301;
-    
+
     public static void main(String[] args) {
-    	System.out.println(Util.AnsiColors.ANSI_RESET + "Starting TCP/IP Server/Client Java "
-    		+ "Demo on " + App.getOs());
-    	System.out.println("Selected protocol: " + appType.name());
-    	
-    	var server = new UdpEchoServer();
-    	server.start();
-    	var client = new UdpEchoClient();
-    	client.start();
-    	
-    	try {
+	System.out.println(Util.AnsiColors.ANSI_RESET + "Starting TCP/IP Server/Client Java "
+		+ "Demo on " + App.getOs());
+	System.out.println("Selected protocol: " + appType.name());
+
+
+	try {
+	    var server = new UdpEchoServer(App.SERVER_PORT);
+	    var client = new UdpEchoClient();
+	    server.start();
+	    client.start();
+	    client.join();
 	    server.join();
-	    	client.join();
-	} catch (InterruptedException e) {
+	}
+	catch(SocketException e) {
+	    e.printStackTrace();
+	    System.exit(1);
+	}
+	catch(UnknownHostException e) {
+	    e.printStackTrace();
+	    System.exit(1);
+	}
+	catch(InterruptedException e) {
 	    e.printStackTrace();
 	    System.exit(1);
 	}
 
-    	System.out.println(Util.AnsiColors.ANSI_RESET + "Finished");
+	System.out.println(Util.AnsiColors.ANSI_RESET + "Finished");
     }
-    
+
     public static String getOs() {
-        return System.getProperty("os.name");
+	return System.getProperty("os.name");
     }
 
 }

@@ -13,6 +13,9 @@ MinSizeRel*
 !**/misc/eclipse/.cproject
 !**/misc/eclipse/.project
 
+# Java
+*.class
+
 # Prerequisites
 *.d
 
