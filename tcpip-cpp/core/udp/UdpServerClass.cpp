@@ -44,6 +44,7 @@ int UdpServerClass::setup(struct addrinfo &hints) {
     /* Resolve the server address and port */
     int retval = 0;
     if(server_address == "any" or server_address == "") {
+        hints.ai_flags = AI_PASSIVE;
         retval = getaddrinfo(nullptr, server_port.c_str(), &hints, &result);
     }
     else {

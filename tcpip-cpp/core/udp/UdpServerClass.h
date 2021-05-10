@@ -26,7 +26,7 @@ private:
     socket_t server_socket = INVALID_SOCKET;
 
     struct sockaddr sender;
-    int sender_sock_len = sizeof(sender);
+    socklen_t sender_sock_len = sizeof(sender);
     size_t bytes_to_send = 0;
 
     int setup(struct addrinfo& hints) override;
