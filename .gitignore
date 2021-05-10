@@ -1,9 +1,5 @@
 # CMake
 build*
-Debug*
-Release*
-RelWithDeb*
-MinSizeRel*
 
 # Eclipse
 .cproject
@@ -59,3 +55,4 @@ __pycache__
 gradle-app.setting
 !gradle-wrapper.jar
 .gradletasknamecache
+!**/build.gradle**
