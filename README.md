@@ -158,6 +158,8 @@ If [Gradle](https://gradle.org/) is installed, you can run the demo with the com
 ./gradlew run
 ```
 
+If you are using Eclipse, it is recommended to install the [JDT](https://marketplace.eclipse.org/content/eclipse-java-development-tools-0#group-details) and the [Eclipse Buildship Gradle Integration](https://projects.eclipse.org/projects/tools.buildship).
+
 # Python
 
 The demo can be configured via `config.py` file.
