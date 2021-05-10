@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 
 int udp_server_oneshot_generic(void* args);
 
