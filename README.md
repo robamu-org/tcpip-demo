@@ -1,14 +1,13 @@
 # TCP/IP demo application
 
-Test application including a TCP client and server. Planned for various programming languages,
-operating systems and IDEs.
+Test application including a TCP client and server. Implemented for various programming languages,
+operating systems and IDEs. Applications can generally be configured to run server or client only.
 
 # C++
 
 The demo is located inside the `tcpip-cpp` folder and 
-can be configured by editing the `demo_config.h` file.
-Alternatively, use can use the CL mode by setting `CLI_MODE` to 1. Then you will be 
-prompted for all required variables.
+can be configured by editing the `demo_config.h` file in the build directory after 
+generating the build system with `CMake`.
 
 ## Build instructions 
 
@@ -35,8 +34,7 @@ Then build the application with
 
 ```cpp
 cd tcpip-cpp
-mkdir Debug-MinGW64
-cd Debug-MinGW64
+mkdir build-Debug-MinGW64 && cd build-Debug-MinGW64
 cmake .. -G "MinGW Makefiles"
 cmake --build . -j
 ```
@@ -65,8 +63,7 @@ You can generate Visual Studio project files with the following command
 
 ```cpp
 cd tcpip-cpp
-mkdir Debug-VS2019
-cd Debug-VS2019
+mkdir build-Debug-VS2019 && cd build-Debug-VS2019
 cmake .. -G "Visual Studio 16 2019"
 ```
 
@@ -97,8 +94,8 @@ Build the project like this:
 
 ```cpp
 cd tcpip-cpp
-mkdir Debug-Unix
-cd Debug-Unix
+mkdir build-Debug-Unix
+cd build-Debug-Unix
 cmake .. 
 cmake --build . -j
 ```
@@ -122,8 +119,8 @@ Coming soon.
 
 # C
 
-The demo is located inside the `tcpip-c` folder and 
-can be configured by editing the `demo_config.h` file.
+The demo is located inside the `tcpip-c` folder.It can be configured like the C++ demo
+by editing the `demo_config.h` file in the build folder after build system generation with `CMake`.
 
 ## Windows - GCC
 
@@ -134,8 +131,7 @@ then build the application with
 
 ```cpp
 cd tcpip-c
-mkdir Debug-MinGW64
-cd Debug-MinGW64
+mkdir build-Debug-MinGW64 && cd build-Debug-MinGW64
 cmake .. -G "MinGW Makefiles"
 cmake --build . -j
 ```
@@ -149,8 +145,7 @@ then build the application with
 
 ```cpp
 cd tcpip-c
-mkdir Debug-Unix
-cd Debug-Unix
+mkdir build-Debug-Unix && cd build-Debug-Unix
 cmake ..
 cmake --build . -j
 ```

@@ -45,4 +45,4 @@ def udp_client():
 
 def udp_listen_for_reply(server_socket: socket):
     reply, from_addr = server_socket.recvfrom(BUFFER_SIZES)
-    print_protected(f"{AnsiColors.CYAN}Client: Received back {len(reply)} bytes: {reply}")
+    print_protected(f"{AnsiColors.CYAN}Client: Received back {len(reply)} bytes: {str(reply)}")
