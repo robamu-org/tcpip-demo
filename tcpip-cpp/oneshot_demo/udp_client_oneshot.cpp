@@ -21,6 +21,7 @@
 #include <thread>
 
 int udp_client_oneshot(std::string server_address) {
+#ifdef _WIN32
     WSADATA wsaData;
     /* Initialize Winsock */
     int retval = WSAStartup(MAKEWORD(2,2), &wsaData);
@@ -28,6 +29,7 @@ int udp_client_oneshot(std::string server_address) {
         printf("WSAStartup failed with error: %d\n", retval);
         return 1;
     }
+#endif
 
     std::vector<uint8_t> rec_buf(tcpip::BUFFER_SIZES);
 
@@ -81,7 +83,9 @@ int udp_client_oneshot(std::string server_address) {
         if(retval < 0) {
             int error = tcpip::get_last_error();
             std::cerr << "udp_client_oneshot: recv failed with error: " << error << std::endl;
+#ifdef _WIN32
             WSACleanup();
+#endif
             return 1;
         }
         rec_buf[retval] = '\0';
@@ -92,7 +96,9 @@ int udp_client_oneshot(std::string server_address) {
         int error = tcpip::get_last_error();
         std::cerr << "udp_client_oneshot: sendto failed with error: " <<
                  error << std::endl;
+#ifdef _WIN32
         WSACleanup();
+#endif
         return 1;
     }
     return 0;
