@@ -132,6 +132,7 @@ std::unique_lock<std::mutex> print_guard() {
     return std::move(std::unique_lock<std::mutex>(print_mutex));
 }
 
+#ifdef _WIN32
 void enable_win_term_colors() {
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     DWORD dwMode = 0;
@@ -139,3 +140,4 @@ void enable_win_term_colors() {
     dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     SetConsoleMode(hOut, dwMode);
 }
+#endif
