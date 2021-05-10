@@ -4,6 +4,7 @@
 
 #include <winsock2.h>
 using socket_t = SOCKET;
+using socklen_t = int;
 
 #elif defined(__unix__)
 
