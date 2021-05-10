@@ -35,7 +35,7 @@ Then build the application with
 ```cpp
 cd tcpip-cpp
 mkdir build-Debug-MinGW64 && cd build-Debug-MinGW64
-cmake .. -G "MinGW Makefiles"
+cmake -G "MinGW Makefiles" .. 
 cmake --build . -j
 ```
 
@@ -94,8 +94,7 @@ Build the project like this:
 
 ```cpp
 cd tcpip-cpp
-mkdir build-Debug-Unix
-cd build-Debug-Unix
+mkdir build-Debug-Unix && cd build-Debug-Unix
 cmake .. 
 cmake --build . -j
 ```
@@ -132,7 +131,7 @@ then build the application with
 ```cpp
 cd tcpip-c
 mkdir build-Debug-MinGW64 && cd build-Debug-MinGW64
-cmake .. -G "MinGW Makefiles"
+cmake  -G "MinGW Makefiles" ..
 cmake --build . -j
 ```
 
