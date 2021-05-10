@@ -3,8 +3,9 @@
 #ifdef _WIN32
 
 #include <winsock2.h>
+#include <ws2tcpip.h>
+
 using socket_t = SOCKET;
-using socklen_t = int;
 
 #elif defined(__unix__)
 
