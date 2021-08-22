@@ -15,8 +15,8 @@ using socket_t = int;
 
 namespace tcpip {
 
-int get_last_error();
-void close_socket(socket_t socket);
+int getLastError();
+void closeSocket(socket_t socket);
 
 }
 

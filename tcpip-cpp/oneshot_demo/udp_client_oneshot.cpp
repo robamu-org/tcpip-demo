@@ -22,7 +22,7 @@
 
 #ifdef _WIN32
 
-int udp_client_oneshot(std::string server_address) {
+int udpClientOneshot(std::string server_address) {
     WSADATA wsaData;
     /* Initialize Winsock */
     int retval = WSAStartup(MAKEWORD(2,2), &wsaData);
@@ -60,7 +60,7 @@ int udp_client_oneshot(std::string server_address) {
     server_socket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
     if (server_socket < 0) {
         std::cerr << "udp_client_oneshot: socket failed with error: " <<
-                tcpip::get_last_error() << std::endl;
+                tcpip::getLastError() << std::endl;
         freeaddrinfo(result);
         WSACleanup();
         return 1;
@@ -81,7 +81,7 @@ int udp_client_oneshot(std::string server_address) {
                 recv_flags
         );
         if(retval < 0) {
-            int error = tcpip::get_last_error();
+            int error = tcpip::getLastError();
             std::cerr << "udp_client_oneshot: recv failed with error: " << error << std::endl;
             WSACleanup();
             return 1;
@@ -91,7 +91,7 @@ int udp_client_oneshot(std::string server_address) {
                 rec_buf.data() << std::endl;
     }
     else {
-        int error = tcpip::get_last_error();
+        int error = tcpip::getLastError();
         std::cerr << "udp_client_oneshot: sendto failed with error: " <<
                  error << std::endl;
         WSACleanup();
@@ -102,7 +102,7 @@ int udp_client_oneshot(std::string server_address) {
 
 #elif defined(__unix__)
 
-int udp_client_oneshot(std::string server_address) {
+int udpClientOneshot(std::string server_address) {
 	int retval = 0;
     std::vector<uint8_t> rec_buf(tcpip::BUFFER_SIZES);
 
@@ -132,7 +132,7 @@ int udp_client_oneshot(std::string server_address) {
     server_socket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
     if (server_socket < 0) {
         std::cerr << "udp_client_oneshot: socket failed with error: " <<
-                tcpip::get_last_error() << std::endl;
+                tcpip::getLastError() << std::endl;
         freeaddrinfo(result);
         return 1;
     }
@@ -152,7 +152,7 @@ int udp_client_oneshot(std::string server_address) {
                 recv_flags
         );
         if(retval < 0) {
-            int error = tcpip::get_last_error();
+            int error = tcpip::getLastError();
             std::cerr << "udp_client_oneshot: recv failed with error: " << error << std::endl;
             return 1;
         }
@@ -161,7 +161,7 @@ int udp_client_oneshot(std::string server_address) {
                 rec_buf.data() << std::endl;
     }
     else {
-        int error = tcpip::get_last_error();
+        int error = tcpip::getLastError();
         std::cerr << "udp_client_oneshot: sendto failed with error: " <<
                  error << std::endl;
         return 1;

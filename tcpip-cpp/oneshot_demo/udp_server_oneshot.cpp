@@ -20,7 +20,7 @@
 
 #ifdef _WIN32
 
-int udp_server_oneshot(std::string server_address) {
+int udpServerOneshot(std::string server_address) {
     WSADATA wsaData;
     /* Initialize Winsock */
     int retval = WSAStartup(MAKEWORD(2,2), &wsaData);
@@ -68,7 +68,7 @@ int udp_server_oneshot(std::string server_address) {
     retval = bind(server_socket, result->ai_addr, (int)result->ai_addrlen);
     if (retval != 0) {
         std::cerr << "udp_server_oneshot: bind failed with error: " <<
-                tcpip::get_last_error() << std::endl;
+                tcpip::getLastError() << std::endl;
         freeaddrinfo(result);
         WSACleanup();
         return 1;
@@ -106,7 +106,7 @@ int udp_server_oneshot(std::string server_address) {
         std::cout << "Server: Empty packet received" << std::endl;
     }
     else {
-        int error = tcpip::get_last_error();
+        int error = tcpip::getLastError();
         std::cerr << "Server: recvfrom failed with error " << error << std::endl;
         WSACleanup();
         return 1;
@@ -117,7 +117,7 @@ int udp_server_oneshot(std::string server_address) {
 
 #elif defined(__unix__)
 
-int udp_server_oneshot(std::string server_address) {
+int udpServerOneshot(std::string server_address) {
 	int retval = 0;
     struct addrinfo *result = nullptr;
     struct addrinfo hints = {};
@@ -156,7 +156,7 @@ int udp_server_oneshot(std::string server_address) {
     retval = bind(server_socket, result->ai_addr, (int)result->ai_addrlen);
     if (retval != 0) {
         std::cerr << "udp_server_oneshot: bind failed with error: " <<
-                tcpip::get_last_error() << std::endl;
+                tcpip::getLastError() << std::endl;
         freeaddrinfo(result);
         return 1;
     }
@@ -193,7 +193,7 @@ int udp_server_oneshot(std::string server_address) {
         std::cout << "Server: Empty packet received" << std::endl;
     }
     else {
-        int error = tcpip::get_last_error();
+        int error = tcpip::getLastError();
         std::cerr << "Server: recvfrom failed with error " << error << std::endl;
         return 1;
     }

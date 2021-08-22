@@ -20,7 +20,7 @@ public:
 
     virtual~ TcpClientClass();
 
-    int perform_operation() override;
+    int performOperation() override;
 
 private:
 
@@ -29,18 +29,18 @@ private:
         READ
     };
 
-    socket_t connect_socket = INVALID_SOCKET;
+    socket_t connectSocket = INVALID_SOCKET;
 
     int setup(struct addrinfo& hints) override;
 
-    int perform_send_operation();
-    int perform_recv_operation();
-    int perform_op_common(Steps step);
+    int performSendOperation();
+    int performRecvOperation();
+    int performOpCommon(Steps step);
 
-    int perform_simple_send_op();
-    int send_packets(std::queue<std::string>& packet_queue);
-    int tcp_read_operation();
+    int performSimpleSendOp();
+    int sendPackets(std::queue<std::string>& packet_queue);
+    int tcpReadUntilServerFinishedOperation();
 
-    int common_connection_attempt();
+    int commonConnectionAttempt();
 
 };

@@ -23,7 +23,7 @@ public:
 
     virtual~ TcpipBase();
 
-    virtual int perform_operation() = 0;
+    virtual int performOperation() = 0;
 
 
 protected:

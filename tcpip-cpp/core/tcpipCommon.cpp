@@ -9,7 +9,7 @@
 
 #endif
 
-int tcpip::get_last_error() {
+int tcpip::getLastError() {
 #ifdef _WIN32
     return WSAGetLastError();
 #elif defined(__unix__)
@@ -17,7 +17,7 @@ int tcpip::get_last_error() {
 #endif
 }
 
-void tcpip::close_socket(socket_t socket) {
+void tcpip::closeSocket(socket_t socket) {
 #ifdef _WIN32
     closesocket(socket);
 #elif defined(__unix__)

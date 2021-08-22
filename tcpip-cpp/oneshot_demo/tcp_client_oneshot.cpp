@@ -20,7 +20,7 @@
 
 
 #ifdef _WIN32
-int tcp_client_oneshot(std::string server_address) {
+int tcpClientOneshot(std::string server_address) {
     // Totally not copied from https://docs.microsoft.com/en-us/windows/win32/winsock/complete-client-code
     WSADATA wsaData;
     SOCKET ConnectSocket = INVALID_SOCKET;
@@ -128,7 +128,7 @@ int tcp_client_oneshot(std::string server_address) {
 
 #elif defined(__unix__)
 
-int tcp_client_oneshot(std::string server_address) {
+int tcpClientOneshot(std::string server_address) {
     /* Based on https://docs.microsoft.com/en-us/windows/win32/winsock/complete-client-code */
     int connect_socket = 0;
     struct addrinfo *result = NULL;

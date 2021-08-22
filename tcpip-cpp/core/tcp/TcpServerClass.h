@@ -20,21 +20,22 @@ public:
 
     virtual~ TcpServerClass();
 
-    int perform_operation() override;
+    int performOperation() override;
 private:
 
-    socket_t listen_socket = INVALID_SOCKET;
-    socket_t client_socket = INVALID_SOCKET;
+    socket_t listenSocket = INVALID_SOCKET;
+    socket_t clientSocket = INVALID_SOCKET;
 
-    int setup_server();
+    int setupServer();
     int setup(struct addrinfo& hints) override;
 
-    int accept_connection();
-    int perform_mode_operation();
+    int acceptConnection();
+    int performModeOperation();
 
-    int perform_mode_1_echo();
-    int perform_mode_2();
-    int perform_mode_3();
+    int perforMode1Echo();
+    int performMode2();
+    int performMode3();
+    int performMode5();
 
-    int perform_shutdown();
+    int performShutdown();
 };

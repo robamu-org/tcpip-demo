@@ -20,7 +20,7 @@
 
 
 #ifdef _WIN32
-int tcp_server_oneshot(std::string ip_address) {
+int tcpServerOneshot(std::string ip_address) {
     /* Totally not copied from https://docs.microsoft.com/en-us/windows/win32/winsock/complete-server-code */
     WSADATA wsaData;
     int iResult;
@@ -149,7 +149,7 @@ int tcp_server_oneshot(std::string ip_address) {
 }
 #elif defined(__unix__)
 
-int tcp_server_oneshot(std::string ip_address) {
+int tcpServerOneshot(std::string ip_address) {
     /* Based on https://docs.microsoft.com/en-us/windows/win32/winsock/complete-server-code */
     int retval = 0;
     int send_result = 0;

@@ -4,10 +4,10 @@
 #include <core/tcp/TcpClientClass.h>
 #include <core/udp/UdpClientClass.h>
 
-int tcp_client_oneshot(std::string server_address);
-int udp_client_oneshot(std::string server_address);
+int tcpClientOneshot(std::string server_address);
+int udpClientOneshot(std::string server_address);
 
-int client_application(tcpip::DemoConfig cfg) {
+int clientApplication(tcpip::DemoConfig cfg) {
     using namespace tcpip;
 	std::cout << ANSI_COLOR_CYAN << "Client application startup.." << std::endl;
     
@@ -17,20 +17,20 @@ int client_application(tcpip::DemoConfig cfg) {
 
     if(cfg.mode == DemoModes::MD_0_PROCEDURAL_DEMO) {
         if(cfg.prot == DemoProtocols::TCP) {
-            return tcp_client_oneshot(cfg.server_address);
+            return tcpClientOneshot(cfg.server_address);
         }
         else {
-            return udp_client_oneshot(cfg.server_address);
+            return udpClientOneshot(cfg.server_address);
         }
     }
     else {
         if(cfg.prot == DemoProtocols::TCP) {
             TcpClientClass tcpClient(cfg, tcpip::BUFFER_SIZES);
-            return tcpClient.perform_operation();
+            return tcpClient.performOperation();
         }
         else if(cfg.prot == DemoProtocols::UDP) {
             UdpClientClass udpClient(cfg, tcpip::BUFFER_SIZES);
-            return udpClient.perform_operation();
+            return udpClient.performOperation();
         }
         else {
             std::cerr << "client_application: Protocol unknown or not implemented"

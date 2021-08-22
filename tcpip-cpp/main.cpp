@@ -5,15 +5,16 @@
 #include <thread>
 
 /* Forward declarations */
-int startup_code(tcpip::DemoConfig& cfg);
+int startupCode(tcpip::DemoConfig& cfg);
 #if CLI_MODE == 1
 int determine_config_from_user(tcpip::DemoConfig& cfg);
 #endif
-int server_application(tcpip::DemoConfig cfg);
-int client_application(tcpip::DemoConfig cfg);
-void print_mode_info(tcpip::DemoConfig& cfg);
-void enable_win_term_colors();
-
+int serverApplication(tcpip::DemoConfig cfg);
+int clientApplication(tcpip::DemoConfig cfg);
+void printModeInfo(tcpip::DemoConfig& cfg);
+#ifdef _WIN32
+void enableWinTermColors();
+#endif
 
 /**
  * @brief   TCP/IP C++ demo entry point.
@@ -29,17 +30,17 @@ int main() {
 	        get_os_name() << ".." << std::endl;
 
     DemoConfig cfg;
-	int result = startup_code(cfg);
+	int result = startupCode(cfg);
 	if(result != 0) {
 	    return result;
 	}
 #if TCPIP_DEMO_PRINT_MODE_INFO == 1
-	print_mode_info(cfg);
+	printModeInfo(cfg);
 #endif
 
-	std::thread server_thread(server_application, cfg);
+	std::thread server_thread(serverApplication, cfg);
 	std::this_thread::sleep_for(1ms);
-	std::thread client_thread(client_application, cfg);
+	std::thread client_thread(clientApplication, cfg);
 	server_thread.join();
 	client_thread.join();
 	std::cout << ANSI_COLOR_RESET << "Demo finished." << std::endl;
@@ -50,11 +51,11 @@ int main() {
 	return 0;
 }
 
-int startup_code(tcpip::DemoConfig& cfg) {
+int startupCode(tcpip::DemoConfig& cfg) {
     using namespace std;
 
 #ifdef _WIN32
-    enable_win_term_colors();
+    enableWinTermColors();
 #endif
 
 #if CLI_MODE == 1
@@ -70,7 +71,7 @@ int startup_code(tcpip::DemoConfig& cfg) {
 }
 
 
-void print_mode_info(tcpip::DemoConfig& cfg) {
+void printModeInfo(tcpip::DemoConfig& cfg) {
     using md = tcpip::DemoModes;
 
     if(cfg.prot == tcpip::DemoProtocols::UDP) {

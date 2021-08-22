@@ -7,11 +7,11 @@ UdpClientClass::UdpClientClass(tcpip::DemoConfig &cfg, size_t rec_buf_size):
 }
 
 UdpClientClass::~UdpClientClass() {
-    tcpip::close_socket(server_socket);
+    tcpip::closeSocket(server_socket);
     freeaddrinfo(server_addr);
 }
 
-int UdpClientClass::perform_operation() {
+int UdpClientClass::performOperation() {
     if(type == tcpip::DemoTypes::SERVER_ONLY) {
         return 0;
     }
@@ -60,7 +60,7 @@ int UdpClientClass::setup(struct addrinfo &hints) {
             server_addr->ai_protocol);
     if (server_socket < 0) {
         std::cerr << "TcpServerClass::setup_server: socket failed with error: " <<
-                tcpip::get_last_error() << std::endl;
+                tcpip::getLastError() << std::endl;
         freeaddrinfo(server_addr);
         return 1;
     }
@@ -75,7 +75,7 @@ int UdpClientClass::perform_send_operation() {
             server_addr->ai_addrlen);
     if(retval < 0) {
         std::cerr << "UdpClientClass::perform_send_operation: sendto failed with error: " <<
-                tcpip::get_last_error() << std::endl;
+                tcpip::getLastError() << std::endl;
     }
     return 0;
 }
@@ -90,7 +90,7 @@ int UdpClientClass::listen_for_replies() {
     );
     if(retval < 0) {
         std::cerr << "UdpClientClass::listen_for_replies: recv failed with error: " <<
-                tcpip::get_last_error() << std::endl;
+                tcpip::getLastError() << std::endl;
     }
     reception_buffer[retval] = '\0';
     std::cout << CL_CLR << "Client: Received back " << retval << " bytes: " <<

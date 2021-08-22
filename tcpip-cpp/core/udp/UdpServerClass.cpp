@@ -7,10 +7,10 @@ UdpServerClass::UdpServerClass(tcpip::DemoConfig &cfg, size_t rec_buf_size):
 }
 
 UdpServerClass::~UdpServerClass() {
-    tcpip::close_socket(server_socket);
+    tcpip::closeSocket(server_socket);
 }
 
-int UdpServerClass::perform_operation() {
+int UdpServerClass::performOperation() {
     if(type == tcpip::DemoTypes::CLIENT_ONLY) {
         return 0;
     }
@@ -69,7 +69,7 @@ int UdpServerClass::setup(struct addrinfo &hints) {
     retval = bind(server_socket, result->ai_addr, (int)result->ai_addrlen);
     if (retval != 0) {
         std::cerr << "TcpServerClass::setup_server: bind failed with error: " <<
-                tcpip::get_last_error() << std::endl;
+                tcpip::getLastError() << std::endl;
         freeaddrinfo(result);
         return 1;
     }
@@ -91,7 +91,7 @@ int UdpServerClass::listen_for_packets() {
     );
 
     if(retval < 0) {
-        error = tcpip::get_last_error();
+        error = tcpip::getLastError();
         std::cerr << "Client: UdpServerClass::listen_for_packets: recvfrom failed with " <<
                 error << std::endl;
         return -1;
@@ -114,7 +114,7 @@ int UdpServerClass::perform_echo_operation() {
             sender_sock_len
     );
     if(send_ret < 0) {
-        int error = tcpip::get_last_error();
+        int error = tcpip::getLastError();
         std::cerr << "Client: UdpServerClass::listen_for_packets: sendto failed with " <<
                 error << std::endl;
         return -1;

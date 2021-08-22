@@ -5,10 +5,10 @@
 
 #include <iostream>
 
-int tcp_server_oneshot(std::string ip_address);
-int udp_server_oneshot(std::string ip_address);
+int tcpServerOneshot(std::string ip_address);
+int udpServerOneshot(std::string ip_address);
 
-int server_application(tcpip::DemoConfig cfg) {
+int serverApplication(tcpip::DemoConfig cfg) {
     using namespace tcpip;
     std::cout << ANSI_COLOR_GREEN << "Server application startup.." << std::endl;
 
@@ -18,20 +18,20 @@ int server_application(tcpip::DemoConfig cfg) {
 
     if(cfg.mode == DemoModes::MD_0_PROCEDURAL_DEMO) {
         if(cfg.prot == DemoProtocols::TCP) {
-            return tcp_server_oneshot(cfg.server_address);
+            return tcpServerOneshot(cfg.server_address);
         }
         else {
-            return udp_server_oneshot(cfg.server_address);
+            return udpServerOneshot(cfg.server_address);
         }
     }
     else {
         if(cfg.prot == DemoProtocols::TCP) {
             TcpServerClass tcpServer(cfg, tcpip::BUFFER_SIZES);
-            return tcpServer.perform_operation();
+            return tcpServer.performOperation();
         }
         else if(cfg.prot == DemoProtocols::UDP) {
             UdpServerClass udpServer(cfg, tcpip::BUFFER_SIZES);
-            return udpServer.perform_operation();
+            return udpServer.performOperation();
         }
         else {
             std::cerr << "server_application: Unknown or unimplemented protocol!" << std::endl;
