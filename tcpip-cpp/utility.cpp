@@ -1,5 +1,5 @@
 #include <definitions.h>
-#include <demo_config.h>
+#include <demoConfig.h>
 #include "utility.h"
 
 #include <string>

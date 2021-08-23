@@ -1,4 +1,4 @@
-#include "demo_config.h"
+#include "demoConfig.h"
 #include "spdlog/spdlog.h"
 
 #include <core/tcp/TcpClientClass.h>

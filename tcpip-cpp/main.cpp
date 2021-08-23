@@ -1,5 +1,5 @@
 #include "utility.h"
-#include "demo_config.h"
+#include "demoConfig.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 

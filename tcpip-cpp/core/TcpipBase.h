@@ -1,7 +1,7 @@
 #pragma once
 
 #include "tcpipCommon.h"
-#include <demo_config.h>
+#include <demoConfig.h>
 #include <vector>
 
 #ifdef _WIN32

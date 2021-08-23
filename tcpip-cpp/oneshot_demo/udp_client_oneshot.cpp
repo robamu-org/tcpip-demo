@@ -1,4 +1,4 @@
-#include <demo_config.h>
+#include <demoConfig.h>
 #include <core/tcpipCommon.h>
 
 #ifdef _WIN32
