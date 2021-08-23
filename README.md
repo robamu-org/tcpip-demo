@@ -5,6 +5,13 @@ operating systems and IDEs. Applications can generally be configured to run serv
 
 # C++
 
+The demo uses the `spdlog` dependency. Run the following command first
+
+```sh
+git submodule init
+git submodule update
+```
+
 The demo is located inside the `tcpip-cpp` folder and 
 can be configured by editing the `demo_config.h` file in the build directory after 
 generating the build system with `CMake`.
