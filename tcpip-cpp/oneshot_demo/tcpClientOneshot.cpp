@@ -56,11 +56,11 @@ int tcpClientOneshot(std::string server_address) {
   for(ptr=result; ptr != NULL ;ptr=ptr->ai_next) {
     struct sockaddr_in *addr_in = (struct sockaddr_in *)ptr->ai_addr;
     char *ip = inet_ntoa(addr_in->sin_addr);
-    std::cout << "Client: Attempting connection to address " << ip << std::endl;
+    spdlog::info("{}: Attempting connection to address {}", tcpip::CLIENT_PR, ip);
     // Create a SOCKET for connecting to server
     ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
     if (ConnectSocket == INVALID_SOCKET) {
-      printf("socket failed with error: %ld\n", WSAGetLastError());
+      printf("socket failed with error: %d\n", WSAGetLastError());
       WSACleanup();
       return 1;
     }
@@ -73,7 +73,8 @@ int tcpClientOneshot(std::string server_address) {
       continue;
     }
 
-    std::cout << "Client: Connected successfully to " << ip << std::endl;
+
+    spdlog::info("{}: Connect success", tcpip::CLIENT_PR);
     break;
   }
 
@@ -94,8 +95,7 @@ int tcpClientOneshot(std::string server_address) {
     return 1;
   }
 
-  printf(CL_CLR "Client: Bytes Sent: %ld\n", iResult);
-  printf(CL_CLR "Client: Sent string: %s\n", sendbuf);
+  spdlog::info("{}: Sent {} bytes: {}", tcpip::CLIENT_PR, iResult, sendbuf);
 
   // shutdown the connection since no more data will be sent
   iResult = shutdown(ConnectSocket, SD_SEND);
@@ -111,11 +111,10 @@ int tcpClientOneshot(std::string server_address) {
 
     iResult = recv(ConnectSocket, reinterpret_cast<char*>(reception_buffer.data()), recvbuflen, 0);
     if ( iResult > 0 ) {
-      printf(CL_CLR "Client: Bytes Received: %d\n", iResult);
-      printf(CL_CLR "Client: Received string: %s\n", reception_buffer.data());
+      spdlog::info("{}: Received {} bytes: {}", tcpip::CLIENT_PR, iResult, reception_buffer.data());
     }
     else if ( iResult == 0 )
-      printf(CL_CLR "Client: Server closed connection\n");
+      spdlog::info("{}: Server closed connection", tcpip::CLIENT_PR);
     else
       printf(CL_CLR "Client: recv failed with error: %d\n", WSAGetLastError());
 

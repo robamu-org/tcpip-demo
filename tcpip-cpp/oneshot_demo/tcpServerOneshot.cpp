@@ -65,7 +65,7 @@ int tcpServerOneshot(std::string ip_address) {
   // Create a SOCKET for connecting to server
   ListenSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
   if (ListenSocket == INVALID_SOCKET) {
-    printf("socket failed with error: %ld\n", WSAGetLastError());
+    printf("socket failed with error: %d\n", WSAGetLastError());
     freeaddrinfo(result);
     WSACleanup();
     return 1;
@@ -108,8 +108,7 @@ int tcpServerOneshot(std::string ip_address) {
 
     iResult = recv(ClientSocket, reinterpret_cast<char*>(reception_buffer.data()), recvbuflen, 0);
     if (iResult > 0) {
-      printf(SRV_CLR "Server: Bytes Received: %d\n", iResult);
-      printf(SRV_CLR "Server: Received string: %s\n", reception_buffer.data());
+      spdlog::info("{}: Bytes received {}: {}", tcpip::SERVER_PR, iResult, reception_buffer.data());
 
       // Echo the buffer back to the sender
       iSendResult = send( ClientSocket, reinterpret_cast<char*>(reception_buffer.data()), iResult, 0 );
@@ -119,10 +118,10 @@ int tcpServerOneshot(std::string ip_address) {
         WSACleanup();
         return 1;
       }
-      printf(SRV_CLR "Server: Bytes echoed back: %d\n", iSendResult);
+      spdlog::info("{}: Bytes echoed back {}", tcpip::SERVER_PR, iSendResult);
     }
     else if (iResult == 0)
-      printf(SRV_CLR "Server: Client closed connection...\n");
+      spdlog::info("{}: Client closed connection", tcpip::SERVER_PR);
     else  {
       printf("Server: recv failed with error: %d\n", WSAGetLastError());
       closesocket(ClientSocket);
@@ -132,7 +131,7 @@ int tcpServerOneshot(std::string ip_address) {
 
   } while (iResult > 0);
 
-  printf(SRV_CLR "Server: Shutting down\n");
+  spdlog::info("{}: Shutting down", tcpip::SERVER_PR);
   // shutdown the connection since we're done
   iResult = shutdown(ClientSocket, SD_SEND);
   if (iResult == SOCKET_ERROR) {
