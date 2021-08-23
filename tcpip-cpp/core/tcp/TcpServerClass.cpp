@@ -268,7 +268,7 @@ int TcpServerClass::performMode5() {
     int retval = select(clientSocket + 1, &rfds, nullptr, &efds, &tv);
     if(retval < 0) {
       // client might have shut down connection?
-      std::cerr << "select: Error " << tcpip::getLastError() << std::endl;
+      spdlog::error("{}: select: Error {}", tcpip::SERVER_PR, tcpip::getLastError());
     }
     else if(retval > 0) {
       if(FD_ISSET(clientSocket, &rfds)) {
@@ -279,7 +279,7 @@ int TcpServerClass::performMode5() {
         }
       }
       if(FD_ISSET(clientSocket, &efds)) {
-        std::cout << "Client closed?" << std::endl;
+        spdlog::error("{}: Exception detected on receive FD", tcpip::SERVER_PR);
       }
     }
     else {
@@ -302,7 +302,7 @@ int TcpServerClass::receiveData(uint32_t* index) {
     return 1;
   }
   else if(retval == 0) {
-    std::cout << SRV_CLR << "Server: Client closed connection" << std::endl;
+    spdlog::info("{}: Client closed connection", tcpip::SERVER_PR);
     return 0;
   }
   else {

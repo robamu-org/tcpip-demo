@@ -133,7 +133,7 @@ std::unique_lock<std::mutex> print_guard() {
 }
 
 #ifdef _WIN32
-void enable_win_term_colors() {
+void enableWinTermColors() {
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     DWORD dwMode = 0;
     GetConsoleMode(hOut, &dwMode);

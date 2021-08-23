@@ -85,6 +85,10 @@ void printModeInfo(tcpip::DemoConfig& cfg) {
   spdlog::info("Mode information. Selected mode: {}", cfg.mode);
 
   switch(cfg.mode) {
+  case(md::MD_0_PROCEDURAL_DEMO): {
+    spdlog::info("Simple procedural demo");
+    break;
+  }
   case(md::MD_1_OOP_CLIENT_ONE_SERVER_ECHO): {
     spdlog::info("{} will send one packet, {} will echo back", tcpip::CLIENT_PR, tcpip::SERVER_PR);
     break;

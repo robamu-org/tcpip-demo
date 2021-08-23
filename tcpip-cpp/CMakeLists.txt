@@ -28,7 +28,7 @@ target_link_libraries(${TARGET_NAME} PRIVATE
     spdlog::spdlog
 )
 if(WIN32)
-    target_link_libraries(${TARGET_NAME}
+    target_link_libraries(${TARGET_NAME} PRIVATE
 	   ws2_32
     )
 elseif(UNIX)

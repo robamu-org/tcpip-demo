@@ -123,7 +123,7 @@ int TcpClientClass::performOpCommon(Steps step) {
               reception_buffer.data());
         }
       } while(retval > 0 );
-      std::cout << "Client closing connection" << std::endl;
+      spdlog::info("Client closing connection");
       // close connection
       tcpip::closeSocket(connectSocket);
     }
