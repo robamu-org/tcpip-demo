@@ -1,4 +1,5 @@
 #include "UdpClientClass.h"
+#include "spdlog/spdlog.h"
 
 #include <iostream>
 
@@ -69,8 +70,7 @@ int UdpClientClass::setup(struct addrinfo &hints) {
 
 int UdpClientClass::perform_send_operation() {
     std::string string = "This is a UDP test";
-    std::cout << "Client: Sending string with " << string.size() << " bytes: " <<
-            string << std::endl;
+    spdlog::info("{}: Sendind string with {} bytes: {}", tcpip::CLIENT_PR, string.size(), string);
     int retval = sendto(server_socket, string.data(), string.size(), 0, server_addr->ai_addr,
             server_addr->ai_addrlen);
     if(retval < 0) {
@@ -93,7 +93,7 @@ int UdpClientClass::listen_for_replies() {
                 tcpip::getLastError() << std::endl;
     }
     reception_buffer[retval] = '\0';
-    std::cout << CL_CLR << "Client: Received back " << retval << " bytes: " <<
-            reception_buffer.data() << std::endl;
+    spdlog::info("{}: Received back {} bytes: {}", tcpip::CLIENT_PR, retval,
+        reception_buffer.data());
     return 0;
 }

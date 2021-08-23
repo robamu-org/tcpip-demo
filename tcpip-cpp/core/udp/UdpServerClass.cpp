@@ -1,4 +1,5 @@
 #include "UdpServerClass.h"
+#include "spdlog/spdlog.h"
 
 #include <iostream>
 
@@ -79,7 +80,7 @@ int UdpServerClass::setup(struct addrinfo &hints) {
 }
 
 int UdpServerClass::listen_for_packets() {
-    std::cout << "Server: Listening for UDP packets.." << std::endl;
+    spdlog::info("{}: Listening for UDP packets..", tcpip::SERVER_PR);
     int error = 0;
     int retval = recvfrom(
             server_socket,
@@ -97,8 +98,7 @@ int UdpServerClass::listen_for_packets() {
         return -1;
     }
     reception_buffer[retval] = '\0';
-    std::cout << SRV_CLR <<"Server: Received " << retval << " bytes: " <<
-            reception_buffer.data() << std::endl;
+    spdlog::info("{}: Received {} bytes: {}", tcpip::SERVER_PR, retval, reception_buffer.data());
     bytes_to_send = retval;
     return 0;
 }
@@ -120,6 +120,6 @@ int UdpServerClass::perform_echo_operation() {
         return -1;
     }
 
-    std::cout << SRV_CLR << "Server: Echoed back packet" << std::endl;
+    spdlog::info("{}: Echoed back packet", tcpip::SERVER_PR);
     return 0;
 }
