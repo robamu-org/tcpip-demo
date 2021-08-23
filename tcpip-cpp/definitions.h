@@ -15,6 +15,9 @@
 
 namespace tcpip {
 
+static std::string SERVER_PR = std::string(SRV_CLR) + "Server" + std::string(ANSI_COLOR_RESET);
+static std::string CLIENT_PR = std::string(CL_CLR) + "Client" + std::string(ANSI_COLOR_RESET);
+
 enum DemoProtocols {
     TCP,
     UDP

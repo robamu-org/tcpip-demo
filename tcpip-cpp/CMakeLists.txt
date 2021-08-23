@@ -22,7 +22,11 @@ target_sources(${TARGET_NAME} PRIVATE
 
 add_subdirectory(oneshot_demo)
 add_subdirectory(core)
+add_subdirectory(spdlog)
 
+target_link_libraries(${TARGET_NAME} PRIVATE
+    spdlog::spdlog
+)
 if(WIN32)
     target_link_libraries(${TARGET_NAME}
 	   ws2_32

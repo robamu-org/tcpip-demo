@@ -1,4 +1,5 @@
 #include "demo_config.h"
+#include "spdlog/spdlog.h"
 
 #include <core/tcp/TcpServerClass.h>
 #include <core/udp/UdpServerClass.h>
@@ -10,7 +11,8 @@ int udpServerOneshot(std::string ip_address);
 
 int serverApplication(tcpip::DemoConfig cfg) {
     using namespace tcpip;
-    std::cout << ANSI_COLOR_GREEN << "Server application startup.." << std::endl;
+
+    spdlog::info("{} application startup..", tcpip::SERVER_PR);
 
     if(cfg.type == DemoTypes::SERVER_ONLY) {
         return 0;

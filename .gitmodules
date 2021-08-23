@@ -1,0 +1,3 @@
+[submodule "tcpip-cpp/spdlog"]
+	path = tcpip-cpp/spdlog
+	url = https://github.com/gabime/spdlog.git

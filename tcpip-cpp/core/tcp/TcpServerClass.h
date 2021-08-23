@@ -38,4 +38,6 @@ private:
     int performMode5();
 
     int performShutdown();
+
+    int receiveData(uint32_t* index = nullptr);
 };
