@@ -84,11 +84,16 @@ int TcpClientClass::performOpCommon(Steps step) {
       std::string string1 = "Hello, this is packet 1";
       std::string string2 = "Hello this is packet 2";
       std::string string3 = "Hello this is packet 3";
-      std::queue<std::string> string_queue;
-      string_queue.push(string1);
-      string_queue.push(string2);
-      string_queue.push(string3);
-      return sendPackets(string_queue);
+      std::queue<std::string> stringQueue;
+      stringQueue.push(string1);
+      stringQueue.push(string2);
+      stringQueue.push(string3);
+      int retval = sendPackets(stringQueue);
+      retval = shutdown(connectSocket, SHUT_SEND);
+      if(retval != 0) {
+        spdlog::error("TcpClientClass::perform_send_operation: shutdown failed with error: {}" ,
+            tcpip::getLastError());
+      }
     }
     else if(step == Steps::READ) {
       return tcpReadUntilServerFinishedOperation();
@@ -96,6 +101,7 @@ int TcpClientClass::performOpCommon(Steps step) {
     else {
       return -1;
     }
+    break;
   }
   case(dm::MD_4_OOP_CLIENT_MUTLIPLE_SERVER_MULTIPLE): {
     break;
@@ -194,11 +200,7 @@ int TcpClientClass::performSimpleSendOp() {
         tcpip::getLastError() << std::endl;
     return 1;
   }
-
-  {
-    auto pg = print_guard();
-    spdlog::info("{}: Sent {} bytes: {}", tcpip::CLIENT_PR, send_buf.size(), send_buf);
-  }
+  spdlog::info("{}: Sent {} bytes: {}", tcpip::CLIENT_PR, send_buf.size(), send_buf);
 
   retval = shutdown(connectSocket, SHUT_SEND);
   if(retval != 0) {
@@ -225,38 +227,30 @@ int TcpClientClass::tcpReadUntilServerFinishedOperation() {
     }
 
     else {
-      std::cerr << ANSI_COLOR_RED << "Client: recv failed with error " <<
-          tcpip::getLastError() << std::endl;
+      spdlog::error("{}: recv failed with error {}", tcpip::CLIENT_PR, tcpip::getLastError());
     }
   } while(retval > 0 );
   return 0;
 }
 
 
-int TcpClientClass::sendPackets(std::queue<std::string>& string_queue) {
+int TcpClientClass::sendPackets(std::queue<std::string>& stringQueue) {
   int retval = 0;
   int idx = 0;
-  while(not string_queue.empty()) {
-    const auto string_ref = string_queue.front();
-    std::cout << CL_CLR <<"Client: Sending string " << idx << ": " << string_ref.data() <<
-        std::endl;
-    int retval = send(connectSocket, reinterpret_cast<const char*>(string_ref.data()),
-        string_ref.size(), 0);
+  while(not stringQueue.empty()) {
+    const auto stringRef = stringQueue.front();
+    spdlog::info("{}: Sending string {}: {}", tcpip::CLIENT_PR, idx, stringRef.data());
+    int retval = send(connectSocket, reinterpret_cast<const char*>(stringRef.data()),
+        stringRef.size(), 0);
     idx++;
     if (retval == SOCKET_ERROR) {
-      std::cerr << "TcpClientClass::perform_send_operation: Send failed with error: " <<
-          tcpip::getLastError() << std::endl;
+      spdlog::error("TcpClientClass::perform_send_operation: Send failed with error: {}",
+          tcpip::getLastError());
       /* Clear the queue nonetheless */
-      std::queue<std::string>().swap(string_queue);
+      std::queue<std::string>().swap(stringQueue);
       return 1;
     }
-    string_queue.pop();
-  }
-
-  retval = shutdown(connectSocket, SHUT_SEND);
-  if(retval != 0) {
-    std::cerr << "TcpClientClass::perform_send_operation: shutdown failed with error: " <<
-        tcpip::getLastError() << std::endl;
+    stringQueue.pop();
   }
   return retval;
 }

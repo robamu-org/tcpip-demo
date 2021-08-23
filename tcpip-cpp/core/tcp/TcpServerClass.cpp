@@ -196,9 +196,9 @@ int TcpServerClass::performMode2() {
           "when none should have been sent!" << std::endl;
     }
     else if(retval == 0) {
-      std::cout << SRV_CLR << "Server: No packets received from client" << std::endl;
+      spdlog::info("{}: No packets received from client", tcpip::SERVER_PR);
       if(not reply_sent) {
-        std::cout << SRV_CLR << "Server: Sending back unrequested reply" << std::endl;
+        spdlog::info("{}: Sending back unrequested reply", tcpip::SERVER_PR);
         std::string reply = "Hello, this is my unrequested reply";
         send_result = send(clientSocket, reinterpret_cast<char*>(reply.data()),
             reply.size(), 0);
@@ -210,7 +210,7 @@ int TcpServerClass::performMode2() {
         reply_sent = true;
       }
       else {
-        std::cerr << "Server: More than 1 packet received from client!" << std::endl;
+        spdlog::error("{}: More than 1 packet received from client!", tcpip::SERVER_PR);
       }
     }
     else {
